@@ -19,7 +19,29 @@ Copyright (C) 2006 Potix Corporation. All Rights Reserved.
 }}IS_RIGHT
 -->
 <zk xmlns="http://www.zkoss.org/2005/zul">
-    <window>
-	My ZK application
-    </window>
+   <borderlayout>
+       <north title="north">
+           sfsdf
+           </north>
+			<west title="West" size="25%" flex="true" maxsize="250" splittable="true" collapsible="true">
+sfsdf
+			</west>
+			<center border="none" flex="true">
+<hbox>
+       <box>sldj</box>
+       <box>
+           <window title="To do list" width="640px" border="normal">
+             <listbox id="box" multiple="true" rows="4">
+              </listbox>
+              </window>
+       </box>
+   </hbox>
+			</center>
+			<east size="50%" border="none" flex="true">
+sdfsdf
+			</east>
+		</borderlayout>
+
+                
+
 </zk>
