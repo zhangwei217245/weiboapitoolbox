@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="weiboAPIs">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="version" maxOccurs="unbounded" type="versionType"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:complexType name="versionType">
+        <xsd:sequence>
+            <xsd:element name="class" maxOccurs="unbounded" type="classType"/>
+        </xsd:sequence>
+        <xsd:attribute name="value" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="classType">
+        <xsd:sequence>
+            <xsd:element name="catagory" maxOccurs="unbounded" type="catagoryType"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string"/>
+        <xsd:attribute name="index" type="xsd:int"/>
+        <xsd:attribute name="desc" use="required" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="catagoryType">
+        <xsd:sequence maxOccurs="unbounded">
+            <xsd:element name="api" type="apiType"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string"/>
+        <xsd:attribute name="index" type="xsd:int"/>
+        <xsd:attribute name="desc" use="required" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="apiType">
+        <xsd:sequence>
+            <xsd:element name="url" type="xsd:string"/>
+            <xsd:element name="formats" type="formatsType"/>
+            <xsd:element name="methods" type="methodsType"/>
+            <xsd:element name="enctype" default="application/x-www-form-urlencoded" type="EnctypeType"/>
+            <xsd:element name="auth" type="xsd:boolean"/>
+            <xsd:element name="rate_limit" type="xsd:boolean"/>
+            <xsd:element name="params" type="paramsType"/>
+            <xsd:element name="description" type="xsd:string"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string"/>
+        <xsd:attribute name="index" type="xsd:int"/>
+        <xsd:attribute name="desc" use="required" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="formatsType">
+        <xsd:sequence>
+            <xsd:element name="format" maxOccurs="unbounded" default="JSON" type="ApiFormatType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="ApiFormatType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="XML"/>
+            <xsd:enumeration value="JSON"/>
+            <xsd:enumeration value="RSS"/>
+            <xsd:enumeration value="ATOM"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="methodsType">
+        <xsd:sequence>
+            <xsd:element name="method" maxOccurs="unbounded" default="GET" type="HttpMethodsType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="HttpMethodsType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="OPTIONS"/>
+            <xsd:enumeration value="GET"/>
+            <xsd:enumeration value="HEAD"/>
+            <xsd:enumeration value="POST"/>
+            <xsd:enumeration value="PUT"/>
+            <xsd:enumeration value="DELETE"/>
+            <xsd:enumeration value="TRACE"/>
+            <xsd:enumeration value="CONNECT"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="EnctypeType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="application/x-www-form-urlencoded"/>
+            <xsd:enumeration value="multipart/form-data"/>
+            <xsd:enumeration value="text/plain"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="paramsType">
+        <xsd:sequence>
+            <xsd:element name="param" minOccurs="0" maxOccurs="unbounded" type="paramType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="paramType">
+        <xsd:attribute name="id" use="required" type="xsd:string"/>
+        <xsd:attribute name="isRest" use="required" type="xsd:boolean"/>
+        <xsd:attribute name="required" use="required" type="xsd:boolean"/>
+        <xsd:attribute name="desc" use="required" type="xsd:string"/>
+    </xsd:complexType>
+</xsd:schema>
