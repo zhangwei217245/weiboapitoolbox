@@ -354,7 +354,9 @@ SHOW WARNINGS;
 CREATE  TABLE IF NOT EXISTS `reqparam` (
   `numrequestid` INT NOT NULL ,
   `vc2paramname` VARCHAR(100) NOT NULL ,
-  `vc2paramvalue` VARCHAR(100) NOT NULL )
+  `vc2paramvalue` VARCHAR(100) NOT NULL ,
+  `numreqparamid` BIGINT NOT NULL ,
+  PRIMARY KEY (`numreqparamid`) )
 ENGINE = InnoDB;
 
 SHOW WARNINGS;
@@ -368,7 +370,9 @@ SHOW WARNINGS;
 CREATE  TABLE IF NOT EXISTS `reqvaluekept` (
   `numrequestid` INT NOT NULL ,
   `vc2sessionkey` VARCHAR(50) NOT NULL ,
-  `vc2valuepath` VARCHAR(50) NOT NULL )
+  `vc2valuepath` VARCHAR(50) NOT NULL ,
+  `numreqvaluekeptid` BIGINT NOT NULL ,
+  PRIMARY KEY (`numreqvaluekeptid`) )
 ENGINE = InnoDB;
 
 SHOW WARNINGS;
@@ -385,7 +389,9 @@ CREATE  TABLE IF NOT EXISTS `reqassert` (
   `vc2pathtype` VARCHAR(1) NOT NULL ,
   `vc2relation` VARCHAR(10) NOT NULL ,
   `vc2expvalueexp` VARCHAR(100) NOT NULL ,
-  `vc2errmsg` VARCHAR(100) NOT NULL )
+  `vc2errmsg` VARCHAR(100) NOT NULL ,
+  `numreqassertid` BIGINT NOT NULL ,
+  PRIMARY KEY (`numreqassertid`) )
 ENGINE = InnoDB;
 
 SHOW WARNINGS;
@@ -399,7 +405,9 @@ SHOW WARNINGS;
 CREATE  TABLE IF NOT EXISTS `globalparam` (
   `vc2paramname` VARCHAR(100) NOT NULL ,
   `vc2paramvalue` VARCHAR(500) NOT NULL ,
-  `numconfigid` INT NOT NULL )
+  `numconfigid` INT NOT NULL ,
+  `numgloblalparamid` BIGINT NOT NULL ,
+  PRIMARY KEY (`numgloblalparamid`) )
 ENGINE = InnoDB;
 
 SHOW WARNINGS;
@@ -437,7 +445,9 @@ CREATE  TABLE IF NOT EXISTS `loopexcutelog` (
   `numretrycount` INT NOT NULL ,
   `numstatuscode` INT NOT NULL ,
   `blobrequest` BLOB NULL ,
-  `blobresponse` BLOB NULL )
+  `blobresponse` BLOB NULL ,
+  `numexecutelogid` BIGINT NOT NULL ,
+  PRIMARY KEY (`numexecutelogid`) )
 ENGINE = InnoDB;
 
 SHOW WARNINGS;
