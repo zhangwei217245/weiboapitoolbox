@@ -77,9 +77,14 @@
     </xsd:simpleType>
     <xsd:simpleType name="EnctypeType">
         <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="form-urlencoded"/>
+            <xsd:enumeration value="multipart"/>
+            <xsd:enumeration value="plaintext"/>
+            <!--
             <xsd:enumeration value="application/x-www-form-urlencoded"/>
             <xsd:enumeration value="multipart/form-data"/>
             <xsd:enumeration value="text/plain"/>
+            -->
         </xsd:restriction>
     </xsd:simpleType>
     <xsd:complexType name="paramsType">
