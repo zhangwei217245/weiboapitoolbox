@@ -21,7 +21,7 @@
                     <methods>
                         <method>GET</method>
                     </methods>
-                    <enctype>application/x-www-form-urlencoded</enctype>
+                    <enctype>form-urlencoded</enctype>
                     <auth>false</auth>
                     <rate_limit>true</rate_limit>
                     <params>
@@ -42,7 +42,7 @@
                         <method>POST</method>
                         <method>PUT</method>
                     </methods>
-                    <enctype>application/x-www-form-urlencoded</enctype>
+                    <enctype>form-urlencoded</enctype>
                     <auth>true</auth>
                     <rate_limit>true</rate_limit>
                     <params>

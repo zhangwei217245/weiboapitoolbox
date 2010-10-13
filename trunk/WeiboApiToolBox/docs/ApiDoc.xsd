@@ -35,7 +35,7 @@
             <xsd:element name="url" type="xsd:string"/>
             <xsd:element name="formats" type="formatsType"/>
             <xsd:element name="methods" type="methodsType"/>
-            <xsd:element name="enctype" default="application/x-www-form-urlencoded" type="EnctypeType"/>
+            <xsd:element name="enctype" default="form-urlencoded" type="EnctypeType"/>
             <xsd:element name="auth" type="xsd:boolean"/>
             <xsd:element name="rate_limit" type="xsd:boolean"/>
             <xsd:element name="params" type="paramsType"/>
