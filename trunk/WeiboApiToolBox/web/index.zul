@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul">
+<?page title="WeiboToolBox"?>
+
+    <borderlayout>
+        <north height="200px" border="none">
+            
+        </north>
+        <west width="250px" border="none">
+        </west>
+        <center border="none">
+            
+            <window id="loginWindow" title="登录系统" width="100%" height="100%" apply="com.sina.weibo.toolbox.web.sys.LoginWindow">
+                <grid>
+                    <columns>
+                        <column label=""/>
+                    </columns>
+                    <rows>
+                        <row>
+                            <grid>
+                                <columns>
+                                    <column label="" align="right"/>
+                                    <column label="" align="left"/>
+                                </columns>
+                                <rows>
+                                    <row>
+                                        <label value="用户名"/>
+                                        <textbox  id="username" width="60%" type="text"/>
+
+                                    </row>
+                                    <row>
+                                        <label value="密码"/>
+                                        <textbox id="password" width="60%" type="password"/>
+                                    </row>
+                                </rows>
+                            </grid>
+                        </row>
+                        <row align="center">
+                            <button id="btn_login" label="登录">
+                                
+                            </button>
+                        </row>
+                    </rows>
+                </grid>
+                
+                
+                
+                
+            </window>
+            
+        </center>
+        <east width="250px" border="none"></east>
+        <south height="200px" border="none"></south>
+    </borderlayout>
+    
+</zk>
