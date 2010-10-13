@@ -10,9 +10,9 @@
 
 <weiboAPIs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ApiDoc.xsd">
     <version value="1.0">
-        <class id="ss" index="1" desc="ss">
-            <catagory id="aa" index="1" desc="aa">
-                <api id="public_timeline" index="1" desc="sls">
+        <class id="baseData" index="1" desc="微博基础数据接口 (Rest API)">
+            <catagory id="timeLine" index="1" desc="获取下行数据集(timeline)接口">
+                <api id="statuses/public_timeline" index="1" desc="获取最新更新的公共微博消息">
                     <url>statuses/public_timeline</url>
                     <formats>
                         <format>XML</format>
@@ -20,15 +20,43 @@
                     </formats>
                     <methods>
                         <method>GET</method>
+                    </methods>
+                    <enctype>application/x-www-form-urlencoded</enctype>
+                    <auth>false</auth>
+                    <rate_limit>true</rate_limit>
+                    <params>
+                        <param id="count" isRest="false" required="false" desc="dlss"></param>
+                    </params>
+                    <description>返回最新更新的20条微博消息。为避免资源浪费及提高效率，对消息缓存60秒。&lt;br/&gt;
+                        * 注意geo地理位置字段仅对有地理位置的微博才有返回</description>
+                </api>
+            </catagory>
+            <catagory id="statusAccess" index="2" desc="微博访问接口">
+                <api id="statuses/update" index="3" desc="发布一条微博信息">
+                    <url>statuses/update</url>
+                    <formats>
+                        <format>XML</format>
+                        <format>JSON</format>
+                    </formats>
+                    <methods>
                         <method>POST</method>
+                        <method>PUT</method>
                     </methods>
                     <enctype>application/x-www-form-urlencoded</enctype>
                     <auth>true</auth>
                     <rate_limit>true</rate_limit>
                     <params>
-                        <param id="count" isRest="false" required="false" desc="dlss"></param>
+                        <param id="status" isRest="false" required="true" desc="要更新的微博信息。必须做URLEncode,信息内容部超过140个汉字,为空返回400错误"/>
+                        <param id="in_reply_to_status_id" isRest="false" required="false" desc="@ 需要回复的微博信息ID, 这个参数只有在微博内容以 @username 开头才有意义。（即将推出）"/>
+                        <param id="lat" isRest="false" required="false" desc="纬度，发表当前微博所在的地理位置，有效范围 -90.0到+90.0, +表示北纬。只有用户设置中geo_enabled=true时候地理位置才有效(仅对受邀请的合作开发者开放)"/>
+                        <param id="long" isRest="false" required="false" desc="经度。有效范围-180.0到+180.0, +表示东经。(仅对受邀请的合作开发者开放)"/>
                     </params>
-                    <description>sser</description>
+                    <description>
+                        发布一条微博信息。请求必须用POST方式提交。为防止重复，发布的信息与当前最新信息一样话，将会被忽略&lt;br/&gt;
+                        * 如果没有登录或超过发布上限，将返回403错误&lt;br/&gt;
+                        * 如果in_reply_to_status_id不存在，将返回500错误&lt;br/&gt;
+                        * 系统将忽略重复发布的信息。每次发布将比较最后一条发布消息，如果一样将被忽略。因此用户不能连续提交相同信息。&lt;br/&gt;
+                    </description>
                 </api>
             </catagory>
         </class>
