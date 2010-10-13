@@ -20,7 +20,7 @@
     <aop:aspectj-autoproxy/>
     <!-- Persist Configurations -->
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
-        <property name="persistenceUnitName" value="AuthencationOAPU"/>
+        <property name="persistenceUnitName" value="WeiboApiToolBoxPU"/>
     </bean>
 
     <bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
@@ -31,7 +31,7 @@
 
     <bean id="jpqlGenerator" class="com.sina.weibo.toolbox.persist.service.qlgenerator.JPQLGenerator"/>
 
-    <bean id="jpaDaoService" class="com.vv.auth.persist.service.JpaDaoService">
+    <bean id="jpaDaoService" class="com.sina.weibo.toolbox.persist.service.JpaDaoService">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
