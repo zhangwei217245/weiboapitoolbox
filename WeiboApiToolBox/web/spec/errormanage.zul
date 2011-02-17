@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:c="client">
+    <menupopup id="specCatePopup">
+        <menuitem id="ctxm_newSysError" label="新建系统错误码" image="/img/smallicons/action_add.gif"/>
+    </menupopup>
+    <menupopup id="errorListPopup">
+        <menuitem id="ctxm_delSysError" label="删除系统错误码" image="/img/smallicons/action_delete.gif"/>
+    </menupopup>
+    <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./syserrormanage" ?>
+    <borderlayout id="syserrormanage"  apply="com.weibo.api.toolbox.page.spec.SysErrorManageComposer">
+        <center flex="true" border="none" zindex="4">
+            <hbox>
+                <tree id="catetree" width="250px" height="300px" pagingPosition="both" autopaging="true" mold="paging" vflex="true" zindex="5">
+                    <treecols>
+                        <treecol label="分类" />
+                    </treecols>
+                </tree>
+
+                <listbox id="sysErrorList" width="750px" height="300px" model="@{syserrormanage$composer.sysErrorByCate,load-when='catetree.onSelect'}"
+                pagingPosition="both" autopaging="true" mold="paging" vflex="true" zindex="5">
+                    <auxhead>
+                        <auxheader label="系统参数列表" colspan="4"/>
+                    </auxhead>
+                    <listhead sizable="true">
+                        <listheader label="错误码"/>
+                        <listheader label="HTTP状态码"/>
+                        <listheader label="错误信息"/>
+                        <listheader label="描述"/>
+                    </listhead>
+                    <listitem self="@{each='syserror'}" value="@{syserror}" tooltiptext="@{syserror.vc2desc}" draggable="true" context="errorListPopup">
+                        <listcell label="@{syserror.vc2errorcode}"/>
+                        <listcell label="@{syserror.vc2httpcode}"/>
+                        <listcell label="@{syserror.vc2errmsg}"/>
+                        <listcell label="@{syserror.vc2desc}"/>
+                    </listitem>
+                    <listfoot>
+                        <listfooter span="4">
+
+                        </listfooter>
+                    </listfoot>
+                </listbox>
+            </hbox>
+        </center>
+        <south size="200px" flex="true" title="编辑" border="none" zindex="2">
+            <grid width="600px">
+                <columns>
+                    <column width="100px" label="属性"/>
+                    <column width="200px" label="值"/>
+                    <column width="100px" label="属性"/>
+                    <column width="200px" label="值"/>
+                </columns>
+                <rows>
+                    <row>
+                        错误码
+                        <textbox value="@{syserrormanage$composer.currSysError.vc2errorcode,load-after='sysErrorList.onSelect'}" constraint="no empty" width="180px"/>
+                        HTTP状态码
+                        <textbox value="@{syserrormanage$composer.currSysError.vc2httpcode,load-after='sysErrorList.onSelect'}" constraint="no empty" width="180px"/>
+                    </row>
+                    <row spans="1,3">
+                        错误信息
+                        <textbox value="@{syserrormanage$composer.currSysError.vc2errmsg,load-after='sysErrorList.onSelect'}" width="480px" constraint="no empty"/>
+                    </row>
+                    <row spans="1,2,1">
+                        描述：
+                        <textbox rows="3" value="@{syserrormanage$composer.currSysError.vc2desc,load-after='sysErrorList.onSelect'}" constraint="no empty" width="280px"/>
+                        <button id="btn_save" label="保存"/>
+                    </row>
+                </rows>
+            </grid>
+        </south>
+    </borderlayout>
+</zk>

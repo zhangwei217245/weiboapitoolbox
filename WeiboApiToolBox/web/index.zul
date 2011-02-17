@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?page id="userLogin" automaticTimeout="false" title="WeiboApiToolBox"?>
+<?link rel="stylesheet" type="text/css" href="/macros/userguide.css.dsp?v=${desktop.webApp.build}"?>
+<?script type="text/javascript" src="/macros/zkdemo.js.dsp?v=${desktop.webApp.build}"?>
+<?script type="text/javascript" content="jq.IE6_ALPHAFIX=/24x24.png|32x32.png|48x48.png|128x128.png|ButtonBlue.png|ButtonGray.png|small.png|small-sel.png|normal.png|normal-sel.png|large.png|large-sel.png/;"?>
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <zscript><![CDATA[
+	boolean isBreeze = com.weibo.api.toolbox.common.Themes.isBreeze(execution) &&
+		com.weibo.api.toolbox.common.Themes.hasBreezeLib();
+	boolean isSilvergray = com.weibo.api.toolbox.common.Themes.isSilvergray(execution) &&
+		com.weibo.api.toolbox.common.Themes.hasSilvergrayLib();
+	String themeSClass = isBreeze? "breeze" : isSilvergray? "silvergray" : "blue";
+]]>
+    </zscript>
+    
+    <borderlayout id="login" sclass="${themeSClass}" apply="com.weibo.api.toolbox.page.login.LoginComposer">
+        <north size="20%" border="0">
+            N
+        </north>
+        <west size="30%" border="0">W</west>
+        <center border="0" flex="true">
+            <div>
+                <grid fixedLayout="true">
+                    <columns>
+                        <column label=""/>
+                        <column label=""/>
+                    </columns>
+                    <rows height="100%">
+                        <row height="50%">
+                            <div align="right">
+                                <label value="用户名/E-mail"/>
+                            </div>
+                            <div align="left">
+                                <textbox id="userName"/>
+                            </div>
+                        </row>
+                        <row height="50%">
+                            <div align="right">
+                                <label value="密码"/>
+                            </div>
+                            <div align="left">
+                                <textbox id="passWord" type="password"/>
+                            </div>
+                        </row>
+                    </rows>
+                </grid>
+                <hbox pack="center" width="100%">
+                    <button id="btn_login" label="登录"/>
+<!--                    <button id="btn_register" label="注册"/>-->
+                </hbox>
+                <label id="msg" style="color:red"/>
+            </div>
+        </center>
+        <east size="30%" border="0">E</east>
+        <south size="20%" border="0">S</south>
+    </borderlayout>
+</zk>

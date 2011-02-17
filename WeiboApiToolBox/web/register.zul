@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?page id="userRegister" automaticTimeout="false" title="用户注册"?>
+<?link rel="stylesheet" type="text/css" href="/macros/userguide.css.dsp?v=${desktop.webApp.build}"?>
+<?script type="text/javascript" src="/macros/zkdemo.js.dsp?v=${desktop.webApp.build}"?>
+<?script type="text/javascript" content="jq.IE6_ALPHAFIX=/24x24.png|32x32.png|48x48.png|128x128.png|ButtonBlue.png|ButtonGray.png|small.png|small-sel.png|normal.png|normal-sel.png|large.png|large-sel.png/;"?>
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <zscript><![CDATA[
+	boolean isBreeze = com.weibo.api.toolbox.common.Themes.isBreeze(execution) &&
+		com.weibo.api.toolbox.common.Themes.hasBreezeLib();
+	boolean isSilvergray = com.weibo.api.toolbox.common.Themes.isSilvergray(execution) &&
+		com.weibo.api.toolbox.common.Themes.hasSilvergrayLib();
+	String themeSClass = isBreeze? "breeze" : isSilvergray? "silvergray" : "blue";
+]]>
+    </zscript>
+    <zscript>
+		<![CDATA[//@IMPORT
+		import org.zkoss.lang.Strings;
+		import org.zkoss.lang.Objects;
+		]]><![CDATA[//@DECLARATION
+		public void doRegister(){
+			String name = nametb.getValue();
+			String pwd = pwdtb2.getValue();
+			String email = emailtb.getValue();
+			cpatb.getValue();
+
+			alert("Success!");
+		}
+		public void doOK(){
+			doRegister();
+		}
+		Constraint pwc = new Constraint() {
+	    	public void validate(Component comp, Object value) throws WrongValueException {
+		       	if (!Objects.equals(pwdtb.getValue(),value)){
+					throw new WrongValueException(comp, "两次输入的密码不一致！");
+		    	}
+	    	}
+	 	};
+	 	Constraint email = new Constraint() {
+	    	public void validate(Component comp, Object value) throws WrongValueException {
+		       	
+	    	}
+	 	};
+
+		]]>
+    </zscript>
+    <borderlayout id="register" sclass="${themeSClass}" apply="com.weibo.api.toolbox.page.login.RegisterComposer">
+        <north border="none" size="20%" flex="true">
+
+        </north>
+        <west border="none" size="25%" flex="true">
+
+        </west>
+        <center border="none" flex="true">
+            <groupbox mold="3d" closable="false" >
+                <caption label="用户注册"/>
+                <div height="100%">
+                    <grid height="90%">
+                        <rows height="100%">
+                            <row height="20%">
+						Email :
+                                <textbox id="emailtb" width="200px" constraint="/.+@.+\.[a-z]+/: 请输入电子邮件地址" />
+                            </row>
+                            <row height="20%">
+						用户名 :
+                                <textbox id="nametb" width="200px" constraint="no empty:请输入用户名"/>
+                            </row>
+                            <row height="20%">
+						密码 :
+                                <textbox id="pwdtb" width="200px"
+							type="password" constraint="no empty:请输入密码"/>
+                            </row>
+                            <row height="20%">
+						确认密码 :
+                                <textbox id="pwdtb2" width="200px"
+							type="password" constraint="${pwc}"/>
+                            </row>
+                            <row height="20%">
+						真实姓名 :
+                                <textbox id="realnametb" width="200px" constraint="no empty:请输入真实姓名"/>
+                            </row>
+                        
+                        </rows>
+                    </grid>
+                    <hbox pack="center" height="10%" width="100%">
+                        <button label="注册" />
+                    </hbox>
+                </div>
+            </groupbox>
+        </center>
+        <east size="25%" border="none" flex="true">
+
+        </east>
+        <south size="20%" border="none" flex="true"></south>
+    </borderlayout>
+</zk>

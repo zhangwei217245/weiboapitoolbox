@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page id="specMana" automaticTimeout="false" title="Spec管理"?>
+<?link rel="stylesheet" type="text/css" href="/macros/userguide.css.dsp?v=${desktop.webApp.build}"?>
+<?script type="text/javascript" src="/macros/zkdemo.js.dsp?v=${desktop.webApp.build}"?>
+<?script type="text/javascript" content="jq.IE6_ALPHAFIX=/24x24.png|32x32.png|48x48.png|128x128.png|ButtonBlue.png|ButtonGray.png|small.png|small-sel.png|normal.png|normal-sel.png|large.png|large-sel.png/;"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"  xmlns:c="client">
+    <style>
+    div.minimize {
+        border: 1px solid #79858E;
+        background: #D3E1EC;
+        position: absolute;
+        opacity: 0.8;
+        z-index: 999999;
+    }
+    .h-inline-block {
+        display: inline-block;
+        _display: inline;
+    }
+    </style>
+    
+    <zscript>
+        <![CDATA[
+            import org.zkoss.spring.SpringUtil;
+            import com.weibo.api.toolbox.service.spec.SpecProvider;
+            import com.weibo.api.toolbox.persist.entity.Tspec;
+            import org.zkoss.zkplus.databind.AnnotateDataBinder;
+        ]]>
+        <![CDATA[
+	boolean isBreeze = com.weibo.api.toolbox.common.Themes.isBreeze(execution) &&
+		com.weibo.api.toolbox.common.Themes.hasBreezeLib();
+	boolean isSilvergray = com.weibo.api.toolbox.common.Themes.isSilvergray(execution) &&
+		com.weibo.api.toolbox.common.Themes.hasSilvergrayLib();
+	String themeSClass = isBreeze? "breeze" : isSilvergray? "silvergray" : "blue";
+        SpecProvider sp = (SpecProvider) SpringUtil.getBean("specProvider");
+
+        void move(Component dragged){
+            Listitem draggeditem = (Listitem)dragged;
+            Listitem droppeditem = (Listitem)self;
+            Tspec dragspec = (Tspec)draggeditem.getValue();
+            Tspec dropspec = (Tspec)droppeditem.getValue();
+            int oldindex = dragspec.getNumcateindex();
+            dragspec.setNumcateindex(dropspec.getNumcateindex());
+            sp.updateSpecIndex(dragspec,oldindex,dropspec.getNumcateindex());
+            sp.saveTspec(dragspec);
+            ((AnnotateDataBinder)specmanage.getAttribute("binder")).loadAll();
+        }
+]]>
+    </zscript>
+    <menupopup id="specCatePopup">
+        <menuitem id="ctxm_newspec" label="新建SPEC" image="/img/smallicons/action_add.gif"/>
+    </menupopup>
+    <menupopup id="specListPopup">
+        <menuitem id="ctxm_editspec" label="编辑SPEC" image="/img/smallicons/reply.gif"/>
+    </menupopup>
+    <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./specmanage" ?>
+        <borderlayout id="specmanage"  apply="com.weibo.api.toolbox.page.spec.SpecManagerComposer">
+        <north size="1%" flex="true" border="none" zindex="2"/>
+        <west size="5%" flex="true" border="none" zindex="2"/>
+        <center flex="true" border="none" zindex="4">
+            <hbox>
+                <tree id="catetree" width="300px" height="500px" pagingPosition="both" autopaging="true" mold="paging" vflex="true" zindex="5">
+                    <treecols>
+                        <treecol label="分类" />
+                    </treecols>
+                </tree>
+
+                <listbox id="specList" width="500px" height="500px" model="@{specmanage$composer.specListByCate,load-when='catetree.onSelect'}"
+                mold="paging" pagingPosition="bottom" autopaging="true" vflex="true" zindex="5">
+                    <auxhead>
+                        <auxheader label="Spec列表" colspan="4"/>
+                    </auxhead>
+                    <listhead sizable="true">
+                        <listheader width="50px">编号</listheader>
+                        <listheader width="300px">路径</listheader>
+                        <listheader width="100px">HTTP方法</listheader>
+                        <listheader width="50px">排序</listheader>
+                    </listhead>
+                    <listitem self="@{each='eachspec'}" value="@{eachspec}" onDrop="move(event.dragged)" draggable="true" droppable="true" context="specListPopup">
+                        <listcell label="@{eachspec.numspecid}"/>
+                        <listcell label="@{eachspec,converter='com.weibo.api.toolbox.page.spec.ResourceNameConvertor'}"/>
+                        <listcell label="@{eachspec,converter='com.weibo.api.toolbox.page.spec.HttpMethodNameConverter'}"/>
+                        <listcell label="@{eachspec.numcateindex}"/>
+                    </listitem>
+                    <listfoot>
+                        <listfooter span="4">
+                            编号<image src="/img/smallicons/funnel.png" tooltiptext="编号过滤"/>
+                            <intbox id="idfilter" c:onClick="this.select()" tooltiptext="编号过滤" constraint="no negative" width="50px"/>
+                            版本<image src="/img/smallicons/funnel.png" tooltiptext="版本过滤"/>
+                            <textbox id="versionfilter" c:onClick="this.select()" tooltiptext="版本过滤" width="50px"/>
+                        </listfooter>
+                    </listfoot>
+                </listbox>
+            </hbox>
+        </center>
+        <east size="5%" flex="true" border="none" zindex="2"/>
+        <south size="5%" flex="true" border="none" zindex="2">
+            <label id="posDot"/>
+        </south>
+    </borderlayout>
+    <!-- Animation of creating window -->
+    <script type="text/javascript"><![CDATA[
+        function flowUp() {
+            var w = jq('$speceditor'), pw = w.position(),
+                b = jq('$posDot'), pb = b.position();
+               //Maxmize from the order button to the Window
+            jq('<div class="minimize" />').appendTo("body").css({
+                left : pb.left,
+                top : pb.top,
+                width : 0,
+                height : 0
+            });
+            jq('.minimize').animate({
+                left : pw.left,
+                top : pw.top,
+                width : w.width(),
+                height : w.height()
+            },  600, 'swing', function() {
+                w.css({visibility: 'visible'});
+                jq('$spectabs').slideDown();
+                jq(this).remove();
+            });
+        }
+        function flowDown(wleft, wtop) {
+            var w = jq('$speceditor'), b = jq('$posDot');
+            //Minimize from the Window to the order button
+            jq('<div class="minimize" />').appendTo("body").css({
+                left : wleft,
+                top : wtop,
+                width : w.width(),
+                height : 10
+            });
+            p = b.offset();
+            jq('.minimize').animate({
+                left : p.left + b.width() / 2,
+                top : p.top + b.height() / 2,
+                width : 0,
+                height : 0
+            }, function() {
+                jq(this).remove();
+            });
+        }
+    ]]></script>
+</zk>

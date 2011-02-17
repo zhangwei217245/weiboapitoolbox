@@ -1,0 +1,45 @@
+    /**
+     *  here comes the Enumerations Converter below
+     */
+    public AcceptType getEnumAcceptType(){
+        return AcceptType.getValueById(this.getNumreqaccept());
+    }
+    public void setEnumAcceptType(AcceptType enm){
+        this.setNumreqaccept(enm.getId());
+    }
+    public ApiStatus getEnumApiStatus(){
+        return ApiStatus.getValueById(this.getNumstatus());
+    }
+    public void setEnumApiStatus(ApiStatus enm){
+        this.setNumstatus(enm.getId());
+    }
+    public ApiType getEnumApiType(){
+        return ApiType.getValueById(this.getNumapitype());
+    }
+    public void setEnumApiType(ApiType enm){
+        this.setNumapitype(enm.getId());
+    }
+    public AuthType getEnumAuthType(){
+        return AuthType.getValueById(this.getNumauthtype());
+    }
+    public void setEnumAuthType(AuthType enm){
+        this.setNumauthtype(enm.getId());
+    }
+    public ContentType[] getEnumContentType(){
+        return ContentType.getMultiValueByIds(this.getVc2respcontenttype(),",");
+    }
+    public void setEnumContentType(ContentType[] enmlst){
+        this.setVc2respcontenttype(ContentType.getMultiIds(enmlst, ","));
+    }
+    public HttpMethod[] getEnumHttpMethod(){
+        return HttpMethod.getMultiValueByIds(this.getVc2httpmethod(),",");
+    }
+    public void setEnumHttpMethod(HttpMethod[] enmlst){
+        this.setVc2httpmethod(HttpMethod.getMultiIds(enmlst, ","));
+    }
+    public RateLimit getEnumRateLimit(){
+        return RateLimit.getValueById(this.getNumratelimittype());
+    }
+    public void setEnumRateLimit(RateLimit enm){
+        this.setNumratelimittype(enm.getId());
+    }

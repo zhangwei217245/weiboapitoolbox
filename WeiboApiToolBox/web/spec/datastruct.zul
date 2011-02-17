@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:c="client">
+    <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./datastructlayout" ?>
+    <zscript>
+        <![CDATA[
+            
+        ]]>
+    </zscript>
+    <borderlayout id="datastructlayout" apply="com.weibo.api.toolbox.page.spec.DataStructComposer">
+        <west style="width:40%" autoscroll="true" collapsible="true">
+            <vlayout>
+                <vbox style="width:100%">
+                    <listbox id="structlist" model="@{datastructlayout$composer.dataStruct,load-when='btn_addstruct.onClick,btn_savestruct.onClick'}"
+                checkmark="true" paginal="${structPaging}" rows="5">
+                        <auxhead>
+                            <auxheader>数据结构</auxheader>
+                            <auxheader>
+                                <image src="/img/smallicons/funnel.png" tooltiptext="版本过滤"/>
+                                <textbox id="versionfilter" c:onClick="this.select()" tooltiptext="版本过滤" width="80px"/>
+                            </auxheader>
+                            <auxheader>
+                                <image src="/img/smallicons/funnel.png" tooltiptext="名称过滤"/>
+                                <textbox id="namefilter" c:onClick="this.select()" tooltiptext="名称过滤" width="100px"/>
+                                <a id="link_refresh" label="刷新"/>
+                            </auxheader>
+                            <auxheader/>
+                        </auxhead>
+                        <listhead>
+                            <listheader label="版本" hflex="2" align="center"/>
+                            <listheader label="名称" hflex="4" align="center"/>
+                            <listheader label="描述" hflex="6" align="center" />
+                        </listhead>
+                        <listitem self="@{each='ds'}" value="@{ds}">
+                            <listcell label="@{ds.vc2version}" />
+                            <listcell label="@{ds.vc2structname}" />
+                            <listcell label="@{ds.vc2desc}"/>
+                        </listitem>
+                        <listfoot>
+                            <listfooter span="3" align="center">
+                                <button id="btn_addstruct" label="添加"/>
+                                <button id="btn_delstruct" label="删除"/>
+                            </listfooter>
+                        </listfoot>
+                    </listbox>
+                    <paging id="structPaging" pageSize="5"></paging>
+                </vbox>
+                <grid id="structInfoEdit" height="150px">
+                    <auxhead>
+                        <auxheader colspan="4" label="当前数据结构"/>
+                    </auxhead>
+                    <columns>
+                        <column hflex="1" label="版本"/>
+                        <column hflex="2" label="名称"/>
+                        <column hflex="3" label="描述"/>
+                        <column hflex="1" label="操作"/>
+                    </columns>
+                    <rows>
+                        <row>
+                            <textbox value="@{datastructlayout$composer.currentDataStruct.vc2version}" style="width:95%"/>
+                            <textbox value="@{datastructlayout$composer.currentDataStruct.vc2structname}" style="width:95%"/>
+                            <textbox value="@{datastructlayout$composer.currentDataStruct.vc2desc}" style="width:95%"/>
+                            <button id="btn_savestruct" label="保存"/>
+                        </row>
+                    </rows>
+                </grid>
+            </vlayout>
+        </west>
+        <east style="width:60%" autoscroll="true" collapsible="true">
+            <listbox id="fieldlist" model="@{datastructlayout$composer.currentDataStruct.tstructfieldSet}"
+                multiple="true" checkmark="true" sizedByContent="true">
+                <auxhead>
+                    <auxheader colspan="7">数据结构字段</auxheader>
+                </auxhead>
+                <listhead>
+                    <listheader label="名称" width="150px" align="center"/>
+                    <listheader label="必须" align="center"/>
+                    <listheader label="私有" align="center"/>
+                    <listheader label="数据类型" align="center"/>
+                    <listheader label="数据结构" align="center"/>
+                    <listheader label="描述" align="center" />
+                    <listheader label="示例值" align="center" />
+                </listhead>
+                <listitem self="@{each='df'}" value="@{df}">
+                    <listcell>
+                        <textbox inplace="true" onChange='self.style="font-weight:bold"' value="@{df.vc2fieldname}" width="80px"/>
+                    </listcell>
+                    <listcell>
+                        <checkbox checked="@{df.isRequired}"/>
+                    </listcell>
+                    <listcell>
+                        <checkbox checked="@{df.isPrivate}"/>
+                    </listcell>
+                    <listcell>
+                        <combobox inplace="true" width="100px" onChange='self.style="font-weight:bold"' mold="rounded" model="@{datastructlayout$composer.allDataTypes}" selectedItem="@{df.enumDataTypes}">
+                            <comboitem self="@{each='datatypes'}" label="@{datatypes.name}"/>
+                        </combobox>
+                    </listcell>
+                    <listcell>
+                        <combobox inplace="true" width="100px" onChange='self.style="font-weight:bold"' mold="rounded" model="@{datastructlayout$composer.allAvailDataStructs}" selectedItem="@{df.numdatastructid}">
+                            <comboitem self="@{each='datastruct'}" label="@{datastruct.vc2structname}"/>
+                        </combobox>
+                    </listcell>
+                    <listcell>
+                        <textbox inplace="true" width="150px" onChange='self.style="font-weight:bold"' value="@{df.vc2desc}"/>
+                    </listcell>
+                    <listcell>
+                        <textbox inplace="true" width="80px" onChange='self.style="font-weight:bold"' value="@{df.vc2demovalue}"/>
+                    </listcell>
+                </listitem>
+                <listfoot>
+                    <listfooter span="7" align="center">
+                        <button id="btn_addfield" label="添加"/>
+                        <button id="btn_delfield" label="删除"/>
+                    </listfooter>
+                </listfoot>
+            </listbox>
+        </east>
+    </borderlayout>
+</zk>

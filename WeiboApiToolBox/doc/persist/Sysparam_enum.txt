@@ -1,0 +1,15 @@
+    /**
+     * Resolve Enum Values
+     */
+    public DataTypes getEnumDataTypes(){
+        return DataTypes.getValueById(this.getNumdatatype());
+    }
+    public void setEnumDataTypes(DataTypes enm){
+        this.setNumdatatype(enm.getId());
+    }
+    public boolean getIsRequired(){
+        return this.getNumrequired() > 0;
+    }
+    public void setIsRequired(boolean required){
+        this.setNumrequired(required?1:0);
+    }

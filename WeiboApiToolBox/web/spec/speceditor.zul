@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page id="specEditor" automaticTimeout="false" title="Spec编辑器"?>
+<?link rel="stylesheet" type="text/css" href="/macros/userguide.css.dsp?v=${desktop.webApp.build}"?>
+<?script type="text/javascript" src="/macros/zkdemo.js.dsp?v=${desktop.webApp.build}"?>
+<?script type="text/javascript" content="jq.IE6_ALPHAFIX=/24x24.png|32x32.png|48x48.png|128x128.png|ButtonBlue.png|ButtonGray.png|small.png|small-sel.png|normal.png|normal-sel.png|large.png|large-sel.png/;"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <zscript><![CDATA[
+	boolean isBreeze = com.weibo.api.toolbox.common.Themes.isBreeze(execution) &&
+		com.weibo.api.toolbox.common.Themes.hasBreezeLib();
+	boolean isSilvergray = com.weibo.api.toolbox.common.Themes.isSilvergray(execution) &&
+		com.weibo.api.toolbox.common.Themes.hasSilvergrayLib();
+	String themeSClass = isBreeze? "breeze" : isSilvergray? "silvergray" : "blue";
+]]>
+    </zscript>
+    <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./speceditor" ?>
+    <window id="speceditor" title="@{speceditor$composer.currentSpec,converter='com.weibo.api.toolbox.page.spec.ResourceNameConvertor'}" border="normal" width="760px"
+    xmlns:c="client" closable="true" style="visibility: hidden" maximizable="true" maximized="true" sizable="true"
+    apply="com.weibo.api.toolbox.page.spec.SpecEditorComposer">
+        <attribute c:name="onClose"><![CDATA[
+        event.stop();
+        var w = this;
+        jq(this).slideUp(600, function() {
+            w.sendAU_(event);
+            flowDown(event.target._left, event.target._top);
+        });
+    ]]>
+        </attribute>
+        <attribute name="onCreate"><![CDATA[
+        Clients.evalJavaScript("flowUp()");
+    ]]>
+        </attribute>
+        <zscript><![CDATA[
+        void speceditorClose() {
+            Clients.evalJavaScript("flowDown()");
+        }
+    ]]>
+        </zscript>
+        <vbox id="spectabs" width="100%">
+            <tabbox id="tb2" orient="horizontal">
+                <tabs width="100%">
+                    <tab height="100" label="基本信息"/>
+                    <tab height="100" label="接口参数"/>
+                    <tab height="100" label="返回结果"/>
+                    <tab height="100" label="错误定义"/>
+                    <tab height="100" label="依赖关系"/>
+                </tabs>
+                <tabpanels width="100%">
+                    <tabpanel style="width:100%">
+                        <hbox style="width:100%">
+                            <grid sizedByContent="true" width="100%">
+                                <columns sizable="true" width="100%">
+                                    <column label="属性"/>
+                                    <column label="值"/>
+                                    <column label="属性"/>
+                                    <column label="值"/>
+                                </columns>
+                                <rows>
+                                    <row>
+                                    Base URL
+                                        <listbox id="base_baseurl" width="200px" mold="select" model="@{speceditor$composer.baseUrls}" selectedItem="@{speceditor$composer.currentSpec.numbaseurlid}">
+                                            <listitem self="@{each='baseurl'}" label="@{baseurl.vc2baseurl}"></listitem>
+                                        </listbox>
+                                    Version
+                                        <textbox id="base_version" width="200px" value="@{speceditor$composer.currentSpec.vc2version}" constraint="no empty"/>
+                                    </row>
+                                    <row>
+                                    MainResource
+                                        <textbox id="base_mainres" width="200px" value="@{speceditor$composer.currentSpec.vc2mainresource}" constraint="no empty"/>
+                                    SubResource
+                                        <textbox id="base_subres" width="200px" value="@{speceditor$composer.currentSpec.vc2subresource}"/>
+                                    </row>
+                                    <row>
+                                    Spec Name:
+                                        <textbox id="base_specname" width="200px" value="@{speceditor$composer.currentSpec.vc2specname}" constraint="no empty"/>
+                                    HTTP Methods:
+                                        <hbox>
+                                            <zk forEach="${speceditor$composer.allHttpMethods}">
+                                                <checkbox id="cbhm_${each.id}" label="${each.name}"/>
+                                            </zk>
+                                        </hbox>
+                                    </row>
+                                    <row>
+                                    分类：
+                                        <hbox>
+                                            <listbox id="base_tspeccate" width="200px" mold="select" model="@{speceditor$composer.allSubCategory}" selectedItem="@{speceditor$composer.currentSpec.numcateid}">
+                                                <listitem self="@{each='subcate'}" label="@{subcate.vc2catename}"/>
+                                            </listbox>
+                                        </hbox>
+                                    分类中的排序:
+                                        <spinner id="base_cateindex" width="200px" value="@{speceditor$composer.currentSpec.numcateindex}" constraint="no empty,min 1: 排序值必须大于等于1"/>
+                                    </row>
+                                    <row>
+                                    Request Accept:
+                                        <listbox id="base_reqaccept" width="200px" mold="select" model="@{speceditor$composer.allAcceptType}" selectedItem="@{speceditor$composer.currentSpec.enumAcceptType}">
+                                            <listitem self="@{each}" label="@{each.name}"></listitem>
+                                        </listbox>
+                                    Response Content-Type:
+                                        <hbox>
+                                            <zk forEach="${speceditor$composer.allContentType}">
+                                                <checkbox id="cbct_${each.id}" label="${each.name}"/>
+                                            </zk>
+                                        </hbox>
+                                    </row>
+                                    <row>
+                                    Need Auth:
+                                        <listbox id="base_needauth" width="200px" mold="select" model="@{speceditor$composer.allAuthType}" selectedItem="@{speceditor$composer.currentSpec.enumAuthType}">
+                                            <listitem self="@{each='authtype'}" label="@{authtype.name}"></listitem>
+                                        </listbox>
+                                    Rate Limit:
+                                        <listbox id="base_ratelimit" width="200px" mold="select" model="@{speceditor$composer.allRateLimit}" selectedItem="@{speceditor$composer.currentSpec.enumRateLimit}">
+                                            <listitem self="@{each='ratelimit'}" label="@{ratelimit.name}"></listitem>
+                                        </listbox>
+                                    </row>
+                                    <row>
+                                    API 状态:
+                                        <listbox id="base_apistatus" width="200px" mold="select"
+                                    model="@{speceditor$composer.allApiStatus}" selectedItem="@{speceditor$composer.currentSpec.enumApiStatus}">
+                                            <listitem self="@{each='apistatus'}" label="@{apistatus.name}"></listitem>
+                                        </listbox>
+                                    API 公开类型:
+                                        <listbox id="base_apitype" width="200px" mold="select"
+                                    model="@{speceditor$composer.allApiType}" selectedItem="@{speceditor$composer.currentSpec.enumApiType}">
+                                            <listitem self="@{each='apitype'}" label="@{apitype.name}"></listitem>
+                                        </listbox>
+                                    </row>
+                                    <row spans="4">
+                                        <vbox>
+                                            <hbox>
+                                            一句话描述：
+                                                <textbox id="base_shortdesc" width="600px" value="@{speceditor$composer.currentSpec.vc2shortdesc}" constraint="no empty"/>
+                                            </hbox>
+                                            <hbox>
+                                            细节描述：
+                                                <textbox id="base_intro" width="600px" rows="5" value="@{speceditor$composer.currentSpec.vc2maindesc}" constraint="no empty"/>
+                                            </hbox>
+                                            <hbox>
+                                            注意事项：
+                                                <textbox id="base_caution" width="600px" rows="5" value="@{speceditor$composer.currentSpec.vc2cautions}"/>
+                                            </hbox>
+                                        </vbox>
+                                    </row>
+                                </rows>
+                            </grid>
+                        </hbox>
+                    </tabpanel>
+                    <tabpanel>
+                        <hbox style="width:100%">
+                            <vbox align="left" hflex="1">
+                                <button id="btn_addparam" label="添加"/>
+                                <button id="btn_delparam" label="删除"/>
+                            </vbox>
+                            <listbox id="paramgrid"
+                                multiple="true" checkmark="true" height="450px"
+                                hflex="9" sizedByContent="true" mold="paging" pageSize="10"
+                                pagingPosition="top"
+                                model="@{speceditor$composer.currentSpec.trequestparamSet}">
+                                <listhead>
+                                    <listheader  width="150px" label="参数名"/>
+                                    <listheader label="必选"/>
+                                    <listheader label="参数风格"/>
+                                    <listheader label="数据类型"/>
+                                    <listheader label="范围"/>
+                                    <listheader label="默认值"/>
+                                    <listheader label="示例值"/>
+                                    <listheader label="描述"/>
+                                </listhead>
+                                <listitem self="@{each='reqparam'}" value="@{reqparam}">
+                                    <listcell>
+                                        <textbox inplace="true" onChange='self.style="font-weight:bold"' value="@{reqparam.vc2paramname}" width="100px"/>
+                                    </listcell>
+                                    <listcell>
+                                        <checkbox checked="@{reqparam.isRequired}" width="50px"/>
+                                    </listcell>
+                                    <listcell>
+                                        <combobox inplace="true" onChange='self.style="font-weight:bold"' mold="rounded" model="@{speceditor$composer.allParamStyle}" selectedItem="@{reqparam.enumParamStyle}" width="100px">
+                                            <comboitem self="@{each='paramstyle'}" label="@{paramstyle.name}"/>
+                                        </combobox>
+                                    </listcell>
+                                    <listcell>
+                                        <combobox inplace="true" onChange='self.style="font-weight:bold"' mold="rounded" model="@{speceditor$composer.allDataTypes}" selectedItem="@{reqparam.enumDataTypes}" width="70px">
+                                            <comboitem self="@{each='datatypes'}" label="@{datatypes.name}"/>
+                                        </combobox>
+                                    </listcell>
+
+                                    <listcell>
+                                        <textbox inplace="true" onChange='self.style="font-weight:bold"' value="@{reqparam.vc2range}" width="150px" />
+                                    </listcell>
+                                    <listcell>
+                                        <textbox inplace="true" onChange='self.style="font-weight:bold"' value="@{reqparam.vc2defaultvalue}" width="100px" />
+                                    </listcell>
+                                    <listcell>
+                                        <textbox inplace="true" onChange='self.style="font-weight:bold"' value="@{reqparam.vc2demovalue}" width="100px" />
+                                    </listcell>
+                                    <listcell>
+                                        <textbox inplace="true" onChange='self.style="font-weight:bold"' value="@{reqparam.vc2desc}" width="250px" />
+                                    </listcell>
+                                </listitem>
+                            </listbox>
+                        </hbox>
+                    </tabpanel>
+                    <tabpanel>
+                        <hbox style="width:100%">
+                            <vbox hflex="1">
+                                <button id="btn_addresponse" label="添加"/>
+                                <button id="btn_delresponse" label="删除"/>
+                            </vbox>
+                            <listbox id="resplist"
+                            multiple="true" checkmark="true" height="450px"
+                                hflex="9" sizedByContent="true" mold="paging" pageSize="10"
+                                pagingPosition="top"
+                            model="@{speceditor$composer.currentSpec.tresponseSet}">
+                                <listhead sizable="true">
+                                    <listheader width="150px" label="名称"  align="center"/>
+                                    <listheader label="必须"  align="center"/>
+                                    <listheader label="数据类型"  align="center"/>
+                                    <listheader label="数据结构"  align="center"/>
+                                    <listheader label="描述"  align="center" />
+                                    <listheader label="示例值"  align="center" />
+                                </listhead>
+                                <listitem self="@{each='df'}" value="@{df}">
+                                    <listcell>
+                                        <textbox inplace="true" onChange='self.style="font-weight:bold;width:100px"' value="@{df.vc2responsename}" style="width:100px"/>
+                                    </listcell>
+                                    <listcell>
+                                        <checkbox checked="@{df.isRequired}"/>
+                                    </listcell>
+                                    <listcell>
+                                        <combobox inplace="true" width="100px" onChange='self.style="font-weight:bold;width:100px"' mold="rounded" model="@{speceditor$composer.allDataTypes}" selectedItem="@{df.enumDataTypes}">
+                                            <comboitem self="@{each='datatypes'}" label="@{datatypes.name}"/>
+                                        </combobox>
+                                    </listcell>
+                                    <listcell>
+                                        <combobox inplace="true" width="100px" onChange='self.style="font-weight:bold;width:100px"' mold="rounded" model="@{speceditor$composer.allAvailDataStructs}" selectedItem="@{df.numdatastructid}">
+                                            <comboitem self="@{each='datastruct'}" label="@{datastruct.vc2structname}"/>
+                                        </combobox>
+                                    </listcell>
+                                    <listcell>
+                                        <textbox inplace="true" width="200px" onChange='self.style="font-weight:bold;width:200px"' value="@{df.vc2desc}"/>
+                                    </listcell>
+                                    <listcell>
+                                        <textbox inplace="true" width="100px" onChange='self.style="font-weight:bold;width:100px"' value="@{df.vc2demovalue}"/>
+                                    </listcell>
+                                </listitem>
+                            </listbox>
+                        </hbox>
+                    </tabpanel>
+                    <tabpanel>
+                        <hbox style="width:100%">
+                            <vbox hflex="1">
+                                <button id="btn_adderr" label="添加"/>
+                                <button id="btn_delerr" label="删除"/>
+                            </vbox>
+                            <listbox id="errgrid" multiple="true" checkmark="true" height="450px"
+                                hflex="9" sizedByContent="true" mold="paging" pageSize="10"
+                                pagingPosition="top"
+                                model="@{speceditor$composer.currentSpec.terrorcodeSet}">
+                                <listhead sizable="true">
+                                    <listheader width="150px" label="错误码"/>
+                                    <listheader label="HTTP状态码"/>
+                                    <listheader label="错误信息"/>
+                                    <listheader label="描述"/>
+                                </listhead>
+                                <listitem self="@{each='errcode'}" value="@{errcode}">
+                                    <listcell>
+                                        <textbox inplace="true" onChange='self.style="font-weight:bold"' value="@{errcode.vc2errorcode}" width="100px" />
+                                    </listcell>
+                                    <listcell>
+                                        <textbox inplace="true" onChange='self.style="font-weight:bold"' value="@{errcode.vc2httpcode}" width="100px" />
+                                    </listcell>
+                                    <listcell>
+                                        <textbox inplace="true" onChange='self.style="font-weight:bold"' value="@{errcode.vc2errmsg}" width="250px" />
+                                    </listcell>
+                                    <listcell>
+                                        <textbox inplace="true" onChange='self.style="font-weight:bold"' value="@{errcode.vc2desc}" width="250px" />
+                                    </listcell>
+                                </listitem>
+                            </listbox>
+                        </hbox>
+                    </tabpanel>
+                    <tabpanel>
+                        <vbox>
+                            谁在依赖我：
+                            <listbox id="list_dependsOnMe" width="500px" rows="10"
+                            model="@{speceditor$composer.currentSpec.tspecSetOnMe}"
+                            vflex="true">
+                                <auxhead>
+                                    <auxheader label="Spec列表" colspan="3"/>
+                                </auxhead>
+                                <listhead sizable="true">
+                                    <listheader width="100px">编号</listheader>
+                                    <listheader width="300px">路径</listheader>
+                                    <listheader width="100px">HTTP方法</listheader>
+                                </listhead>
+                                <listitem self="@{each='dpom'}" value="@{dpom}" context="ctm_dpom">
+                                    <listcell label="@{dpom.numspecid}"/>
+                                    <listcell label="@{dpom,converter='com.weibo.api.toolbox.page.spec.ResourceNameConvertor'}"/>
+                                    <listcell label="@{dpom,converter='com.weibo.api.toolbox.page.spec.HttpMethodNameConverter'}"/>
+                                </listitem>
+                                <listfoot>
+                                    <listfooter span="3">
+                                        <intbox id="int_dependsOnMe" width="100px" constraint="no negative"/>
+                                        <button id="btn_dependsOnMe" image="/img/smallicons/action_add.gif" label="添加"/>
+                                    </listfooter>
+                                </listfoot>
+                            </listbox>
+                            <separator bar="true"/>
+                            我依赖于谁：
+                            <listbox id="list_dependsOnWho" width="500px"
+                            model="@{speceditor$composer.currentSpec.tspecSetOnWho}"
+                            rows="10" vflex="true">
+                                <auxhead>
+                                    <auxheader label="Spec列表" colspan="3"/>
+                                </auxhead>
+                                <listhead sizable="true">
+                                    <listheader width="100px">编号</listheader>
+                                    <listheader width="300px">路径</listheader>
+                                    <listheader width="100px">HTTP方法</listheader>
+                                </listhead>
+                                <listitem self="@{each='dpow'}" value="@{dpow}" context="ctm_dpow">
+                                    <listcell label="@{dpow.numspecid}"/>
+                                    <listcell label="@{dpow,converter='com.weibo.api.toolbox.page.spec.ResourceNameConvertor'}"/>
+                                    <listcell label="@{dpow,converter='com.weibo.api.toolbox.page.spec.HttpMethodNameConverter'}"/>
+                                </listitem>
+                                <listfoot>
+                                    <listfooter span="3">
+                                        <intbox id="int_dependsOnWho" width="100px" constraint="no negative"/>
+                                        <button id="btn_dependsOnWho" image="/img/smallicons/action_add.gif" label="添加"/>
+                                    </listfooter>
+                                </listfoot>
+                            </listbox>
+                        </vbox>
+                        <menupopup id="ctm_dpom">
+                            <menuitem id="menu_rm_dpom" label="解除依赖" image="/img/smallicons/action_delete.gif"></menuitem>
+                        </menupopup>
+                        <menupopup id="ctm_dpow">
+                            <menuitem id="menu_rm_dpow" label="解除依赖" image="/img/smallicons/action_delete.gif"></menuitem>
+                        </menupopup>
+                    </tabpanel>
+                </tabpanels>
+            </tabbox>
+            <hbox>
+                <button id="btn_save" label="保存"/>
+                <button id="btn_cancel" label="取消"/>
+            </hbox>
+        </vbox>
+    </window>
+</zk>
