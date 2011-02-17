@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:c="client">
+    <menupopup id="specCatePopup">
+        <menuitem id="ctxm_newSysParam" label="新建系统参数" image="/img/smallicons/action_add.gif"/>
+    </menupopup>
+    <menupopup id="paramListPopup">
+        <menuitem id="ctxm_delSysParam" label="删除系统参数" image="/img/smallicons/action_delete.gif"/>
+    </menupopup>
+    <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./sysparammanage" ?>
+    <borderlayout id="sysparammanage"  apply="com.weibo.api.toolbox.page.spec.SysParamManageComposer">
+        <center flex="true" border="none" zindex="4">
+            <hbox>
+                <tree id="catetree" width="250px" height="300px" pagingPosition="both" autopaging="true" mold="paging" vflex="true" zindex="5">
+                    <treecols>
+                        <treecol label="分类" />
+                    </treecols>
+                </tree>
+
+                <listbox id="sysParamList" width="750px" height="300px" model="@{sysparammanage$composer.sysParamByCate,load-when='catetree.onSelect'}"
+                pagingPosition="both" autopaging="true" mold="paging" vflex="true" zindex="5">
+                    <auxhead>
+                        <auxheader label="系统参数列表" colspan="5"/>
+                    </auxhead>
+                    <listhead sizable="true">
+                        <listheader label="参数名"/>
+                        <listheader label="必选"/>
+                        <listheader label="参数风格"/>
+                        <listheader label="数据类型"/>
+                        <listheader label="范围"/>
+                    </listhead>
+                    <listitem self="@{each='sysparam'}" value="@{sysparam}" tooltiptext="@{sysparam.vc2desc}" draggable="true" context="paramListPopup">
+                        <listcell label="@{sysparam.vc2paramname}"/>
+                        <listcell label="@{sysparam.isRequired}"/>
+                        <listcell label="@{sysparam.enumParamStyle.name}"/>
+                        <listcell label="@{sysparam.enumDataTypes.name}"/>
+                        <listcell label="@{sysparam.vc2range}"/>
+                    </listitem>
+                    <listfoot>
+                        <listfooter span="5">
+                            
+                        </listfooter>
+                    </listfoot>
+                </listbox>
+            </hbox>
+        </center>
+        <south size="200px" flex="true" title="编辑" border="none" zindex="2">
+            <grid width="800px">
+                <columns>
+                    <column width="70px" label="属性"/>
+                    <column width="130px" label="值"/>
+                    <column width="70px" label="属性"/>
+                    <column width="130px" label="值"/>
+                    <column width="70px" label="属性"/>
+                    <column width="130px" label="值"/>
+                    <column width="70px" label="属性"/>
+                    <column width="130px" label="值"/>
+                </columns>
+                <rows>
+                    <row>
+                        参数名：
+                        <textbox value="@{sysparammanage$composer.currSysParam.vc2paramname,load-after='sysParamList.onSelect'}" constraint="no empty" width="100px"/>
+                        必选：
+                        <checkbox checked="@{sysparammanage$composer.currSysParam.isRequired,load-after='sysParamList.onSelect'}" width="50px"/>
+                        参数风格：
+                        <combobox mold="rounded" model="@{sysparammanage$composer.allParamStyle}" selectedItem="@{sysparammanage$composer.currSysParam.enumParamStyle,load-after='sysParamList.onSelect'}" width="100px">
+                            <comboitem self="@{each='paramstyle'}" label="@{paramstyle.name}"/>
+                        </combobox>
+                        数据类型：
+                        <combobox mold="rounded" model="@{sysparammanage$composer.allDataTypes}" selectedItem="@{sysparammanage$composer.currSysParam.enumDataTypes,load-after='sysParamList.onSelect'}" width="100px">
+                            <comboitem self="@{each='datatypes'}" label="@{datatypes.name}"/>
+                        </combobox>
+                    </row>
+                    <row>
+                        范围：
+                        <textbox value="@{sysparammanage$composer.currSysParam.vc2range,load-after='sysParamList.onSelect'}" width="100px" />
+                        默认值：
+                        <textbox value="@{sysparammanage$composer.currSysParam.vc2defaultvalue,load-after='sysParamList.onSelect'}"  width="100px"/>
+                        示例值：
+                        <textbox value="@{sysparammanage$composer.currSysParam.vc2demovalue,load-after='sysParamList.onSelect'}" width="100px"/>
+                    </row>
+                    <row spans="1,6,1">
+                        描述：
+                        <textbox rows="3" value="@{sysparammanage$composer.currSysParam.vc2desc,load-after='sysParamList.onSelect'}" constraint="no empty" width="560px"/>
+                        <button id="btn_save" label="保存"/>
+                    </row>
+                </rows>
+            </grid>
+        </south>
+    </borderlayout>
+</zk>

@@ -1,0 +1,171 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.weibo.api.toolbox.service.spec;
+
+import com.weibo.api.toolbox.persist.IJpaDaoService;
+import com.weibo.api.toolbox.persist.entity.Baseurl;
+import com.weibo.api.toolbox.persist.entity.Tdatastruct;
+import com.weibo.api.toolbox.persist.entity.Tspec;
+import com.weibo.api.toolbox.persist.entity.Tspeccategory;
+import com.weibo.api.toolbox.persist.entity.Tstructfield;
+import com.weibo.api.toolbox.persist.qlgenerator.JPQLGenerator;
+import com.weibo.api.toolbox.persist.qlgenerator.QLGenerator;
+import com.weibo.api.toolbox.util.ToolBoxUtil;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+/**
+ *
+ * @author x-spirit
+ */
+@Service("specProvider")
+public class SpecProviderImpl implements SpecProvider {
+
+    @Resource
+    IJpaDaoService jpaDaoService;
+
+    public List<Tspec> getSpecListByCategory(Tspeccategory cate, Integer specid, String version) {
+        QLGenerator qlgen = new JPQLGenerator();
+        List rstlst = null;
+        qlgen.select("s").from("Tspec s");
+        Map<String, Object> param = new HashMap<String, Object>();
+        if (cate != null) {
+            param.put("numcateid", cate);
+            qlgen.where(null, "s.numcateid = :numcateid");
+
+            if (specid != null) {
+                param.put("numspecid", specid);
+                qlgen.where(null, "s.numspecid = :numspecid");
+            }
+            if (ToolBoxUtil.isNotEmpty(version)) {
+                param.put("vc2version", '%' + version + '%');
+                qlgen.where(null, "s.vc2version LIKE :vc2version");
+            }
+            qlgen.orderBy("s.numcateindex", "ASC");
+            rstlst = jpaDaoService.findEntities(qlgen.toString(), param, true, -1, -1);
+        }
+        return rstlst;
+
+    }
+
+    public List<Baseurl> getBaseurls() {
+        return jpaDaoService.findByNamedQueryAndNamedParams("Baseurl.findAll", null);
+    }
+
+    public int getMaxcateIndex(Tspeccategory cate) {
+        String ql1 = "SELECT count(t.numcateindex) FROM Tspec t WHERE t.numcateid = :numcateid";
+        Map param = new HashMap();
+        param.put("numcateid", cate);
+        int count = jpaDaoService.getEntityCount(ql1, param).intValue();
+        return count;
+    }
+
+    public void saveTspec(Tspec spec) {
+        if (spec.getNumspecid() == null) {
+            jpaDaoService.create(spec);
+        } else {
+            jpaDaoService.edit(spec);
+        }
+    }
+
+    public void delReqParamById(String[] paramid) {
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.delete().from("Trequestparam p").where(null, qlgen.getIn_clause("p.numparamid", paramid));
+        jpaDaoService.executeUpdate(qlgen.toString(), null);
+    }
+
+    public void delErrorDefById(String[] errorid) {
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.delete().from("Terrorcode e").where(null, qlgen.getIn_clause("e.numerrorid", errorid));
+        jpaDaoService.executeUpdate(qlgen.toString(), null);
+    }
+
+    public List<Tdatastruct> getAllDataStruct(String structname, String version, boolean all, int startPos, int maxCount) {
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.select("t").from("Tdatastruct t");
+        qlgen.where(null, "t.numenable = 1");
+        Map param = new HashMap();
+        if (ToolBoxUtil.isNotEmpty(structname)) {
+            qlgen.where(null, "t.vc2structname LIKE :vc2structname");
+            param.put("vc2structname", '%' + structname + '%');
+        }
+        if (ToolBoxUtil.isNotEmpty(version)) {
+            qlgen.where(null, "t.vc2version LIKE :vc2version");
+            param.put("vc2version", '%' + version + '%');
+        }
+        return jpaDaoService.findEntities(qlgen.toString(), param, all, startPos, maxCount);
+    }
+
+    public int getAllDataStructCount(String structname, String version) {
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.select("count(t)").from("Tdatastruct t");
+        qlgen.where(null, "t.numenable = 1");
+        Map param = new HashMap();
+        if (ToolBoxUtil.isNotEmpty(structname)) {
+            qlgen.where(null, "t.vc2structname LIKE :vc2structname");
+            param.put("vc2structname", '%' + structname + '%');
+        }
+        if (ToolBoxUtil.isNotEmpty(version)) {
+            qlgen.where(null, "t.vc2version LIKE :vc2version");
+            param.put("vc2version", '%' + version + '%');
+        }
+        return jpaDaoService.getEntityCount(qlgen.toString(), param).intValue();
+    }
+
+    public void saveDataStruct(Tdatastruct struct) {
+        if (struct.getNumdatastructid() == null) {
+            jpaDaoService.create(struct);
+        } else {
+            jpaDaoService.edit(struct);
+        }
+    }
+
+    public void saveStructField(Tstructfield field) {
+        if (field.getNumfieldid() == null) {
+            jpaDaoService.create(field);
+        } else {
+            jpaDaoService.edit(field);
+        }
+    }
+
+    public void delStructFieldById(String[] numfieldid) {
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.delete().from("Tstructfield f").where(null, qlgen.getIn_clause("f.numfieldid", numfieldid));
+        jpaDaoService.executeUpdate(qlgen.toString(), null);
+    }
+
+    public void delResponseById(String[] respids) {
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.delete().from("Tresponse r").where(null, qlgen.getIn_clause("r.numresponseid", respids));
+        jpaDaoService.executeUpdate(qlgen.toString(), null);
+    }
+
+    public void updateSpecIndex(Tspec spec, int oldindex, int newindex) {
+        String ql = null;
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.update(spec.getClass().getName() + " t").where(null, "t.numcateid = :numcateid").where(null, "t.numenable = 1");
+        if (oldindex > newindex) {
+            qlgen.set("t.numcateindex = t.numcateindex+1");
+            qlgen.where(null, "t.numcateindex >= :newindex");
+            qlgen.where(null, "t.numcateindex <= :oldindex");
+            ql = qlgen.toString();
+        } else if (oldindex < newindex) {
+            qlgen.set("t.numcateindex = t.numcateindex-1");
+            qlgen.where(null, "t.numcateindex <= :newindex");
+            qlgen.where(null, "t.numcateindex >= :oldindex");
+            ql = qlgen.toString();
+        }
+        Map params = new HashMap();
+        params.put("newindex", newindex);
+        params.put("oldindex", oldindex);
+        params.put("numcateid", spec.getNumcateid());
+        if (ql != null) {
+            jpaDaoService.executeUpdate(ql, params);
+        }
+    }
+}

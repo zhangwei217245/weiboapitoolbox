@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page id="mainFrame" title="WeiboApiToolBox"?>
+<?link rel="stylesheet" type="text/css" href="/macros/userguide.css.dsp?v=${desktop.webApp.build}"?>
+<?script type="text/javascript" src="/macros/zkdemo.js.dsp?v=${desktop.webApp.build}"?>
+<?script type="text/javascript" content="jq.IE6_ALPHAFIX=/24x24.png|32x32.png|48x48.png|128x128.png|ButtonBlue.png|ButtonGray.png|small.png|small-sel.png|normal.png|normal-sel.png|large.png|large-sel.png/;"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <zscript><![CDATA[
+	boolean isBreeze = com.weibo.api.toolbox.common.Themes.isBreeze(execution) &&
+		com.weibo.api.toolbox.common.Themes.hasBreezeLib();
+	boolean isSilvergray = com.weibo.api.toolbox.common.Themes.isSilvergray(execution) &&
+		com.weibo.api.toolbox.common.Themes.hasSilvergrayLib();
+	String themeSClass = isBreeze? "breeze" : isSilvergray? "silvergray" : "blue";
+]]>
+    </zscript>
+    <borderlayout id="main" sclass="${themeSClass}" apply="com.weibo.api.toolbox.page.mainframe.MainLayoutComposer">
+        <north border="none" size="100px" sclass="demo-header" collapsible="true">
+            <div>
+                <div sclass="demo-logo pointer" onClick='Executions.sendRedirect("http://open.t.sina.com.cn")'>
+                    <image width="90px" height="80px" src="/img/weibo.png"/>
+                </div>
+                <div sclass="demo-categorybar" id="header">
+                    <button sclass="demo-category" forEach="${main$MainLayoutComposer.categories}" id="${each.id}"  label="${each.label}"
+			forward="onClick=main.onCategorySelect"/>
+                    <div style="float:right">
+                        更换主题
+                        <combobox mold="rounded" use="com.weibo.api.toolbox.common.ThemeSelector"></combobox>
+                        <hbox>
+                            <image sclass="pointer" src="/img/Centigrade-Widget-Icons/small.png" use="com.weibo.api.toolbox.common.ThemeImage"/>
+                            <image sclass="pointer" src="/img/Centigrade-Widget-Icons/normal.png" use="com.weibo.api.toolbox.common.ThemeImage"/>
+                            <image sclass="pointer" src="/img/Centigrade-Widget-Icons/large.png" use="com.weibo.api.toolbox.common.ThemeImage"/>
+                        </hbox>
+                        当前用户：
+                        <label id="lb_username"/>
+                        <button label="退出" id="btn_logout"/>
+                    </div>
+                </div>
+                
+            </div>
+        </north>
+        <west title="Weibo API ToolBox" size="210px" flex="true" splittable="true"
+		minsize="210" maxsize="500" collapsible="true">
+            <panel>
+                <toolbar>
+                    <label value="Search:"/>
+                    <textbox id="searchBox" ctrlKeys="#down#up" focus="true" sclass="demo-search-inp"/>
+                </toolbar>
+                <panelchildren>
+                    <listbox id="itemList" oddRowSclass="non-odd" sclass="demo-items"
+					itemRenderer="${main$MainLayoutComposer.itemRenderer}" model="${main$MainLayoutComposer.selectedModel}" fixedLayout="true" vflex="true">
+                        <custom-attributes org.zkoss.zul.listbox.rod="false"/>
+                    </listbox>
+                </panelchildren>
+            </panel>
+        </west>
+        <center autoscroll="true" flex="true">
+            <include style="padding:3px;" id="xcontents" />
+        </center>
+    </borderlayout>
+</zk>
