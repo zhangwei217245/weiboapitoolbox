@@ -408,10 +408,10 @@ public class SpecEditorComposer extends GenericForwardComposer {
     }
 
     public List<DataTypes> getAllPrimitiveTypes() {
-        List<DataTypes> dtlst = Arrays.asList(DataTypes.values());
-        for (DataTypes type:dtlst){
-            if (type.isStruct()){
-                dtlst.remove(type);
+        List<DataTypes> dtlst = new ArrayList<DataTypes>();
+        for (DataTypes type:DataTypes.values()){
+            if (type.isPrimitive()){
+                dtlst.add(type);
             }
         }
         Collections.sort(dtlst, new Comparator<DataTypes>() {
