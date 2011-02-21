@@ -160,6 +160,7 @@
                                     <listheader label="必选"/>
                                     <listheader label="参数风格"/>
                                     <listheader label="数据类型"/>
+                                    <listheader label="枚举"/>
                                     <listheader label="范围"/>
                                     <listheader label="默认值"/>
                                     <listheader label="示例值"/>
@@ -183,7 +184,7 @@
                                         </combobox>
                                     </listcell>
                                     <listcell>
-                                        <combobox inplace="true" onChange='self.style="font-weight:bold"' mold="rounded" model="@{speceditor$composer.allEnumGroups}" selectedItem="@{reqparam.numenumgroupid}" width="70px">
+                                        <combobox inplace="true" onChange='self.style="font-weight:bold"' mold="rounded" model="@{speceditor$composer.allEnableEnumGroups}" selectedItem="@{reqparam.numenumgroupid}" width="100px">
                                             <comboitem self="@{each='enumgroups'}" label="@{enumgroups.vc2enumgroupname}" tooltiptext="@{enumgroups.vc2enumgroupdesc}"/>
                                         </combobox>
                                     </listcell>

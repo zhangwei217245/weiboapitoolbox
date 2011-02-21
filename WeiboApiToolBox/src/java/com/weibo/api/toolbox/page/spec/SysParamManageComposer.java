@@ -4,8 +4,10 @@ import com.weibo.api.toolbox.common.enumerations.DataTypes;
 import com.weibo.api.toolbox.common.enumerations.ParamStyle;
 import com.weibo.api.toolbox.persist.IJpaDaoService;
 import com.weibo.api.toolbox.persist.entity.Sysparam;
+import com.weibo.api.toolbox.persist.entity.Tenumgroup;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.service.spec.CategoryProvider;
+import com.weibo.api.toolbox.service.spec.SpecProvider;
 import com.weibo.api.toolbox.service.spec.SysDataProvider;
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,6 +40,7 @@ public class SysParamManageComposer extends GenericForwardComposer{
 
     IJpaDaoService daoService = (IJpaDaoService) SpringUtil.getBean("jpaDaoService");
     SysDataProvider sdprovider = (SysDataProvider)SpringUtil.getBean("sysDataProvider");
+    SpecProvider sp = (SpecProvider) SpringUtil.getBean("specProvider");
     CategoryProvider cp = (CategoryProvider) SpringUtil.getBean("categoryProvider");
 
     private Tree catetree;
@@ -160,6 +163,10 @@ public class SysParamManageComposer extends GenericForwardComposer{
             }
         });
         return dtlst;
+    }
+
+    public List<Tenumgroup> getAllEnableEnumGroups(){
+        return sp.getAllEnableEnumGroups();
     }
 
     public Sysparam getCurrSysParam() {

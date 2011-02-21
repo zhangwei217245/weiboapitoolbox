@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,7 +30,8 @@ import javax.persistence.Table;
     @NamedQuery(name = "Tenumgroup.findAll", query = "SELECT t FROM Tenumgroup t"),
     @NamedQuery(name = "Tenumgroup.findByNumenumgroupid", query = "SELECT t FROM Tenumgroup t WHERE t.numenumgroupid = :numenumgroupid"),
     @NamedQuery(name = "Tenumgroup.findByVc2enumgroupname", query = "SELECT t FROM Tenumgroup t WHERE t.vc2enumgroupname = :vc2enumgroupname"),
-    @NamedQuery(name = "Tenumgroup.findByVc2enumgroupdesc", query = "SELECT t FROM Tenumgroup t WHERE t.vc2enumgroupdesc = :vc2enumgroupdesc")})
+    @NamedQuery(name = "Tenumgroup.findByVc2enumgroupdesc", query = "SELECT t FROM Tenumgroup t WHERE t.vc2enumgroupdesc = :vc2enumgroupdesc"),
+    @NamedQuery(name = "Tenumgroup.findByNumenable", query = "SELECT t FROM Tenumgroup t WHERE t.numenable = :numenable")})
 public class Tenumgroup implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,11 +44,14 @@ public class Tenumgroup implements Serializable {
     private String vc2enumgroupname;
     @Column(name = "vc2enumgroupdesc", length = 1000)
     private String vc2enumgroupdesc;
+    @Basic(optional = false)
+    @Column(name = "numenable", nullable = false)
+    private int numenable;
     @OneToMany(mappedBy = "numenumgroupid")
     private Set<Trequestparam> trequestparamSet;
     @OneToMany(mappedBy = "numenumgroupid")
     private Set<Sysparam> sysparamSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "numenumgroupid")
+    @OneToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER, mappedBy = "numenumgroupid")
     private Set<Tenumvalues> tenumvaluesSet;
     @OneToMany(mappedBy = "numenumgroupid")
     private Set<Tstructfield> tstructfieldSet;
@@ -58,9 +63,10 @@ public class Tenumgroup implements Serializable {
         this.numenumgroupid = numenumgroupid;
     }
 
-    public Tenumgroup(Integer numenumgroupid, String vc2enumgroupname) {
+    public Tenumgroup(Integer numenumgroupid, String vc2enumgroupname, int numenable) {
         this.numenumgroupid = numenumgroupid;
         this.vc2enumgroupname = vc2enumgroupname;
+        this.numenable = numenable;
     }
 
     public Integer getNumenumgroupid() {
@@ -85,6 +91,14 @@ public class Tenumgroup implements Serializable {
 
     public void setVc2enumgroupdesc(String vc2enumgroupdesc) {
         this.vc2enumgroupdesc = vc2enumgroupdesc;
+    }
+
+    public int getNumenable() {
+        return numenable;
+    }
+
+    public void setNumenable(int numenable) {
+        this.numenable = numenable;
     }
 
     public Set<Trequestparam> getTrequestparamSet() {

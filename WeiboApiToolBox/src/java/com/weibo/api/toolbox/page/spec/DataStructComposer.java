@@ -2,6 +2,7 @@ package com.weibo.api.toolbox.page.spec;
 
 import com.weibo.api.toolbox.common.enumerations.DataTypes;
 import com.weibo.api.toolbox.persist.entity.Tdatastruct;
+import com.weibo.api.toolbox.persist.entity.Tenumgroup;
 import com.weibo.api.toolbox.persist.entity.Tstructfield;
 import com.weibo.api.toolbox.service.spec.CategoryProvider;
 import com.weibo.api.toolbox.service.spec.SpecProvider;
@@ -166,6 +167,10 @@ public class DataStructComposer extends GenericForwardComposer {
             }
         });
         return dtlst;
+    }
+
+    public List<Tenumgroup> getAllEnableEnumGroups(){
+        return sp.getAllEnableEnumGroups();
     }
 
     public Tdatastruct getCurrentDataStruct() {
