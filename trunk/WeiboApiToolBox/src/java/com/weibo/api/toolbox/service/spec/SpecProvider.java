@@ -7,6 +7,7 @@ package com.weibo.api.toolbox.service.spec;
 
 import com.weibo.api.toolbox.persist.entity.Baseurl;
 import com.weibo.api.toolbox.persist.entity.Tdatastruct;
+import com.weibo.api.toolbox.persist.entity.Tenumgroup;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.persist.entity.Tstructfield;
@@ -31,4 +32,7 @@ public interface SpecProvider {
     void delStructFieldById(String[] numfieldid);
     void delResponseById(String[] respids);
     void updateSpecIndex(Tspec spec, int oldindex, int newindex);
+    List<Tenumgroup> getAllEnableEnumGroups();
+    List<Tenumgroup> getAllEnumGroups();
+    void saveEnumgroup(Tenumgroup enumgroup);
 }

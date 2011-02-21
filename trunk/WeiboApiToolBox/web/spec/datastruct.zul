@@ -78,6 +78,7 @@
                     <listheader label="私有" align="center"/>
                     <listheader label="数据类型" align="center"/>
                     <listheader label="数据结构" align="center"/>
+                    <listheader label="枚举" align="center"/>
                     <listheader label="描述" align="center" />
                     <listheader label="示例值" align="center" />
                 </listhead>
@@ -99,6 +100,11 @@
                     <listcell>
                         <combobox inplace="true" width="100px" onChange='self.style="font-weight:bold"' mold="rounded" model="@{datastructlayout$composer.allAvailDataStructs}" selectedItem="@{df.numdatastructid}">
                             <comboitem self="@{each='datastruct'}" label="@{datastruct.vc2structname}"/>
+                        </combobox>
+                    </listcell>
+                    <listcell>
+                        <combobox inplace="true" width="100px" onChange='self.style="font-weight:bold"' mold="rounded" model="@{datastructlayout$composer.allEnableEnumGroups}" selectedItem="@{df.numenumgroupid}">
+                            <comboitem self="@{each='enumgroup'}" label="@{enumgroup.vc2enumgroupname}" tooltiptext="@{enumgroups.vc2enumgroupdesc}"/>
                         </combobox>
                     </listcell>
                     <listcell>

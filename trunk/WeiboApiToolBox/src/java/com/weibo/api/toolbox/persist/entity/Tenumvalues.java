@@ -28,7 +28,8 @@ import javax.persistence.Table;
     @NamedQuery(name = "Tenumvalues.findAll", query = "SELECT t FROM Tenumvalues t"),
     @NamedQuery(name = "Tenumvalues.findByNumenumvalueid", query = "SELECT t FROM Tenumvalues t WHERE t.numenumvalueid = :numenumvalueid"),
     @NamedQuery(name = "Tenumvalues.findByVc2enumvalue", query = "SELECT t FROM Tenumvalues t WHERE t.vc2enumvalue = :vc2enumvalue"),
-    @NamedQuery(name = "Tenumvalues.findByVc2enumdesc", query = "SELECT t FROM Tenumvalues t WHERE t.vc2enumdesc = :vc2enumdesc")})
+    @NamedQuery(name = "Tenumvalues.findByVc2enumdesc", query = "SELECT t FROM Tenumvalues t WHERE t.vc2enumdesc = :vc2enumdesc"),
+    @NamedQuery(name = "Tenumvalues.findByNumenable", query = "SELECT t FROM Tenumvalues t WHERE t.numenable = :numenable")})
 public class Tenumvalues implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,6 +43,9 @@ public class Tenumvalues implements Serializable {
     @Basic(optional = false)
     @Column(name = "vc2enumdesc", nullable = false, length = 2000)
     private String vc2enumdesc;
+    @Basic(optional = false)
+    @Column(name = "numenable", nullable = false)
+    private int numenable;
     @JoinColumn(name = "numenumgroupid", referencedColumnName = "numenumgroupid", nullable = false)
     @ManyToOne(optional = false)
     private Tenumgroup numenumgroupid;
@@ -53,10 +57,11 @@ public class Tenumvalues implements Serializable {
         this.numenumvalueid = numenumvalueid;
     }
 
-    public Tenumvalues(Integer numenumvalueid, String vc2enumvalue, String vc2enumdesc) {
+    public Tenumvalues(Integer numenumvalueid, String vc2enumvalue, String vc2enumdesc, int numenable) {
         this.numenumvalueid = numenumvalueid;
         this.vc2enumvalue = vc2enumvalue;
         this.vc2enumdesc = vc2enumdesc;
+        this.numenable = numenable;
     }
 
     public Integer getNumenumvalueid() {
@@ -81,6 +86,14 @@ public class Tenumvalues implements Serializable {
 
     public void setVc2enumdesc(String vc2enumdesc) {
         this.vc2enumdesc = vc2enumdesc;
+    }
+
+    public int getNumenable() {
+        return numenable;
+    }
+
+    public void setNumenable(int numenable) {
+        this.numenable = numenable;
     }
 
     public Tenumgroup getNumenumgroupid() {

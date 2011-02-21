@@ -78,6 +78,10 @@
                         <textbox value="@{sysparammanage$composer.currSysParam.vc2defaultvalue,load-after='sysParamList.onSelect'}"  width="100px"/>
                         示例值：
                         <textbox value="@{sysparammanage$composer.currSysParam.vc2demovalue,load-after='sysParamList.onSelect'}" width="100px"/>
+                        枚举：
+                        <combobox inplace="true" onChange='self.style="font-weight:bold"' mold="rounded" model="@{sysparammanage$composer.allEnableEnumGroups}" selectedItem="@{currSysParam.numenumgroupid}" width="70px">
+                            <comboitem self="@{each='enumgroups'}" label="@{enumgroups.vc2enumgroupname}" tooltiptext="@{enumgroups.vc2enumgroupdesc}"/>
+                        </combobox>
                     </row>
                     <row spans="1,6,1">
                         描述：

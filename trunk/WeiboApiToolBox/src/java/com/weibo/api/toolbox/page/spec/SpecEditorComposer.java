@@ -14,6 +14,7 @@ import com.weibo.api.toolbox.common.enumerations.RateLimit;
 import com.weibo.api.toolbox.persist.IJpaDaoService;
 import com.weibo.api.toolbox.persist.entity.Baseurl;
 import com.weibo.api.toolbox.persist.entity.Tdatastruct;
+import com.weibo.api.toolbox.persist.entity.Tenumgroup;
 import com.weibo.api.toolbox.persist.entity.Terrorcode;
 import com.weibo.api.toolbox.persist.entity.Trequestparam;
 import com.weibo.api.toolbox.persist.entity.Tresponse;
@@ -431,6 +432,10 @@ public class SpecEditorComposer extends GenericForwardComposer {
             }
         });
         return pslst;
+    }
+
+    public List<Tenumgroup> getAllEnableEnumGroups(){
+        return sp.getAllEnableEnumGroups();
     }
 
     public List<Tspeccategory> getAllSubCategory() {

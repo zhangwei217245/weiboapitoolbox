@@ -7,6 +7,7 @@ package com.weibo.api.toolbox.service.spec;
 import com.weibo.api.toolbox.persist.IJpaDaoService;
 import com.weibo.api.toolbox.persist.entity.Baseurl;
 import com.weibo.api.toolbox.persist.entity.Tdatastruct;
+import com.weibo.api.toolbox.persist.entity.Tenumgroup;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.persist.entity.Tstructfield;
@@ -28,6 +29,27 @@ public class SpecProviderImpl implements SpecProvider {
 
     @Resource
     IJpaDaoService jpaDaoService;
+
+    public List<Tenumgroup> getAllEnableEnumGroups(){
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.select("t").from("Tenumgroup t");
+        qlgen.where(null, "t.numenable = 1");
+        return jpaDaoService.findEntities(qlgen.toString(), null, true, -1, -1);
+    }
+    
+    public List<Tenumgroup> getAllEnumGroups(){
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.select("t").from("Tenumgroup t");
+        return jpaDaoService.findEntities(qlgen.toString(), null, true, -1, -1);
+    }
+
+    public void saveEnumgroup(Tenumgroup enumgroup){
+        if (enumgroup.getNumenumgroupid()==null){
+            jpaDaoService.create(enumgroup);
+        } else {
+            jpaDaoService.edit(enumgroup);
+        }
+    }
 
     public List<Tspec> getSpecListByCategory(Tspeccategory cate, Integer specid, String version) {
         QLGenerator qlgen = new JPQLGenerator();
