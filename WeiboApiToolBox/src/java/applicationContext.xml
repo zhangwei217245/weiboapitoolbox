@@ -30,5 +30,11 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
     <bean id="jpqlGenerator" scope="prototype" class="com.weibo.api.toolbox.persist.qlgenerator.JPQLGenerator"/>
+    <bean id="baseArgument" class="com.weibo.api.spec.basic.BaseArgument">
+        <property name="docBase" value="/home/x-spirit/apispecdocs"/>
+        <property name="specBase" value="spec"/>
+        <property name="schemaBase" value="schema"/>
+        <property name="wikiBase" value="wiki"/>
+    </bean>
     <tx:annotation-driven transaction-manager="txManager"/>
 </beans>
