@@ -22,17 +22,17 @@ import javax.persistence.UniqueConstraint;
  * @author X-Spirit
  */
 @Entity
-@Table(name = "enumerations", uniqueConstraints = {
+@Table(name = "sysenums", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"vc2enumgroup"})})
 @NamedQueries({
-    @NamedQuery(name = "Enumerations.findAll", query = "SELECT e FROM Enumerations e"),
-    @NamedQuery(name = "Enumerations.findByNumenumid", query = "SELECT e FROM Enumerations e WHERE e.numenumid = :numenumid"),
-    @NamedQuery(name = "Enumerations.findByVc2enumgroup", query = "SELECT e FROM Enumerations e WHERE e.vc2enumgroup = :vc2enumgroup"),
-    @NamedQuery(name = "Enumerations.findByNumenumidx", query = "SELECT e FROM Enumerations e WHERE e.numenumidx = :numenumidx"),
-    @NamedQuery(name = "Enumerations.findByVc2enumvalue", query = "SELECT e FROM Enumerations e WHERE e.vc2enumvalue = :vc2enumvalue"),
-    @NamedQuery(name = "Enumerations.findByVc2enumname", query = "SELECT e FROM Enumerations e WHERE e.vc2enumname = :vc2enumname"),
-    @NamedQuery(name = "Enumerations.findByNumenable", query = "SELECT e FROM Enumerations e WHERE e.numenable = :numenable")})
-public class Enumerations implements Serializable {
+    @NamedQuery(name = "Sysenums.findAll", query = "SELECT e FROM Sysenums e"),
+    @NamedQuery(name = "Sysenums.findByNumenumid", query = "SELECT e FROM Sysenums e WHERE e.numenumid = :numenumid"),
+    @NamedQuery(name = "Sysenums.findByVc2enumgroup", query = "SELECT e FROM Sysenums e WHERE e.vc2enumgroup = :vc2enumgroup"),
+    @NamedQuery(name = "Sysenums.findByNumenumidx", query = "SELECT e FROM Sysenums e WHERE e.numenumidx = :numenumidx"),
+    @NamedQuery(name = "Sysenums.findByVc2enumvalue", query = "SELECT e FROM Sysenums e WHERE e.vc2enumvalue = :vc2enumvalue"),
+    @NamedQuery(name = "Sysenums.findByVc2enumname", query = "SELECT e FROM Sysenums e WHERE e.vc2enumname = :vc2enumname"),
+    @NamedQuery(name = "Sysenums.findByNumenable", query = "SELECT e FROM Sysenums e WHERE e.numenable = :numenable")})
+public class Sysenums implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,14 +55,14 @@ public class Enumerations implements Serializable {
     @Column(name = "numenable", nullable = false)
     private int numenable;
 
-    public Enumerations() {
+    public Sysenums() {
     }
 
-    public Enumerations(Integer numenumid) {
+    public Sysenums(Integer numenumid) {
         this.numenumid = numenumid;
     }
 
-    public Enumerations(Integer numenumid, String vc2enumgroup, int numenumidx, String vc2enumvalue, String vc2enumname, int numenable) {
+    public Sysenums(Integer numenumid, String vc2enumgroup, int numenumidx, String vc2enumvalue, String vc2enumname, int numenable) {
         this.numenumid = numenumid;
         this.vc2enumgroup = vc2enumgroup;
         this.numenumidx = numenumidx;
@@ -129,10 +129,10 @@ public class Enumerations implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Enumerations)) {
+        if (!(object instanceof Sysenums)) {
             return false;
         }
-        Enumerations other = (Enumerations) object;
+        Sysenums other = (Sysenums) object;
         if ((this.numenumid == null && other.numenumid != null) || (this.numenumid != null && !this.numenumid.equals(other.numenumid))) {
             return false;
         }
@@ -141,7 +141,7 @@ public class Enumerations implements Serializable {
 
     @Override
     public String toString() {
-        return "com.weibo.api.toolbox.persist.entity.Enumerations[numenumid=" + numenumid + "]";
+        return "com.weibo.api.toolbox.persist.entity.Sysenums[numenumid=" + numenumid + "]";
     }
 
 }
