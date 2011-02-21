@@ -19,19 +19,19 @@ import javax.persistence.UniqueConstraint;
 
 /**
  *
- * @author X-Spirit
+ * @author x-spirit
  */
 @Entity
 @Table(name = "sysenums", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"vc2enumgroup"})})
 @NamedQueries({
-    @NamedQuery(name = "Sysenums.findAll", query = "SELECT e FROM Sysenums e"),
-    @NamedQuery(name = "Sysenums.findByNumenumid", query = "SELECT e FROM Sysenums e WHERE e.numenumid = :numenumid"),
-    @NamedQuery(name = "Sysenums.findByVc2enumgroup", query = "SELECT e FROM Sysenums e WHERE e.vc2enumgroup = :vc2enumgroup"),
-    @NamedQuery(name = "Sysenums.findByNumenumidx", query = "SELECT e FROM Sysenums e WHERE e.numenumidx = :numenumidx"),
-    @NamedQuery(name = "Sysenums.findByVc2enumvalue", query = "SELECT e FROM Sysenums e WHERE e.vc2enumvalue = :vc2enumvalue"),
-    @NamedQuery(name = "Sysenums.findByVc2enumname", query = "SELECT e FROM Sysenums e WHERE e.vc2enumname = :vc2enumname"),
-    @NamedQuery(name = "Sysenums.findByNumenable", query = "SELECT e FROM Sysenums e WHERE e.numenable = :numenable")})
+    @NamedQuery(name = "Sysenums.findAll", query = "SELECT s FROM Sysenums s"),
+    @NamedQuery(name = "Sysenums.findByNumenumid", query = "SELECT s FROM Sysenums s WHERE s.numenumid = :numenumid"),
+    @NamedQuery(name = "Sysenums.findByVc2enumgroup", query = "SELECT s FROM Sysenums s WHERE s.vc2enumgroup = :vc2enumgroup"),
+    @NamedQuery(name = "Sysenums.findByNumenumidx", query = "SELECT s FROM Sysenums s WHERE s.numenumidx = :numenumidx"),
+    @NamedQuery(name = "Sysenums.findByVc2enumvalue", query = "SELECT s FROM Sysenums s WHERE s.vc2enumvalue = :vc2enumvalue"),
+    @NamedQuery(name = "Sysenums.findByVc2enumname", query = "SELECT s FROM Sysenums s WHERE s.vc2enumname = :vc2enumname"),
+    @NamedQuery(name = "Sysenums.findByNumenable", query = "SELECT s FROM Sysenums s WHERE s.numenable = :numenable")})
 public class Sysenums implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -141,7 +141,7 @@ public class Sysenums implements Serializable {
 
     @Override
     public String toString() {
-        return "com.weibo.api.toolbox.persist.entity.Sysenums[numenumid=" + numenumid + "]";
+        return "org.zkoss.zkdemo.persist.entity.Sysenums[numenumid=" + numenumid + "]";
     }
 
 }

@@ -64,6 +64,9 @@ public class Sysparam implements Serializable {
     @Basic(optional = false)
     @Column(name = "numenable", nullable = false)
     private int numenable;
+    @JoinColumn(name = "numenumgroupid", referencedColumnName = "numenumgroupid")
+    @ManyToOne
+    private Tenumgroup numenumgroupid;
     @JoinColumn(name = "numcateid", referencedColumnName = "numcateid", nullable = false)
     @ManyToOne(optional = false)
     private Tspeccategory numcateid;
@@ -163,6 +166,14 @@ public class Sysparam implements Serializable {
 
     public void setNumenable(int numenable) {
         this.numenable = numenable;
+    }
+
+    public Tenumgroup getNumenumgroupid() {
+        return numenumgroupid;
+    }
+
+    public void setNumenumgroupid(Tenumgroup numenumgroupid) {
+        this.numenumgroupid = numenumgroupid;
     }
 
     public Tspeccategory getNumcateid() {

@@ -406,6 +406,22 @@ public class SpecEditorComposer extends GenericForwardComposer {
         return dtlst;
     }
 
+    public List<DataTypes> getAllPrimitiveTypes() {
+        List<DataTypes> dtlst = Arrays.asList(DataTypes.values());
+        for (DataTypes type:dtlst){
+            if (type.isStruct()){
+                dtlst.remove(type);
+            }
+        }
+        Collections.sort(dtlst, new Comparator<DataTypes>() {
+
+            public int compare(DataTypes o1, DataTypes o2) {
+                return o1.getId() - o2.getId();
+            }
+        });
+        return dtlst;
+    }
+
     public List<ParamStyle> getAllParamStyle() {
         List<ParamStyle> pslst = Arrays.asList(ParamStyle.values());
         Collections.sort(pslst, new Comparator<ParamStyle>() {
