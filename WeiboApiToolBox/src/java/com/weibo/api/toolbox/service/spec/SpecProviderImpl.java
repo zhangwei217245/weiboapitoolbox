@@ -4,10 +4,13 @@
  */
 package com.weibo.api.toolbox.service.spec;
 
+import com.weibo.api.toolbox.common.enumerations.DataTypes;
 import com.weibo.api.toolbox.persist.IJpaDaoService;
 import com.weibo.api.toolbox.persist.entity.Baseurl;
 import com.weibo.api.toolbox.persist.entity.Tdatastruct;
 import com.weibo.api.toolbox.persist.entity.Tenumgroup;
+import com.weibo.api.toolbox.persist.entity.Tenumvalues;
+import com.weibo.api.toolbox.persist.entity.Trequestparam;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.persist.entity.Tstructfield;
@@ -30,6 +33,44 @@ public class SpecProviderImpl implements SpecProvider {
     @Resource
     IJpaDaoService jpaDaoService;
 
+    public List<Tenumvalues> getAllEnumvaluesByGroup(Tenumgroup group){
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.select("v").from("Tenumvalues v");
+        Map param = new HashMap();
+        if (group!=null){
+            qlgen.where(null, "v.numenumgroupid = :numenumgroupid");
+            param.put("numenumgroupid", group);
+            return jpaDaoService.findEntities(qlgen.toString(), param, true, -1, -1);
+        }
+        return null;
+    }
+
+    
+    
+    private String getEnumRange(Tenumgroup group){
+        QLGenerator qlgen = new JPQLGenerator();
+        Map param = new HashMap();
+        qlgen.select("t").from("Tenumvalues t").where(null, "t.numenable = 1");
+        qlgen.where(null, "t.numenumgroupid = :numenumgroupid");
+        param.put("numenumgroupid", group);
+        List<Tenumvalues> enumvaluelist = jpaDaoService.findEntities(qlgen.toString(), param, true, -1, -1);
+        StringBuilder sb = new StringBuilder();
+        for (int i =0;i<enumvaluelist.size();i++){
+            if (i>0){
+                sb.append(",");
+            }
+            sb.append(enumvaluelist.get(i).getVc2enumvalue());
+        }
+        return sb.toString();
+    }
+
+    public void saveEnumValues(Tenumvalues value){
+        if (value.getNumenumvalueid()==null){
+            jpaDaoService.create(value);
+        }else{
+            jpaDaoService.edit(value);
+        }
+    }
     public List<Tenumgroup> getAllEnableEnumGroups(){
         QLGenerator qlgen = new JPQLGenerator();
         qlgen.select("t").from("Tenumgroup t");
@@ -88,11 +129,22 @@ public class SpecProviderImpl implements SpecProvider {
     }
 
     public void saveTspec(Tspec spec) {
+        List<Trequestparam> trequestparamSet = spec.getTrequestparamSet();
+        for (Trequestparam param : trequestparamSet){
+            processParamEnumRange(param);
+        }
         if (spec.getNumspecid() == null) {
             jpaDaoService.create(spec);
         } else {
             jpaDaoService.edit(spec);
         }
+    }
+
+    private void processParamEnumRange(Trequestparam param){
+        if (param.getEnumDataTypes().equals(DataTypes.ENUM)){
+            param.setVc2range(getEnumRange(param.getNumenumgroupid()));
+        }
+        jpaDaoService.edit(param);
     }
 
     public void delReqParamById(String[] paramid) {

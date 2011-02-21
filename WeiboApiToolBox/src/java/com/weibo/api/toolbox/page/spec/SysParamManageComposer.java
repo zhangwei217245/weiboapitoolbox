@@ -9,6 +9,7 @@ import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.service.spec.CategoryProvider;
 import com.weibo.api.toolbox.service.spec.SpecProvider;
 import com.weibo.api.toolbox.service.spec.SysDataProvider;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -156,6 +157,22 @@ public class SysParamManageComposer extends GenericForwardComposer{
 
     public List<DataTypes> getAllDataTypes() {
         List<DataTypes> dtlst = Arrays.asList(DataTypes.values());
+        Collections.sort(dtlst, new Comparator<DataTypes>() {
+
+            public int compare(DataTypes o1, DataTypes o2) {
+                return o1.getId() - o2.getId();
+            }
+        });
+        return dtlst;
+    }
+
+    public List<DataTypes> getAllPrimitiveTypes() {
+        List<DataTypes> dtlst = new ArrayList<DataTypes>();
+        for (DataTypes type:DataTypes.values()){
+            if (type.isPrimitive()){
+                dtlst.add(type);
+            }
+        }
         Collections.sort(dtlst, new Comparator<DataTypes>() {
 
             public int compare(DataTypes o1, DataTypes o2) {

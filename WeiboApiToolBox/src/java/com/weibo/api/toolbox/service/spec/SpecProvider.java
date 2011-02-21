@@ -8,6 +8,7 @@ package com.weibo.api.toolbox.service.spec;
 import com.weibo.api.toolbox.persist.entity.Baseurl;
 import com.weibo.api.toolbox.persist.entity.Tdatastruct;
 import com.weibo.api.toolbox.persist.entity.Tenumgroup;
+import com.weibo.api.toolbox.persist.entity.Tenumvalues;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.persist.entity.Tstructfield;
@@ -35,4 +36,6 @@ public interface SpecProvider {
     List<Tenumgroup> getAllEnableEnumGroups();
     List<Tenumgroup> getAllEnumGroups();
     void saveEnumgroup(Tenumgroup enumgroup);
+    List<Tenumvalues> getAllEnumvaluesByGroup(Tenumgroup group);
+    void saveEnumValues(Tenumvalues value);
 }

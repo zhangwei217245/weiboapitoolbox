@@ -104,6 +104,21 @@ public class Tenumvalues implements Serializable {
         this.numenumgroupid = numenumgroupid;
     }
 
+    public String getEnableImg(){
+        if (this.numenable<=0){
+            return "/img/smallicons/wrong_small.png";
+        }else{
+            return "/img/smallicons/right_small.png";
+        }
+    }
+
+    public boolean getIsEnable(){
+        return this.getNumenable() > 0;
+    }
+    public void setIsEnable(boolean enable){
+        this.setNumenable(enable?1:0);
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

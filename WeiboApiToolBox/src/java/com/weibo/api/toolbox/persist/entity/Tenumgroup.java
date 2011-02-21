@@ -51,7 +51,7 @@ public class Tenumgroup implements Serializable {
     private Set<Trequestparam> trequestparamSet;
     @OneToMany(mappedBy = "numenumgroupid")
     private Set<Sysparam> sysparamSet;
-    @OneToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER, mappedBy = "numenumgroupid")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "numenumgroupid")
     private Set<Tenumvalues> tenumvaluesSet;
     @OneToMany(mappedBy = "numenumgroupid")
     private Set<Tstructfield> tstructfieldSet;
@@ -63,9 +63,10 @@ public class Tenumgroup implements Serializable {
         this.numenumgroupid = numenumgroupid;
     }
 
-    public Tenumgroup(Integer numenumgroupid, String vc2enumgroupname, int numenable) {
+    public Tenumgroup(Integer numenumgroupid, String vc2enumgroupname,String vc2enumgroupdesc, int numenable) {
         this.numenumgroupid = numenumgroupid;
         this.vc2enumgroupname = vc2enumgroupname;
+        this.vc2enumgroupdesc = vc2enumgroupdesc;
         this.numenable = numenable;
     }
 
@@ -131,6 +132,21 @@ public class Tenumgroup implements Serializable {
 
     public void setTstructfieldSet(Set<Tstructfield> tstructfieldSet) {
         this.tstructfieldSet = tstructfieldSet;
+    }
+
+    public String getEnableImg(){
+        if (this.numenable<=0){
+            return "/img/smallicons/wrong_small.png";
+        }else{
+            return "/img/smallicons/right_small.png";
+        }
+    }
+
+    public boolean getIsEnable(){
+        return this.getNumenable() > 0;
+    }
+    public void setIsEnable(boolean enable){
+        this.setNumenable(enable?1:0);
     }
 
     @Override

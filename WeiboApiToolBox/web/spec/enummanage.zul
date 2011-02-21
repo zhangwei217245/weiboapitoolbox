@@ -1,5 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:c="client">
-    
+    <zscript>
+        <![CDATA[
+            import org.zkoss.spring.SpringUtil;
+            import com.weibo.api.toolbox.service.spec.SpecProvider;
+            import com.weibo.api.toolbox.persist.entity.Tenumgroup;
+            import com.weibo.api.toolbox.persist.entity.Tenumvalues;
+            import org.zkoss.zkplus.databind.AnnotateDataBinder;
+        ]]>
+        <![CDATA[
+            SpecProvider sp = (SpecProvider) SpringUtil.getBean("specProvider");
+
+            void move(Component dragged){
+                Listitem draggeditem = (Listitem)dragged;
+                Listitem droppeditem = (Listitem)self;
+                Tenumvalues dragvalue = (Tenumvalues)draggeditem.getValue();
+                Tenumgroup dropgroup = (Tenumgroup)droppeditem.getValue();
+                dragvalue.setNumenumgroupid(dropgroup);
+                sp.saveEnumValues(dragvalue);
+                ((AnnotateDataBinder)enummanage.getAttribute("binder")).loadAll();
+            }
+        ]]>
+    </zscript>
+    <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./enummanage" ?>
+    <borderlayout id="enummanage"  apply="com.weibo.api.toolbox.page.spec.EnumManageComposer">
+        <north size="60%" zindex="1" border="none" flex="true">
+            <hbox>
+                <groupbox mold="3d" width="400px">
+                    <caption label="枚举"/>
+                    <hbox>
+                        <listbox id="enumgrouplist" width="300px" height="60%" rows="10"
+			oddRowSclass="non-odd" fixedLayout="true" 
+                        model="@{enummanage$composer.allEnumGroups,load-after='groupsave.onClick,enumgroupdel.onClick'}">
+                            <listhead >
+                                <listheader width="40%" label="名称"/>
+                                <listheader width="50%" label="描述"/>
+                                <listheader width="10%" label="启用"/>
+                            </listhead>
+                            <listitem self="@{each='enumgroup'}" value="@{enumgroup}" onDrop="move(event.dragged)" droppable="true">
+                                <listcell label="@{enumgroup.vc2enumgroupname}"/>
+                                <listcell label="@{enumgroup.vc2enumgroupdesc}"/>
+                                <listcell image="@{enumgroup.enableImg}"/>
+                            </listitem>
+                        </listbox>
+                        <vbox>
+                            <button id="enumgroupadd" label="添加"/>
+                            <button id="enumgroupdel" label="删除"/>
+                        </vbox>
+                    </hbox>
+                </groupbox>
+                <groupbox mold="3d" width="400px">
+                    <caption label="枚举值"/>
+                    <hbox>
+                        <listbox id="enumvaluelist" width="300px" height="60%" rows="10"
+                        model="@{enummanage$composer.allEnumvaluesByGroup,load-after='enumgrouplist.onSelect,valuesave.onClick,enumvaluedel.onClick'}"
+                        oddRowSclass="non-odd" fixedLayout="true">
+                            <listhead >
+                                <listheader width="30%" label="枚举值"/>
+                                <listheader width="60%" label="含义"/>
+                                <listheader width="10%" label="启用"/>
+                            </listhead>
+                            <listitem self="@{each='enumvalue'}" value="@{enumvalue}" draggable="true">
+                                <listcell label="@{enumvalue.vc2enumvalue}"/>
+                                <listcell label="@{enumvalue.vc2enumdesc}"/>
+                                <listcell image="@{enumvalue.enableImg}"/>
+                            </listitem>
+                        </listbox>
+                        <vbox>
+                            <button id="enumvalueadd" label="添加"/>
+                            <button id="enumvaluedel" label="删除"/>
+                        </vbox>
+                    </hbox>
+                </groupbox>
+            </hbox>
+        </north>
+        <south id="attrlayout" size="40%" zindex="5" minsize="250" maxsize="500"
+        title="编辑" border="none" flex="true" collapsible="true" splittable="true">
+            <panel>
+                <panelchildren>
+                    <grid>
+                        <rows>
+                            <row>
+                                <label id="lb_name" value="名称"/>
+                                <textbox id="name" width="90%" constraint="no empty"/>
+                            </row>
+                            <row>
+                                启用:
+                                <checkbox id="enable" checked="true"/>
+                            </row>
+                            <row>
+						描述 :
+                                <textbox id="intro" width="90%" rows="3"/>
+                                <hbox pack="center" width="100%">
+                                    <button id="groupsave" label="保存枚举" />
+                                    <button id="valuesave" visible="false" label="保存枚举值"/>
+                                </hbox>
+                            </row>
+                        </rows>
+                    </grid>
+                </panelchildren>
+            </panel>
+        </south>
+    </borderlayout>
 </zk>
