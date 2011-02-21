@@ -178,11 +178,15 @@
                                         </combobox>
                                     </listcell>
                                     <listcell>
-                                        <combobox inplace="true" onChange='self.style="font-weight:bold"' mold="rounded" model="@{speceditor$composer.allDataTypes}" selectedItem="@{reqparam.enumDataTypes}" width="70px">
+                                        <combobox inplace="true" onChange='self.style="font-weight:bold"' mold="rounded" model="@{speceditor$composer.allPrimitiveTypes}" selectedItem="@{reqparam.enumDataTypes}" width="70px">
                                             <comboitem self="@{each='datatypes'}" label="@{datatypes.name}"/>
                                         </combobox>
                                     </listcell>
-
+                                    <listcell>
+                                        <combobox inplace="true" onChange='self.style="font-weight:bold"' mold="rounded" model="@{speceditor$composer.allEnumGroups}" selectedItem="@{reqparam.numenumgroupid}" width="70px">
+                                            <comboitem self="@{each='enumgroups'}" label="@{enumgroups.vc2enumgroupname}" tooltiptext="@{enumgroups.vc2enumgroupdesc}"/>
+                                        </combobox>
+                                    </listcell>
                                     <listcell>
                                         <textbox inplace="true" onChange='self.style="font-weight:bold"' value="@{reqparam.vc2range}" width="150px" />
                                     </listcell>

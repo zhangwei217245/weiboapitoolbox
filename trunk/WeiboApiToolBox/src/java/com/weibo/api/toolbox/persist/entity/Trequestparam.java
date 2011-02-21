@@ -69,6 +69,9 @@ public class Trequestparam implements Serializable {
     @Basic(optional = false)
     @Column(name = "numenable", nullable = false)
     private int numenable;
+    @JoinColumn(name = "numenumgroupid", referencedColumnName = "numenumgroupid")
+    @ManyToOne
+    private Tenumgroup numenumgroupid;
     @JoinColumn(name = "numspecid", referencedColumnName = "numspecid")
     @ManyToOne
     private Tspec numspecid;
@@ -168,6 +171,14 @@ public class Trequestparam implements Serializable {
 
     public void setNumenable(int numenable) {
         this.numenable = numenable;
+    }
+
+    public Tenumgroup getNumenumgroupid() {
+        return numenumgroupid;
+    }
+
+    public void setNumenumgroupid(Tenumgroup numenumgroupid) {
+        this.numenumgroupid = numenumgroupid;
     }
 
     public Tspec getNumspecid() {

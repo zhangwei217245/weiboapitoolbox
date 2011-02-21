@@ -62,6 +62,9 @@ public class Tstructfield implements Serializable {
     @JoinColumn(name = "numdatastructid", referencedColumnName = "numdatastructid")
     @ManyToOne
     private Tdatastruct numdatastructid;
+    @JoinColumn(name = "numenumgroupid", referencedColumnName = "numenumgroupid")
+    @ManyToOne
+    private Tenumgroup numenumgroupid;
 
     public Tstructfield() {
     }
@@ -149,6 +152,14 @@ public class Tstructfield implements Serializable {
 
     public void setNumparentdatastructid(Tdatastruct numparentdatastructid) {
         this.numparentdatastructid = numparentdatastructid;
+    }
+
+    public Tenumgroup getNumenumgroupid() {
+        return numenumgroupid;
+    }
+
+    public void setNumenumgroupid(Tenumgroup numenumgroupid) {
+        this.numenumgroupid = numenumgroupid;
     }
 
     /**
