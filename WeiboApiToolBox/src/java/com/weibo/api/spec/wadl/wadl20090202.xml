@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : wadl20090202.xml
+    Created on : 2011年2月22日, 下午6:04
+    Author     : x-spirit
+    Description:
+        Purpose of the document follows.
+-->
+
+<ns0:application  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns:ns0='http://wadl.dev.java.net/2009/02'
+   xsi:schemaLocation='http://wadl.dev.java.net/2009/02 wadl20090202.xsd'>
+    <ns0:resources>
+        <ns0:resource>
+            <ns0:doc>
+                slslakbvks
+            </ns0:doc>
+        </ns0:resource>
+    </ns0:resources>
+
+</ns0:application>
