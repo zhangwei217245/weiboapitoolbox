@@ -1,0 +1,13 @@
+-docBase
+--spec
+---{version}
+----{public type}
+-----{api status}
+------{spec_name}
+--schema
+---{version}
+----{ds_name}
+--wiki
+---{version}
+----{public type}
+-----{api status}
