@@ -57,11 +57,15 @@
                     <column width="130px" label="值"/>
                 </columns>
                 <rows>
-                    <row>
+                    <row spans="1,1,2,1,1,1,1">
                         参数名：
                         <textbox value="@{sysparammanage$composer.currSysParam.vc2paramname,load-after='sysParamList.onSelect'}" constraint="no empty" width="100px"/>
+                        <hbox>
                         必选：
                         <checkbox checked="@{sysparammanage$composer.currSysParam.isRequired,load-after='sysParamList.onSelect'}" width="50px"/>
+                        可重复：
+                        <checkbox checked="@{sysparammanage$composer.currSysParam.isRepeating,load-after='sysParamList.onSelect'}" width="50px"/>
+                        </hbox>
                         参数风格：
                         <combobox mold="rounded" model="@{sysparammanage$composer.allParamStyle}" selectedItem="@{sysparammanage$composer.currSysParam.enumParamStyle,load-after='sysParamList.onSelect'}" width="100px">
                             <comboitem self="@{each='paramstyle'}" label="@{paramstyle.name}"/>

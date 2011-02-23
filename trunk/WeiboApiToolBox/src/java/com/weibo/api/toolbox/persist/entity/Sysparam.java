@@ -47,6 +47,9 @@ public class Sysparam implements Serializable {
     @Column(name = "numrequired", nullable = false)
     private int numrequired;
     @Basic(optional = false)
+    @Column(name = "numrepeating", nullable = false)
+    private int numrepeating;
+    @Basic(optional = false)
     @Column(name = "numstyle", nullable = false)
     private int numstyle;
     @Basic(optional = false)
@@ -110,6 +113,14 @@ public class Sysparam implements Serializable {
 
     public void setNumrequired(int numrequired) {
         this.numrequired = numrequired;
+    }
+    
+    public int getNumrepeating() {
+        return numrepeating;
+    }
+
+    public void setNumrepeating(int numrepeating) {
+        this.numrepeating = numrepeating;
     }
 
     public int getNumstyle() {
@@ -204,6 +215,12 @@ public class Sysparam implements Serializable {
     }
     public void setIsRequired(boolean required){
         this.setNumrequired(required?1:0);
+    }
+    public boolean getIsRepeating(){
+        return this.getNumrepeating() > 0;
+    }
+    public void setIsRepeating(boolean isRepeating){
+        this.setNumrepeating(isRepeating?1:0);
     }
 
     @Override

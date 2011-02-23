@@ -4,11 +4,15 @@ package com.weibo.api.spec.wadl;
 import com.weibo.api.spec.wadl.wadl20090202.Application;
 import com.weibo.api.spec.wadl.wadl20090202.Doc;
 import com.weibo.api.spec.wadl.wadl20090202.Method;
+import com.weibo.api.spec.wadl.wadl20090202.Param;
+import com.weibo.api.spec.wadl.wadl20090202.ParamStyle;
 import com.weibo.api.spec.wadl.wadl20090202.Representation;
 import com.weibo.api.spec.wadl.wadl20090202.Request;
 import com.weibo.api.spec.wadl.wadl20090202.Resource;
 import com.weibo.api.spec.wadl.wadl20090202.Resources;
+import com.weibo.api.toolbox.common.enumerations.AcceptType;
 import com.weibo.api.toolbox.common.enumerations.HttpMethod;
+import com.weibo.api.toolbox.persist.entity.Trequestparam;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
 import java.util.List;
@@ -61,10 +65,32 @@ public class WadlBindingImpl {
 
     public void bindRequest(Method mtd, Tspec spec){
         Request req = new Request();
-        Representation rep = new Representation();
-        rep.setMediaType("");
-        rep.getParam();
-        req.getRepresentation().add(new Representation());
+        if (spec.getEnumAcceptType().equals(AcceptType.WILDCARD)){
+            bindRequestParameters(req,spec);
+        }else{
+            bindRequestRepresentation(req,spec);
+        }
+        
+
         mtd.setRequest(req);
+    }
+
+    public void bindRequestParameters(Request req,Tspec spec){
+        List<Trequestparam> trequestparamSet = spec.getTrequestparamSet();
+        for (Trequestparam reqparam : trequestparamSet){
+            Param par = new Param();
+            par.setName(reqparam.getVc2paramname());
+            par.setRequired(reqparam.getIsRequired());
+            par.setStyle(reqparam.getEnumParamStyle().getWadlStyle());
+            if (ToolBoxUtil.isNotEmpty(reqparam.getVc2defaultvalue())){
+                par.setDefault(reqparam.getVc2defaultvalue());
+            }
+        }
+    }
+    public void bindRequestRepresentation(Request req,Tspec spec){
+        Representation rep = new Representation();
+        rep.setMediaType(spec.getEnumAcceptType().getMediaString());
+        req.getRepresentation().add(rep);
+        
     }
 }
