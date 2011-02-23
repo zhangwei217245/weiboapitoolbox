@@ -144,7 +144,7 @@ public class SpecProviderImpl implements SpecProvider {
         if (param.getEnumDataTypes().equals(DataTypes.ENUM)){
             param.setVc2range(getEnumRange(param.getNumenumgroupid()));
         }
-        jpaDaoService.edit(param);
+        //jpaDaoService.edit(param);
     }
 
     public void delReqParamById(String[] paramid) {
