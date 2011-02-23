@@ -21,6 +21,9 @@ public enum ParamStyle {
         public String getDesc(){
             return "查询参数，通过请求提交的查询参数";
         }
+        public com.weibo.api.spec.wadl.wadl20090202.ParamStyle getWadlStyle(){
+            return com.weibo.api.spec.wadl.wadl20090202.ParamStyle.QUERY;
+        }
     },PathParam{
         public int getId(){
             return 2;
@@ -31,6 +34,9 @@ public enum ParamStyle {
         public String getDesc(){
             return "路径中的参数，即REST风格的参数";
         }
+        public com.weibo.api.spec.wadl.wadl20090202.ParamStyle getWadlStyle(){
+            return com.weibo.api.spec.wadl.wadl20090202.ParamStyle.TEMPLATE;
+        }
     },FormParam{
         public int getId(){
             return 3;
@@ -40,6 +46,9 @@ public enum ParamStyle {
         }
         public String getDesc(){
             return "表单参数。从MIME为application/x-www-form-urlencoded的POST请求中提取的参数";
+        }
+        public com.weibo.api.spec.wadl.wadl20090202.ParamStyle getWadlStyle(){
+            return com.weibo.api.spec.wadl.wadl20090202.ParamStyle.QUERY;
         }
     },
     HeaderParam{
@@ -52,6 +61,9 @@ public enum ParamStyle {
         public String getDesc(){
             return "请求头参数。放在请求头中的参数";
         }
+        public com.weibo.api.spec.wadl.wadl20090202.ParamStyle getWadlStyle(){
+            return com.weibo.api.spec.wadl.wadl20090202.ParamStyle.HEADER;
+        }
     },CookieParam{
         public int getId(){
             return 5;
@@ -61,6 +73,9 @@ public enum ParamStyle {
         }
         public String getDesc(){
             return "Cookie参数，从Cookie中提取的参数";
+        }
+        public com.weibo.api.spec.wadl.wadl20090202.ParamStyle getWadlStyle(){
+            return com.weibo.api.spec.wadl.wadl20090202.ParamStyle.PLAIN;
         }
     },MatrixParam{
         public int getId(){
@@ -72,11 +87,15 @@ public enum ParamStyle {
         public String getDesc(){
             return "一种灵活到少见的参数风格，不推荐使用。http://www.w3.org/DesignIssues/MatrixURIs.html";
         }
+        public com.weibo.api.spec.wadl.wadl20090202.ParamStyle getWadlStyle(){
+            return com.weibo.api.spec.wadl.wadl20090202.ParamStyle.MATRIX;
+        }
     };
     
     public abstract int getId();
     public abstract String getName();
     public abstract String getDesc();
+    public abstract com.weibo.api.spec.wadl.wadl20090202.ParamStyle getWadlStyle();
 
     public static ParamStyle getValueById(int id){
         for (ParamStyle m : ParamStyle.values()){

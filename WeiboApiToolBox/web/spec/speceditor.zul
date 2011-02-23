@@ -161,6 +161,7 @@
                                     <listheader label="参数风格"/>
                                     <listheader label="数据类型"/>
                                     <listheader label="枚举"/>
+                                    <listheader label="可重复"/>
                                     <listheader label="范围"/>
                                     <listheader label="默认值"/>
                                     <listheader label="示例值"/>
@@ -187,6 +188,9 @@
                                         <combobox inplace="true" onChange='self.style="font-weight:bold"' mold="rounded" model="@{speceditor$composer.allEnableEnumGroups}" selectedItem="@{reqparam.numenumgroupid}" width="100px">
                                             <comboitem self="@{each='enumgroups'}" label="@{enumgroups.vc2enumgroupname}" tooltiptext="@{enumgroups.vc2enumgroupdesc}"/>
                                         </combobox>
+                                    </listcell>
+                                    <listcell>
+                                        <checkbox checked="@{reqparam.isRepeating}" width="50px"/>
                                     </listcell>
                                     <listcell>
                                         <textbox inplace="true" onChange='self.style="font-weight:bold"' value="@{reqparam.vc2range}" width="150px" />
