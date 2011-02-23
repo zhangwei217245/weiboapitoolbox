@@ -82,11 +82,17 @@ public class WadlBindingImpl {
             par.setName(reqparam.getVc2paramname());
             par.setRequired(reqparam.getIsRequired());
             par.setStyle(reqparam.getEnumParamStyle().getWadlStyle());
+            par.setRepeating(reqparam.getIsRepeating());
             if (ToolBoxUtil.isNotEmpty(reqparam.getVc2defaultvalue())){
                 par.setDefault(reqparam.getVc2defaultvalue());
             }
+            if (ToolBoxUtil.isNotEmpty(reqparam.getVc2demovalue())){
+                par.setFixed(reqparam.getVc2demovalue());
+            }
+            req.getParam().add(par);
         }
     }
+    
     public void bindRequestRepresentation(Request req,Tspec spec){
         Representation rep = new Representation();
         rep.setMediaType(spec.getEnumAcceptType().getMediaString());
