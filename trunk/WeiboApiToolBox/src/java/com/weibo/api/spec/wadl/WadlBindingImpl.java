@@ -10,9 +10,11 @@ import com.weibo.api.spec.wadl.wadl20090202.Representation;
 import com.weibo.api.spec.wadl.wadl20090202.Request;
 import com.weibo.api.spec.wadl.wadl20090202.Resource;
 import com.weibo.api.spec.wadl.wadl20090202.Resources;
+import com.weibo.api.spec.wadl.wadl20090202.Response;
 import com.weibo.api.toolbox.common.enumerations.AcceptType;
 import com.weibo.api.toolbox.common.enumerations.HttpMethod;
 import com.weibo.api.toolbox.persist.entity.Trequestparam;
+import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
 import java.util.List;
@@ -59,7 +61,8 @@ public class WadlBindingImpl {
             Method mtd = new Method();
             mtd.setName(hm.getName());
             mtd.setId(spec.getVc2specname());
-            
+            bindRequest(mtd, spec);
+            bindResponse(mtd,spec);
         }
     }
 
@@ -70,8 +73,6 @@ public class WadlBindingImpl {
         }else{
             bindRequestRepresentation(req,spec);
         }
-        
-
         mtd.setRequest(req);
     }
 
@@ -96,7 +97,37 @@ public class WadlBindingImpl {
     public void bindRequestRepresentation(Request req,Tspec spec){
         Representation rep = new Representation();
         rep.setMediaType(spec.getEnumAcceptType().getMediaString());
+        bindRepresentationParameters(rep,spec);
         req.getRepresentation().add(rep);
+        
+    }
+    public void bindRepresentationParameters(Representation rep,Tspec spec){
+        List<Trequestparam> trequestparamSet = spec.getTrequestparamSet();
+        for (Trequestparam reqparam : trequestparamSet){
+            Param par = new Param();
+            par.setName(reqparam.getVc2paramname());
+            par.setRequired(reqparam.getIsRequired());
+            par.setStyle(reqparam.getEnumParamStyle().getWadlStyle());
+            par.setRepeating(reqparam.getIsRepeating());
+            if (ToolBoxUtil.isNotEmpty(reqparam.getVc2defaultvalue())){
+                par.setDefault(reqparam.getVc2defaultvalue());
+            }
+            if (ToolBoxUtil.isNotEmpty(reqparam.getVc2demovalue())){
+                par.setFixed(reqparam.getVc2demovalue());
+            }
+            rep.getParam().add(par);
+        }
+    }
+
+    public void bindResponse(Method mtd, Tspec spec){
+        List<Tresponse> tresponseSet = spec.getTresponseSet();
+        for (Tresponse tresp : tresponseSet){
+            Response resp = new Response();
+            bindResponseRepresentation(resp,spec);
+        }
+    }
+
+    public void bindResponseRepresentation(Response resp, Tspec spec){
         
     }
 }
