@@ -24,7 +24,12 @@ import java.util.List;
  * @author x-spirit
  */
 public class WadlBindingImpl {
-    
+
+    /**
+     * bind Resource node for each spec
+     * @param ress
+     * @param sameBaseSepcs
+     */
     public void bindResources(Resources ress,List<Tspec> sameBaseSepcs){
         for (Tspec spec : sameBaseSepcs){
             Resource res = new Resource();
@@ -37,6 +42,13 @@ public class WadlBindingImpl {
         }
     }
 
+    /**
+     * bind spec main resource to its first Resource node
+     * if the spec doesn't have a subresource,
+     * bind the main resource to its last Resource node.
+     * @param res
+     * @param spec
+     */
     public void bindResource(Resource res, Tspec spec){
         if (ToolBoxUtil.isNotEmpty(spec.getVc2subresource())){
             Resource subres = new Resource();
@@ -48,13 +60,23 @@ public class WadlBindingImpl {
         res.setPath(spec.getVc2mainresource());
     }
 
+    /**
+     * bind spec subresource to its last Resource node.
+     * @param res
+     * @param spec
+     */
     public void bindLastResource(Resource res, Tspec spec){
         res.setPath(spec.getVc2subresource());
         res.setId(spec.getVc2specname());
         bindMethod(res, spec);
     }
 
-
+    /**
+     * bind Method node to its last Resource node
+     * according to the 
+     * @param rs
+     * @param spec
+     */
     public void bindMethod(Resource rs, Tspec spec){
         HttpMethod[] enumHttpMethod = spec.getEnumHttpMethod();
         for(HttpMethod hm : enumHttpMethod){
@@ -101,6 +123,7 @@ public class WadlBindingImpl {
         req.getRepresentation().add(rep);
         
     }
+    
     public void bindRepresentationParameters(Representation rep,Tspec spec){
         List<Trequestparam> trequestparamSet = spec.getTrequestparamSet();
         for (Trequestparam reqparam : trequestparamSet){
