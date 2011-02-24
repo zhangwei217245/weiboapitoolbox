@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -79,6 +80,9 @@ public class SpecEditorComposer extends GenericForwardComposer {
             return;
         }
         if (who!=null){
+            if (currentSpec.getTspecSetOnWho()==null){
+                currentSpec.setTspecSetOnWho(new HashSet<Tspec>());
+            }
             currentSpec.getTspecSetOnWho().add(who);
             who.getTspecSetOnMe().add(currentSpec);
             daoService.edit(who);
@@ -97,6 +101,9 @@ public class SpecEditorComposer extends GenericForwardComposer {
             return;
         }
         if (who!=null){
+            if (currentSpec.getTspecSetOnMe()==null){
+                currentSpec.setTspecSetOnMe(new HashSet<Tspec>());
+            }
             currentSpec.getTspecSetOnMe().add(who);
             who.getTspecSetOnWho().add(currentSpec);
             daoService.edit(who);

@@ -348,7 +348,16 @@ public class Tspec implements Serializable {
     public void setTspecSetOnWho(Set<Tspec> tspecSetOnWho) {
         this.tspecSetOnWho = tspecSetOnWho;
     }
-    
+
+    public String getResourcePath(){
+        return (this.vc2version==null?"":this.vc2version)
+                + (this.vc2mainresource==null?"":"/"+this.vc2mainresource)
+                + (this.vc2subresource==null?"":"/"+this.vc2subresource);
+    }
+
+    public String getSpecTitle(){
+        return "当前编辑：" + (this.numspecid==null?"":"#"+this.numspecid+" - ") + getResourcePath();
+    }
 
     /**
      *  here comes the Enumerations Converter below

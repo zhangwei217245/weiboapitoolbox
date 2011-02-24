@@ -14,7 +14,7 @@
 ]]>
     </zscript>
     <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./speceditor" ?>
-    <window id="speceditor" title="@{speceditor$composer.currentSpec,converter='com.weibo.api.toolbox.page.spec.ResourceNameConvertor'}" border="normal" width="760px"
+    <window id="speceditor" border="normal" width="760px" title="Spec Editor"
     xmlns:c="client" closable="true" style="visibility: hidden" maximizable="true" maximized="true" sizable="true"
     apply="com.weibo.api.toolbox.page.spec.SpecEditorComposer">
         <attribute c:name="onClose"><![CDATA[
@@ -36,6 +36,7 @@
         }
     ]]>
         </zscript>
+        <label id="lbn_specTitle" value="@{speceditor$composer.currentSpec.specTitle}"/>
         <vbox id="spectabs" width="100%">
             <tabbox id="tb2" orient="horizontal">
                 <tabs width="100%">
