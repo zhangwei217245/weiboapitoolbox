@@ -16,6 +16,12 @@
             <ns0:doc>
                 slslakbvks
             </ns0:doc>
+            <ns0:method>
+                <ns0:response status="">
+                    <ns0:representation >
+                    </ns0:representation>
+                </ns0:response>
+            </ns0:method>
         </ns0:resource>
     </ns0:resources>
 
