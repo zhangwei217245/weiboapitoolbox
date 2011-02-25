@@ -115,7 +115,6 @@ public class SpecManagerComposer extends GenericForwardComposer {
         spec.setNumauthtype(AuthType.REQUIRED.getId());
         spec.setNumratelimittype(RateLimit.USER_IP.getId());
         spec.setVc2httpmethod(HttpMethod.getMultiIds(new HttpMethod[]{HttpMethod.GET}, ","));
-        spec.setVc2respcontenttype(ContentType.getMultiIds(new ContentType[]{ContentType.APP_XML, ContentType.APP_JSON}, ","));
         spec.setNumbaseurlid(daoService.findOneEntityById(Baseurl.class, 1));
         spec.setNumcateid(cate);
         spec.setNumcateindex(sp.getMaxcateIndex(cate) + 1);

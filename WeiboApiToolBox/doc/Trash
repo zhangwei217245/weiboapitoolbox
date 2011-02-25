@@ -1,0 +1,9 @@
+Response Content-Type:
+                                        <hbox>
+                                            <zk forEach="${speceditor$composer.allContentType}">
+                                                <checkbox id="cbct_${each.id}" label="${each.name}"/>
+                                            </zk>
+                                        </hbox>
+
+
+

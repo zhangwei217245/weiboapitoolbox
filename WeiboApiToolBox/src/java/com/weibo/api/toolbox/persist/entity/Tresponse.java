@@ -5,6 +5,7 @@
 
 package com.weibo.api.toolbox.persist.entity;
 
+import com.weibo.api.toolbox.common.enumerations.ContentType;
 import com.weibo.api.toolbox.common.enumerations.DataTypes;
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -50,6 +51,9 @@ public class Tresponse implements Serializable {
     @Column(name = "numrequired")
     private int numrequired;
     @Basic(optional = false)
+    @Column(name = "numcontenttype")
+    private int numcontenttype;
+    @Basic(optional = false)
     @Column(name = "vc2desc", nullable = false, length = 5000)
     private String vc2desc;
     @Column(name = "vc2demovalue", length = 45)
@@ -68,12 +72,13 @@ public class Tresponse implements Serializable {
         this.numresponseid = numresponseid;
     }
 
-    public Tresponse(Integer numresponseid, String vc2responsename, int numdatatype,int numrequired, String vc2desc) {
+    public Tresponse(Integer numresponseid, String vc2responsename, int numdatatype,int numrequired,int numcontenttype, String vc2desc) {
         this.numresponseid = numresponseid;
         this.vc2responsename = vc2responsename;
         this.numdatatype = numdatatype;
         this.vc2desc = vc2desc;
         this.numrequired = numrequired;
+        this.numcontenttype = numcontenttype;
     }
 
     public Integer getNumresponseid() {
@@ -140,6 +145,15 @@ public class Tresponse implements Serializable {
         this.numspecid = numspecid;
     }
 
+    public int getNumcontenttype() {
+        return numcontenttype;
+    }
+
+    public void setNumcontenttype(int numcontenttype) {
+        this.numcontenttype = numcontenttype;
+    }
+
+    
     /**
      * Resolve Enum Values
      */
@@ -154,6 +168,12 @@ public class Tresponse implements Serializable {
     }
     public void setIsRequired(boolean required){
         this.setNumrequired(required?1:0);
+    }
+    public ContentType getEnumContentType(){
+        return ContentType.getValueById(this.numcontenttype);
+    }
+    public void setEnumContentType(ContentType ctntype){
+        this.numcontenttype = ctntype.getId();
     }
 
     @Override
