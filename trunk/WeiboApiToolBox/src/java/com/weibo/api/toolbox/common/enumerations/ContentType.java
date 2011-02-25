@@ -11,26 +11,9 @@ import javax.ws.rs.core.MediaType;
  */
 public enum ContentType {
 
-    APP_XML{
-        public int getId(){
-            return 1;
-        }
-        public String getName(){
-            return "XML";
-        }
-        public MediaType getMediaType(){
-            return MediaType.APPLICATION_XML_TYPE;
-        }
-        public String getMediaString(){
-            return MediaType.APPLICATION_XML;
-        }
-        public String getDesc(){
-            return "XML格式";
-        }
-    },
     APP_JSON{
         public int getId(){
-            return 2;
+            return 1;
         }
         public String getName(){
             return "JSON";
@@ -43,6 +26,22 @@ public enum ContentType {
         }
         public String getDesc(){
             return "JSON格式";
+        }
+    },APP_XML{
+        public int getId(){
+            return 2;
+        }
+        public String getName(){
+            return "XML";
+        }
+        public MediaType getMediaType(){
+            return MediaType.APPLICATION_XML_TYPE;
+        }
+        public String getMediaString(){
+            return MediaType.APPLICATION_XML;
+        }
+        public String getDesc(){
+            return "XML格式";
         }
     },
     PLAIN_TXT{
@@ -69,6 +68,16 @@ public enum ContentType {
     public abstract String getMediaString();
     public abstract String getDesc();
 
+
+    public static ContentType getValueById(int id){
+        for (ContentType m : ContentType.values()){
+            if (m.getId()==id){
+                return m;
+            }
+        }
+        return null;
+    }
+    
     public static ContentType getValueById(String id){
         for (ContentType m : ContentType.values()){
             if (m.getId()==Integer.parseInt(id)){

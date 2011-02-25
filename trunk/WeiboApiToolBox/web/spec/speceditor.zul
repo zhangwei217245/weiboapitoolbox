@@ -58,6 +58,16 @@
                                 </columns>
                                 <rows>
                                     <row>
+                                    分类：
+                                        <hbox>
+                                            <listbox id="base_tspeccate" width="200px" mold="select" model="@{speceditor$composer.allSubCategory}" selectedItem="@{speceditor$composer.currentSpec.numcateid}">
+                                                <listitem self="@{each='subcate'}" label="@{subcate.vc2catename}"/>
+                                            </listbox>
+                                        </hbox>
+                                    分类中的排序:
+                                        <spinner id="base_cateindex" width="200px" value="@{speceditor$composer.currentSpec.numcateindex}" constraint="no empty,min 1: 排序值必须大于等于1"/>
+                                    </row>
+                                    <row>
                                     Base URL
                                         <listbox id="base_baseurl" width="200px" mold="select" model="@{speceditor$composer.baseUrls}" selectedItem="@{speceditor$composer.currentSpec.numbaseurlid}">
                                             <listitem self="@{each='baseurl'}" label="@{baseurl.vc2baseurl}"></listitem>
@@ -74,32 +84,16 @@
                                     <row>
                                     Spec Name:
                                         <textbox id="base_specname" width="200px" value="@{speceditor$composer.currentSpec.vc2specname}" constraint="no empty"/>
-                                    HTTP Methods:
-                                        <hbox>
-                                            <zk forEach="${speceditor$composer.allHttpMethods}">
-                                                <checkbox id="cbhm_${each.id}" label="${each.name}"/>
-                                            </zk>
-                                        </hbox>
-                                    </row>
-                                    <row>
-                                    分类：
-                                        <hbox>
-                                            <listbox id="base_tspeccate" width="200px" mold="select" model="@{speceditor$composer.allSubCategory}" selectedItem="@{speceditor$composer.currentSpec.numcateid}">
-                                                <listitem self="@{each='subcate'}" label="@{subcate.vc2catename}"/>
-                                            </listbox>
-                                        </hbox>
-                                    分类中的排序:
-                                        <spinner id="base_cateindex" width="200px" value="@{speceditor$composer.currentSpec.numcateindex}" constraint="no empty,min 1: 排序值必须大于等于1"/>
-                                    </row>
-                                    <row>
                                     Request Accept:
                                         <listbox id="base_reqaccept" width="200px" mold="select" model="@{speceditor$composer.allAcceptType}" selectedItem="@{speceditor$composer.currentSpec.enumAcceptType}">
                                             <listitem self="@{each}" label="@{each.name}"></listitem>
                                         </listbox>
-                                    Response Content-Type:
+                                    </row>
+                                    <row spans="1,3">
+                                    HTTP Methods:
                                         <hbox>
-                                            <zk forEach="${speceditor$composer.allContentType}">
-                                                <checkbox id="cbct_${each.id}" label="${each.name}"/>
+                                            <zk forEach="${speceditor$composer.allHttpMethods}">
+                                                <checkbox id="cbhm_${each.id}" label="${each.name}"/>
                                             </zk>
                                         </hbox>
                                     </row>
@@ -223,6 +217,7 @@
                                 <listhead sizable="true">
                                     <listheader width="150px" label="名称"  align="center"/>
                                     <listheader label="必须"  align="center"/>
+                                    <listheader label="Content-Type"  align="center"/>
                                     <listheader label="数据类型"  align="center"/>
                                     <listheader label="数据结构"  align="center"/>
                                     <listheader label="描述"  align="center" />
@@ -234,6 +229,11 @@
                                     </listcell>
                                     <listcell>
                                         <checkbox checked="@{df.isRequired}"/>
+                                    </listcell>
+                                    <listcell>
+                                        <combobox inplace="true" width="100px" onChange='self.style="font-weight:bold;width:100px"' mold="rounded" model="@{speceditor$composer.allContentType}" selectedItem="@{df.enumContentType}">
+                                            <comboitem self="@{each='contentType'}" label="@{contentType.name}"/>
+                                        </combobox>
                                     </listcell>
                                     <listcell>
                                         <combobox inplace="true" width="100px" onChange='self.style="font-weight:bold;width:100px"' mold="rounded" model="@{speceditor$composer.allDataTypes}" selectedItem="@{df.enumDataTypes}">

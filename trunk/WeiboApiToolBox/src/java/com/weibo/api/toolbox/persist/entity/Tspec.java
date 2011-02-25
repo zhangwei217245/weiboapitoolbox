@@ -48,7 +48,6 @@ import org.hibernate.annotations.FetchMode;
     @NamedQuery(name = "Tspec.findByVc2subresource", query = "SELECT t FROM Tspec t WHERE t.vc2subresource = :vc2subresource"),
     @NamedQuery(name = "Tspec.findByVc2httpmethod", query = "SELECT t FROM Tspec t WHERE t.vc2httpmethod = :vc2httpmethod"),
     @NamedQuery(name = "Tspec.findByNumreqaccept", query = "SELECT t FROM Tspec t WHERE t.numreqaccept = :numreqaccept"),
-    @NamedQuery(name = "Tspec.findByVc2respcontenttype", query = "SELECT t FROM Tspec t WHERE t.vc2respcontenttype = :vc2respcontenttype"),
     @NamedQuery(name = "Tspec.findByNumauthtype", query = "SELECT t FROM Tspec t WHERE t.numauthtype = :numauthtype"),
     @NamedQuery(name = "Tspec.findByNumratelimittype", query = "SELECT t FROM Tspec t WHERE t.numratelimittype = :numratelimittype"),
     @NamedQuery(name = "Tspec.findByNumcateindex", query = "SELECT t FROM Tspec t WHERE t.numcateindex = :numcateindex"),
@@ -78,9 +77,6 @@ public class Tspec implements Serializable {
     @Basic(optional = false)
     @Column(name = "numreqaccept", nullable = false)
     private int numreqaccept;
-    @Basic(optional = false)
-    @Column(name = "vc2respcontenttype", nullable = false, length = 20)
-    private String vc2respcontenttype;
     @Basic(optional = false)
     @Column(name = "numauthtype", nullable = false)
     private int numauthtype;
@@ -142,12 +138,11 @@ public class Tspec implements Serializable {
         this.numspecid = numspecid;
     }
 
-    public Tspec(Integer numspecid, String vc2mainresource, String vc2httpmethod, int numreqaccept, String vc2respcontenttype, int numauthtype, int numratelimittype, int numcateindex, String vc2shortdesc, int numenable, int numstatus, int numapitype) {
+    public Tspec(Integer numspecid, String vc2mainresource, String vc2httpmethod, int numreqaccept, int numauthtype, int numratelimittype, int numcateindex, String vc2shortdesc, int numenable, int numstatus, int numapitype) {
         this.numspecid = numspecid;
         this.vc2mainresource = vc2mainresource;
         this.vc2httpmethod = vc2httpmethod;
         this.numreqaccept = numreqaccept;
-        this.vc2respcontenttype = vc2respcontenttype;
         this.numauthtype = numauthtype;
         this.numratelimittype = numratelimittype;
         this.numcateindex = numcateindex;
@@ -203,14 +198,6 @@ public class Tspec implements Serializable {
 
     public void setNumreqaccept(int numreqaccept) {
         this.numreqaccept = numreqaccept;
-    }
-
-    public String getVc2respcontenttype() {
-        return vc2respcontenttype;
-    }
-
-    public void setVc2respcontenttype(String vc2respcontenttype) {
-        this.vc2respcontenttype = vc2respcontenttype;
     }
 
     public int getNumauthtype() {
@@ -385,12 +372,6 @@ public class Tspec implements Serializable {
     }
     public void setEnumAuthType(AuthType enm){
         this.setNumauthtype(enm.getId());
-    }
-    public ContentType[] getEnumContentType(){
-        return ContentType.getMultiValueByIds(this.getVc2respcontenttype(),",");
-    }
-    public void setEnumContentType(ContentType[] enmlst){
-        this.setVc2respcontenttype(ContentType.getMultiIds(enmlst, ","));
     }
     public HttpMethod[] getEnumHttpMethod(){
         return HttpMethod.getMultiValueByIds(this.getVc2httpmethod(),",");

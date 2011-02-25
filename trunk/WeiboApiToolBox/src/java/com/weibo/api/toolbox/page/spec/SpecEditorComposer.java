@@ -150,9 +150,8 @@ public class SpecEditorComposer extends GenericForwardComposer {
 
     public void onClick$btn_save() {
         String hmids = getCheckboxValues("cbhm", ",", this.self);
-        String ctids = getCheckboxValues("cbct", ",", this.self);
+        //String ctids = getCheckboxValues("cbct", ",", this.self);
         currentSpec.setVc2httpmethod(hmids);
-        currentSpec.setVc2respcontenttype(ctids);
         final Component selfcomp = this.self;
         ConfirmBoxEventListener listener = new ConfirmBoxEventListener();
         listener.setOk_operation(new EventListenerAction() {
@@ -180,7 +179,7 @@ public class SpecEditorComposer extends GenericForwardComposer {
     }
     public void onClick$btn_addresponse(){
         List<Tresponse> tresponseSet = currentSpec.getTresponseSet();
-        Tresponse resp = new Tresponse(null, "返回结果标签", 1, 1, "描述");
+        Tresponse resp = new Tresponse(null, "返回结果标签", 1, 1,1, "描述");
         resp.setNumdatastructid(nonstruct);
         resp.setNumspecid(currentSpec);
         tresponseSet.add(resp);
@@ -255,7 +254,6 @@ public class SpecEditorComposer extends GenericForwardComposer {
         initResponse();
         super.doAfterCompose(comp);
         autoCheck("cbhm", currentSpec.getVc2httpmethod(), ",", comp);
-        autoCheck("cbct", currentSpec.getVc2respcontenttype(), ",", comp);
     }
 
     private void initErrorSet() {
