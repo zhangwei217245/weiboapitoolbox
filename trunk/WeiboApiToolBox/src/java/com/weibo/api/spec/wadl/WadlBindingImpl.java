@@ -3,6 +3,7 @@ package com.weibo.api.spec.wadl;
 import com.weibo.api.spec.wadl.wadl20090202.Application;
 import com.weibo.api.spec.wadl.wadl20090202.Doc;
 import com.weibo.api.spec.wadl.wadl20090202.Method;
+import com.weibo.api.spec.wadl.wadl20090202.Option;
 import com.weibo.api.spec.wadl.wadl20090202.Param;
 import com.weibo.api.spec.wadl.wadl20090202.ParamStyle;
 import com.weibo.api.spec.wadl.wadl20090202.Representation;
@@ -11,13 +12,17 @@ import com.weibo.api.spec.wadl.wadl20090202.Resource;
 import com.weibo.api.spec.wadl.wadl20090202.Resources;
 import com.weibo.api.spec.wadl.wadl20090202.Response;
 import com.weibo.api.toolbox.common.enumerations.AcceptType;
+import com.weibo.api.toolbox.common.enumerations.DataTypes;
 import com.weibo.api.toolbox.common.enumerations.HttpMethod;
+import com.weibo.api.toolbox.persist.entity.Tenumgroup;
+import com.weibo.api.toolbox.persist.entity.Tenumvalues;
 import com.weibo.api.toolbox.persist.entity.Terrorcode;
 import com.weibo.api.toolbox.persist.entity.Trequestparam;
 import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -185,6 +190,18 @@ public class WadlBindingImpl {
         }
         if (ToolBoxUtil.isNotEmpty(reqparam.getVc2demovalue())) {
             par.setFixed(reqparam.getVc2demovalue());
+        }
+        if (reqparam.getEnumDataTypes().equals(DataTypes.ENUM)
+                &&reqparam.getNumenumgroupid()!=null){
+            Tenumgroup enumvals = reqparam.getNumenumgroupid();
+            Set<Tenumvalues> tenumvaluesSet = enumvals.getTenumvaluesSet();
+            for (Tenumvalues enumv : tenumvaluesSet){
+                if (enumv.getIsEnable()){
+                    Option opt = new Option();
+                    opt.setValue(enumv.getVc2enumvalue());
+                    par.getOption().add(opt);
+                }
+            }
         }
     }
 }
