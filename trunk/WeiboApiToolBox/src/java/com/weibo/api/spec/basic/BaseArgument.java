@@ -10,7 +10,7 @@ package com.weibo.api.spec.basic;
  * @author x-spirit
  */
 public class BaseArgument {
-    
+    private String hostBase;
     private String docBase;
     private String wikiBase;
     private String specBase;
@@ -49,5 +49,11 @@ public class BaseArgument {
         this.wikiBase = wikiBase;
     }
 
-    
+    public String getHostBase() {
+        return hostBase;
+    }
+
+    public void setHostBase(String hostBase) {
+        this.hostBase = hostBase;
+    }
 }

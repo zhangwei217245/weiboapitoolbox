@@ -6,7 +6,7 @@
 ------{spec_name}
 --schema
 ---{version}
-----{ds_name}
+----{ds_name}.(xsd|jssd)
 --wiki
 ---{version}
 ----{public type}

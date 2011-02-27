@@ -19,6 +19,9 @@ public enum DataTypes {
         public String getJsonType(){
             return "integer";
         }
+        public String getXsdType(){
+            return "xsd:integer";
+        }
     },INT64{
         public int getId(){
             return 2;
@@ -31,6 +34,9 @@ public enum DataTypes {
         }
         public String getJsonType(){
             return "integer";
+        }
+        public String getXsdType(){
+            return "xsd:long";
         }
     },FLOAT{
         public int getId(){
@@ -45,6 +51,9 @@ public enum DataTypes {
         public String getJsonType(){
             return "number";
         }
+        public String getXsdType(){
+            return "xsd:float";
+        }
     },FLOAT64{
         public int getId(){
             return 4;
@@ -57,6 +66,9 @@ public enum DataTypes {
         }
         public String getJsonType(){
             return "number";
+        }
+        public String getXsdType(){
+            return "xsd:double";
         }
     },BOOLEAN{
         public int getId(){
@@ -71,6 +83,9 @@ public enum DataTypes {
         public String getJsonType(){
             return "boolean";
         }
+        public String getXsdType(){
+            return "xsd:boolean";
+        }
     },DATETIME{
         public int getId(){
             return 6;
@@ -83,6 +98,9 @@ public enum DataTypes {
         }
         public String getJsonType(){
             return "string";
+        }
+        public String getXsdType(){
+            return "xsd:dateTime";
         }
     },STRING{
         public int getId(){
@@ -97,6 +115,9 @@ public enum DataTypes {
         public String getJsonType(){
             return "string";
         }
+        public String getXsdType(){
+            return "xsd:string";
+        }
     },BINARY{
         public int getId(){
             return 8;
@@ -109,6 +130,9 @@ public enum DataTypes {
         }
         public String getJsonType(){
             return "any";
+        }
+        public String getXsdType(){
+            return "xsd:base64Binary";
         }
     },ARRAY{
         public int getId(){
@@ -123,6 +147,9 @@ public enum DataTypes {
         public String getJsonType(){
             return "array";
         }
+        public String getXsdType(){
+            return null;
+        }
     },OBJECT{
         public int getId(){
             return 10;
@@ -135,6 +162,9 @@ public enum DataTypes {
         }
         public String getJsonType(){
             return "object";
+        }
+        public String getXsdType(){
+            return null;
         }
     },ENUM{
         public int getId(){
@@ -149,6 +179,9 @@ public enum DataTypes {
         public String getJsonType(){
             return "any";
         }
+        public String getXsdType(){
+            return null;
+        }
     },WILDCARD{
         public int getId(){
             return 12;
@@ -162,11 +195,15 @@ public enum DataTypes {
         public String getJsonType(){
             return "any";
         }
+        public String getXsdType(){
+            return null;
+        }
     };
     public abstract int getId();
     public abstract String getName();
     public abstract String getDesc();
     public abstract String getJsonType();
+    public abstract String getXsdType();
 
     public boolean isNumeric(){
         return (this.getJsonType().equals("integer")||this.getJsonType().equals("number"));
