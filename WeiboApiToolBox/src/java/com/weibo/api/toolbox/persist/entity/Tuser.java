@@ -50,6 +50,9 @@ public class Tuser implements Serializable {
     @Column(name = "vc2password", nullable = false, length = 100)
     private String vc2password;
     @Basic(optional = false)
+    @Column(name = "vc2pwdstr", nullable = false, length = 100)
+    private String vc2pwdstr;
+    @Basic(optional = false)
     @Column(name = "vc2phone", nullable = false, length = 100)
     private String vc2phone;
     @Basic(optional = false)
@@ -71,13 +74,14 @@ public class Tuser implements Serializable {
         this.numuserid = numuserid;
     }
 
-    public Tuser(Integer numuserid, String vc2email, String vc2username, String vc2realname, String vc2password, int numenable, int numsupervisor) {
+    public Tuser(Integer numuserid, String vc2email, String vc2username, String vc2realname, String vc2password, String vc2pwdstr, int numenable, int numsupervisor) {
         this.numuserid = numuserid;
         this.vc2email = vc2email;
         this.vc2username = vc2username;
         this.vc2realname = vc2realname;
         this.vc2password = vc2password;
         this.numenable = numenable;
+        this.vc2pwdstr = vc2pwdstr;
         this.numsupervisor = numsupervisor;
     }
 
@@ -151,6 +155,14 @@ public class Tuser implements Serializable {
 
     public void setVc2phone(String vc2phone) {
         this.vc2phone = vc2phone;
+    }
+
+    public String getVc2pwdstr() {
+        return vc2pwdstr;
+    }
+
+    public void setVc2pwdstr(String vc2pwdstr) {
+        this.vc2pwdstr = vc2pwdstr;
     }
 
     public Set<Tgroup> getTgroupSet() {

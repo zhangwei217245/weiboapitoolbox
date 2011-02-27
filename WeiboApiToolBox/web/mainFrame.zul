@@ -54,7 +54,8 @@
             </panel>
         </west>
         <center autoscroll="true" flex="true">
-            <include style="padding:3px;" id="xcontents" />
+<!--            <include style="padding:3px;" id="xcontents" />-->
+             <iframe style="padding:3px;" id="xcontents" />
         </center>
     </borderlayout>
 </zk>

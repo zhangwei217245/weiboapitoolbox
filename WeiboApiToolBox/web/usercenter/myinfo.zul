@@ -12,64 +12,54 @@
 	String themeSClass = isBreeze? "breeze" : isSilvergray? "silvergray" : "blue";
 ]]>
     </zscript>
-<borderlayout id="register" sclass="${themeSClass}" apply="${myinfoComposer}">
-        <north border="none" size="20%" flex="true">
-
-        </north>
-        <west border="none" size="25%" flex="true">
-
-        </west>
-        <center border="none" flex="true">
-                    <grid mold="default">
-                        <columns>
-                            <column label="用户注册"/>
-                            <column label=""/>
-                        </columns>
-                        <rows height="100%">
-                            <row height="20%">
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./userInfogrid" ?>
+    <grid id="userInfogrid" mold="default" apply="${myinfoComposer}">
+        <columns>
+            <column label="用户注册"/>
+            <column label=""/>
+        </columns>
+        <rows height="100%">
+            <row height="20%">
 						Email :
-                                <textbox id="emailtb" width="200px" constraint="${registerComposer.const_email}" />
-                            </row>
-                            <row height="20%">
+                <label value="@{myinfoComposer.currUser.vc2email}"></label>
+            </row>
+            <row height="20%">
 						用户名 :
-                                <textbox id="nametb" width="200px" constraint="${registerComposer.const_username}"/>
-                            </row>
-                            <row height="20%">
+                <label value="@{myinfoComposer.currUser.vc2username}"></label>
+            </row>
+            <row height="20%">
 						密码 :
-                                <textbox id="pwdtb" width="200px"
-							type="password" constraint="no empty:请输入密码"/>
-                            </row>
-                            <row height="20%">
+                <textbox id="pwdtb" width="200px" type="password" constraint="no empty:请输入密码"/>
+            </row>
+            <row height="20%">
 						确认密码 :
-                                <textbox id="pwdtb2" width="200px"
-							type="password" constraint="${pwc}"/>
-                            </row>
-                            <row height="20%">
+                <hbox>
+                    <textbox id="pwdtb2" width="200px"
+							type="password" constraint="${myinfoComposer.pwc}"/>
+                    <button id="showpwd" label="显示密码"/>
+                </hbox>
+                
+            </row>
+            <row height="20%">
 						真实姓名 :
-                                <textbox id="realnametb" width="200px" constraint="no empty:请输入真实姓名"/>
-                            </row>
-                            <row height="20%">
+                <textbox id="realnametb" inplace="true" width="200px" value="@{myinfoComposer.currUser.vc2realname}" constraint="no empty:请输入真实姓名"/>
+            </row>
+            <row height="20%">
 						手机 :
-                                <textbox id="mobiletb" width="200px" constraint="/1[0-9]{10}/:请输入手机号码"/>
-                            </row>
-                            <row height="20%">
+                <textbox id="mobiletb" width="200px" value="@{myinfoComposer.currUser.vc2phone}" constraint="/1[0-9]{10}/:请输入手机号码"/>
+            </row>
+            <row height="20%">
 						部门 :
-                                <textbox id="departtb" width="200px" constraint="no empty:请输部门名称"/>
-                            </row>
-                        </rows>
-                        <foot>
-                            <footer span="2">
-                                <hbox pack="center" height="10%" width="100%">
-                                    <button id="btn_submit" label="提交" />
-                                    <button id="btn_cancel" label="取消" />
-                                </hbox>
-                            </footer>
-                        </foot>
-                    </grid>
-        </center>
-        <east size="25%" border="none" flex="true">
-
-        </east>
-        <south size="20%" border="none" flex="true"></south>
-    </borderlayout>
+                <textbox id="departtb" inplace="true" width="200px" value="@{myinfoComposer.currUser.vc2department}" constraint="no empty:请输部门名称"/>
+            </row>
+        </rows>
+        <foot>
+            <footer span="2">
+                <hbox pack="center" height="10%" width="100%">
+                    <button id="btn_submit" label="修改信息" />
+                </hbox>
+            </footer>
+        </foot>
+    </grid>
+  
 </zk>
