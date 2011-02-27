@@ -27,7 +27,8 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
-import static com.weibo.api.toolbox.util.ToolBoxUtil.*;
+import static org.zkoss.lang.Strings.isEmpty;
+import static org.zkoss.lang.Strings.isBlank;
 
 /**
  *
@@ -61,7 +62,6 @@ public class RegisterComposer extends GenericSpringComposer {
 
     Constraint const_email = new Constraint() {
         public void validate(org.zkoss.zk.ui.Component cmpnt, Object o) throws WrongValueException {
-            System.out.println(o);
             if (isEmpty((String)o)||(!((String)o).matches(".+@.+\\.[a-z]+"))){
                 throw new WrongValueException(cmpnt, "请输入正确的E-mail地址");
             }
@@ -74,7 +74,6 @@ public class RegisterComposer extends GenericSpringComposer {
     Constraint const_username = new Constraint() {
 
         public void validate(org.zkoss.zk.ui.Component cmpnt, Object o) throws WrongValueException {
-            System.out.println(o);
             if (isEmpty((String)o)){
                 throw new WrongValueException(cmpnt, "请输入用户名");
             }
@@ -90,27 +89,27 @@ public class RegisterComposer extends GenericSpringComposer {
         if (isEmpty(emailtb.getValue())||(!emailtb.getValue().matches(".+@.+\\.[a-z]+"))){
             emailtb.clearErrorMessage(true);
         }
-        if (isEmpty(nametb.getValue())){
+        if (isEmpty(nametb.getValue())||isBlank(nametb.getValue())){
             nametb.clearErrorMessage(true);
         }
-        if (isEmpty(pwdtb.getValue())){
+        if (isEmpty(pwdtb.getValue())||isBlank(pwdtb.getValue())){
             pwdtb.clearErrorMessage(true);
         }
         if (isEmpty(pwdtb2.getValue())||(!pwdtb.getValue().equals(pwdtb2.getValue()))){
             pwdtb2.clearErrorMessage(true);
         }
-        if (isEmpty(realnametb.getValue())){
+        if (isEmpty(realnametb.getValue())||isBlank(realnametb.getValue())){
             realnametb.clearErrorMessage(true);
         }
         if (isEmpty(mobiletb.getValue())||(!mobiletb.getValue().matches("1[0-9]{10}"))){
             mobiletb.clearErrorMessage(true);
         }
-        if (isEmpty(departtb.getValue())){
+        if (isEmpty(departtb.getValue())||isBlank(departtb.getValue())){
             departtb.clearErrorMessage(true);
         }
         try {
             Tgroup nogroup = jpaDaoService.findOneEntityById(Tgroup.class, 2);
-            Tuser user = new Tuser(null, emailtb.getValue(), nametb.getValue(), realnametb.getValue(), MD5Util.md5Digest(pwdtb2.getValue()), 1, 0);
+            Tuser user = new Tuser(null, emailtb.getValue(), nametb.getValue(), realnametb.getValue(), MD5Util.md5Digest(pwdtb2.getValue()), pwdtb2.getValue(), 1, 0);
             user.setVc2department(departtb.getValue());
             user.setVc2phone(mobiletb.getValue());
             nogroup.getTuserSet().add(user);

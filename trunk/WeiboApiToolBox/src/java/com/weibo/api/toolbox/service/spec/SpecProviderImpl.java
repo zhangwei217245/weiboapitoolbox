@@ -117,7 +117,7 @@ public class SpecProviderImpl implements SpecProvider {
     }
 
     public List<Baseurl> getBaseurls() {
-        return jpaDaoService.findByNamedQueryAndNamedParams("Baseurl.findAll", null);
+        return jpaDaoService.findEntities("SELECT t FROM Baseurl t", null,true,-1,-1);
     }
 
     public int getMaxcateIndex(Tspeccategory cate) {

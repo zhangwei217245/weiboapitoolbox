@@ -26,6 +26,7 @@ import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Div;
+import org.zkoss.zul.Iframe;
 import org.zkoss.zul.Include;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModel;
@@ -46,7 +47,7 @@ public class MainLayoutComposer extends GenericForwardComposer implements
     private static final Log log = Log.lookup(MainLayoutComposer.class);
     Textbox searchBox;
     Listbox itemList;
-    Include xcontents;
+    Iframe xcontents;
     Div header;
     Button _selected;
     Label lb_username;
