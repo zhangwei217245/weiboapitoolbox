@@ -24,12 +24,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tenumvalues")
-@NamedQueries({
-    @NamedQuery(name = "Tenumvalues.findAll", query = "SELECT t FROM Tenumvalues t"),
-    @NamedQuery(name = "Tenumvalues.findByNumenumvalueid", query = "SELECT t FROM Tenumvalues t WHERE t.numenumvalueid = :numenumvalueid"),
-    @NamedQuery(name = "Tenumvalues.findByVc2enumvalue", query = "SELECT t FROM Tenumvalues t WHERE t.vc2enumvalue = :vc2enumvalue"),
-    @NamedQuery(name = "Tenumvalues.findByVc2enumdesc", query = "SELECT t FROM Tenumvalues t WHERE t.vc2enumdesc = :vc2enumdesc"),
-    @NamedQuery(name = "Tenumvalues.findByNumenable", query = "SELECT t FROM Tenumvalues t WHERE t.numenable = :numenable")})
 public class Tenumvalues implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

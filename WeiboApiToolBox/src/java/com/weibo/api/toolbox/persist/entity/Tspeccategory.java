@@ -28,13 +28,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tspeccategory")
-@NamedQueries({
-    @NamedQuery(name = "Tspeccategory.findAll", query = "SELECT t FROM Tspeccategory t"),
-    @NamedQuery(name = "Tspeccategory.findByNumcateid", query = "SELECT t FROM Tspeccategory t WHERE t.numcateid = :numcateid"),
-    @NamedQuery(name = "Tspeccategory.findByVc2catename", query = "SELECT t FROM Tspeccategory t WHERE t.vc2catename = :vc2catename"),
-    @NamedQuery(name = "Tspeccategory.findByNumindex", query = "SELECT t FROM Tspeccategory t WHERE t.numindex = :numindex"),
-    @NamedQuery(name = "Tspeccategory.findByNumenable", query = "SELECT t FROM Tspeccategory t WHERE t.numenable = :numenable"),
-    @NamedQuery(name = "Tspeccategory.findByVc2desc", query = "SELECT t FROM Tspeccategory t WHERE t.vc2desc = :vc2desc")})
 public class Tspeccategory implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

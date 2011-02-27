@@ -24,16 +24,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "terrorcode")
-@NamedQueries({
-    @NamedQuery(name = "Terrorcode.findAll", query = "SELECT t FROM Terrorcode t"),
-    @NamedQuery(name = "Terrorcode.findByNumerrorid", query = "SELECT t FROM Terrorcode t WHERE t.numerrorid = :numerrorid"),
-    @NamedQuery(name = "Terrorcode.findByVc2errorcode", query = "SELECT t FROM Terrorcode t WHERE t.vc2errorcode = :vc2errorcode"),
-    @NamedQuery(name = "Terrorcode.findByVc2httpcode", query = "SELECT t FROM Terrorcode t WHERE t.vc2httpcode = :vc2httpcode"),
-    @NamedQuery(name = "Terrorcode.findByVc2errmsg", query = "SELECT t FROM Terrorcode t WHERE t.vc2errmsg = :vc2errmsg"),
-    @NamedQuery(name = "Terrorcode.findByVc2cnmsg", query = "SELECT t FROM Terrorcode t WHERE t.vc2cnmsg = :vc2cnmsg"),
-    @NamedQuery(name = "Terrorcode.findByVc2desc", query = "SELECT t FROM Terrorcode t WHERE t.vc2desc = :vc2desc"),
-    @NamedQuery(name = "Terrorcode.findByVc2detail", query = "SELECT t FROM Terrorcode t WHERE t.vc2detail = :vc2detail"),
-    @NamedQuery(name = "Terrorcode.findByNumenable", query = "SELECT t FROM Terrorcode t WHERE t.numenable = :numenable")})
 public class Terrorcode implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

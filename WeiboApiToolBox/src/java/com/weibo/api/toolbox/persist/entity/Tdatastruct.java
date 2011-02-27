@@ -28,11 +28,6 @@ import org.hibernate.annotations.FetchMode;
  */
 @Entity
 @Table(name = "tdatastruct")
-@NamedQueries({
-    @NamedQuery(name = "Tdatastruct.findAll", query = "SELECT t FROM Tdatastruct t"),
-    @NamedQuery(name = "Tdatastruct.findByNumdatastructid", query = "SELECT t FROM Tdatastruct t WHERE t.numdatastructid = :numdatastructid"),
-    @NamedQuery(name = "Tdatastruct.findByVc2structname", query = "SELECT t FROM Tdatastruct t WHERE t.vc2structname = :vc2structname"),
-    @NamedQuery(name = "Tdatastruct.findByNumenable", query = "SELECT t FROM Tdatastruct t WHERE t.numenable = :numenable")})
 public class Tdatastruct implements Serializable {
 
     private static final long serialVersionUID = 1L;

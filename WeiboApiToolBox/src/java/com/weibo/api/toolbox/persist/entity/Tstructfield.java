@@ -25,13 +25,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tstructfield")
-@NamedQueries({
-    @NamedQuery(name = "Tstructfield.findAll", query = "SELECT t FROM Tstructfield t"),
-    @NamedQuery(name = "Tstructfield.findByNumfieldid", query = "SELECT t FROM Tstructfield t WHERE t.numfieldid = :numfieldid"),
-    @NamedQuery(name = "Tstructfield.findByVc2fieldname", query = "SELECT t FROM Tstructfield t WHERE t.vc2fieldname = :vc2fieldname"),
-    @NamedQuery(name = "Tstructfield.findByNumdatatype", query = "SELECT t FROM Tstructfield t WHERE t.numdatatype = :numdatatype"),
-    @NamedQuery(name = "Tstructfield.findByVc2desc", query = "SELECT t FROM Tstructfield t WHERE t.vc2desc = :vc2desc"),
-    @NamedQuery(name = "Tstructfield.findByVc2demovalue", query = "SELECT t FROM Tstructfield t WHERE t.vc2demovalue = :vc2demovalue")})
 public class Tstructfield implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

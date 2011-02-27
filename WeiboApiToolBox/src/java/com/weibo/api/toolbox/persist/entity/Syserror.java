@@ -19,16 +19,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "syserror")
-@NamedQueries({
-    @NamedQuery(name = "Syserror.findAll", query = "SELECT s FROM Syserror s"),
-    @NamedQuery(name = "Syserror.findByNumerrorid", query = "SELECT s FROM Syserror s WHERE s.numerrorid = :numerrorid"),
-    @NamedQuery(name = "Syserror.findByVc2errorcode", query = "SELECT s FROM Syserror s WHERE s.vc2errorcode = :vc2errorcode"),
-    @NamedQuery(name = "Syserror.findByVc2httpcode", query = "SELECT s FROM Syserror s WHERE s.vc2httpcode = :vc2httpcode"),
-    @NamedQuery(name = "Syserror.findByVc2errmsg", query = "SELECT s FROM Syserror s WHERE s.vc2errmsg = :vc2errmsg"),
-    @NamedQuery(name = "Syserror.findByVc2cnmsg", query = "SELECT s FROM Syserror s WHERE s.vc2cnmsg = :vc2cnmsg"),
-    @NamedQuery(name = "Syserror.findByVc2desc", query = "SELECT s FROM Syserror s WHERE s.vc2desc = :vc2desc"),
-    @NamedQuery(name = "Syserror.findByVc2detail", query = "SELECT s FROM Syserror s WHERE s.vc2detail = :vc2detail"),
-    @NamedQuery(name = "Syserror.findByNumenable", query = "SELECT s FROM Syserror s WHERE s.numenable = :numenable")})
 public class Syserror implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

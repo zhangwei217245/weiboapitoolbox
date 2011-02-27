@@ -29,12 +29,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tgroup")
-@NamedQueries({
-    @NamedQuery(name = "Tgroup.findAll", query = "SELECT t FROM Tgroup t"),
-    @NamedQuery(name = "Tgroup.findByNumgroupid", query = "SELECT t FROM Tgroup t WHERE t.numgroupid = :numgroupid"),
-    @NamedQuery(name = "Tgroup.findByVc2groupname", query = "SELECT t FROM Tgroup t WHERE t.vc2groupname = :vc2groupname"),
-    @NamedQuery(name = "Tgroup.findByVc2groupdesc", query = "SELECT t FROM Tgroup t WHERE t.vc2groupdesc = :vc2groupdesc"),
-    @NamedQuery(name = "Tgroup.findByNumenable", query = "SELECT t FROM Tgroup t WHERE t.numenable = :numenable")})
 public class Tgroup implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

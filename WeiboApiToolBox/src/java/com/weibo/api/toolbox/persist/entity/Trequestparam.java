@@ -26,18 +26,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "trequestparam")
-@NamedQueries({
-    @NamedQuery(name = "Trequestparam.findAll", query = "SELECT t FROM Trequestparam t"),
-    @NamedQuery(name = "Trequestparam.findByNumparamid", query = "SELECT t FROM Trequestparam t WHERE t.numparamid = :numparamid"),
-    @NamedQuery(name = "Trequestparam.findByVc2paramname", query = "SELECT t FROM Trequestparam t WHERE t.vc2paramname = :vc2paramname"),
-    @NamedQuery(name = "Trequestparam.findByNumrequired", query = "SELECT t FROM Trequestparam t WHERE t.numrequired = :numrequired"),
-    @NamedQuery(name = "Trequestparam.findByNumstyle", query = "SELECT t FROM Trequestparam t WHERE t.numstyle = :numstyle"),
-    @NamedQuery(name = "Trequestparam.findByNumdatatype", query = "SELECT t FROM Trequestparam t WHERE t.numdatatype = :numdatatype"),
-    @NamedQuery(name = "Trequestparam.findByVc2desc", query = "SELECT t FROM Trequestparam t WHERE t.vc2desc = :vc2desc"),
-    @NamedQuery(name = "Trequestparam.findByVc2range", query = "SELECT t FROM Trequestparam t WHERE t.vc2range = :vc2range"),
-    @NamedQuery(name = "Trequestparam.findByVc2defaultvalue", query = "SELECT t FROM Trequestparam t WHERE t.vc2defaultvalue = :vc2defaultvalue"),
-    @NamedQuery(name = "Trequestparam.findByVc2demovalue", query = "SELECT t FROM Trequestparam t WHERE t.vc2demovalue = :vc2demovalue"),
-    @NamedQuery(name = "Trequestparam.findByNumenable", query = "SELECT t FROM Trequestparam t WHERE t.numenable = :numenable")})
 public class Trequestparam implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

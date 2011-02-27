@@ -27,15 +27,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tcategory")
-@NamedQueries({
-    @NamedQuery(name = "Tcategory.findAll", query = "SELECT t FROM Tcategory t"),
-    @NamedQuery(name = "Tcategory.findByNumcateid", query = "SELECT t FROM Tcategory t WHERE t.numcateid = :numcateid"),
-    @NamedQuery(name = "Tcategory.findByVc2catename", query = "SELECT t FROM Tcategory t WHERE t.vc2catename = :vc2catename"),
-    @NamedQuery(name = "Tcategory.findByVc2catedesc", query = "SELECT t FROM Tcategory t WHERE t.vc2catedesc = :vc2catedesc"),
-    @NamedQuery(name = "Tcategory.findByVc2catehref", query = "SELECT t FROM Tcategory t WHERE t.vc2catehref = :vc2catehref"),
-    @NamedQuery(name = "Tcategory.findByVc2cateimg", query = "SELECT t FROM Tcategory t WHERE t.vc2cateimg = :vc2cateimg"),
-    @NamedQuery(name = "Tcategory.findByNumenable", query = "SELECT t FROM Tcategory t WHERE t.numenable = :numenable"),
-    @NamedQuery(name = "Tcategory.findByNumindex", query = "SELECT t FROM Tcategory t WHERE t.numindex = :numindex")})
 public class Tcategory implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
