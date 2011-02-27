@@ -5,19 +5,15 @@
 
 package com.weibo.api.toolbox.page.usercenter;
 
+import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zul.Button;
-import org.springframework.context.annotation.Scope;
 import com.weibo.api.toolbox.persist.IJpaDaoService;
-import javax.annotation.Resource;
 import org.zkoss.zul.Messagebox;
 import com.weibo.api.toolbox.persist.entity.Tuser;
 import com.weibo.api.toolbox.util.MD5Util;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.zkoss.lang.Objects;
-import org.zkoss.spring.context.annotation.EventHandler;
-import org.zkoss.spring.util.GenericSpringComposer;
+import org.zkoss.spring.SpringUtil;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
@@ -29,25 +25,16 @@ import static org.zkoss.lang.Strings.isBlank;
  *
  * @author X-Spirit
  */
-@Component("myinfoComposer")
-@Scope("desktop")
-public class MyInfoComposer extends GenericSpringComposer{
+public class MyInfoComposer extends GenericForwardComposer{
 
-    @Autowired
     Textbox pwdtb;
-    @Autowired
     Textbox pwdtb2;
-    @Autowired
     Textbox realnametb;
-    @Autowired
     Textbox mobiletb;
-    @Autowired
     Textbox departtb;
-    @Autowired
     Button showpwd;
 
-    @Resource
-    IJpaDaoService jpaDaoService;
+    IJpaDaoService jpaDaoService = (IJpaDaoService)SpringUtil.getBean("jpaDaoService");
 
     Tuser currUser;
     
@@ -59,8 +46,7 @@ public class MyInfoComposer extends GenericSpringComposer{
             }
         }
     };
-    @EventHandler("btn_submit.onClick")
-    public void submit(Event evt) throws InterruptedException{
+    public void onClick$btn_submit(Event evt) throws InterruptedException{
         if (isEmpty(pwdtb.getValue())||isBlank(pwdtb.getValue())){
             pwdtb.clearErrorMessage(true);
         }
@@ -86,8 +72,7 @@ public class MyInfoComposer extends GenericSpringComposer{
         }
         Messagebox.show("操作成功", "成功", Messagebox.OK, Messagebox.INFORMATION);
     }
-    @EventHandler("showpwd.onClick")
-    public void showOrHidePwd(Event evt){
+    public void onClick$showpwd(Event evt){
         if (pwdtb.getType().equals("password")){
             pwdtb.setType("text");
             pwdtb2.setType("text");
