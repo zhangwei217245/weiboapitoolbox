@@ -26,12 +26,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tenumgroup")
-@NamedQueries({
-    @NamedQuery(name = "Tenumgroup.findAll", query = "SELECT t FROM Tenumgroup t"),
-    @NamedQuery(name = "Tenumgroup.findByNumenumgroupid", query = "SELECT t FROM Tenumgroup t WHERE t.numenumgroupid = :numenumgroupid"),
-    @NamedQuery(name = "Tenumgroup.findByVc2enumgroupname", query = "SELECT t FROM Tenumgroup t WHERE t.vc2enumgroupname = :vc2enumgroupname"),
-    @NamedQuery(name = "Tenumgroup.findByVc2enumgroupdesc", query = "SELECT t FROM Tenumgroup t WHERE t.vc2enumgroupdesc = :vc2enumgroupdesc"),
-    @NamedQuery(name = "Tenumgroup.findByNumenable", query = "SELECT t FROM Tenumgroup t WHERE t.numenable = :numenable")})
 public class Tenumgroup implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

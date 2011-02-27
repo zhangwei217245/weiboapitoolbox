@@ -28,15 +28,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tmenuitem")
-@NamedQueries({
-    @NamedQuery(name = "Tmenuitem.findAll", query = "SELECT t FROM Tmenuitem t"),
-    @NamedQuery(name = "Tmenuitem.findByNumitemid", query = "SELECT t FROM Tmenuitem t WHERE t.numitemid = :numitemid"),
-    @NamedQuery(name = "Tmenuitem.findByVc2itemname", query = "SELECT t FROM Tmenuitem t WHERE t.vc2itemname = :vc2itemname"),
-    @NamedQuery(name = "Tmenuitem.findByVc2itemurl", query = "SELECT t FROM Tmenuitem t WHERE t.vc2itemurl = :vc2itemurl"),
-    @NamedQuery(name = "Tmenuitem.findByVc2itemdesc", query = "SELECT t FROM Tmenuitem t WHERE t.vc2itemdesc = :vc2itemdesc"),
-    @NamedQuery(name = "Tmenuitem.findByVc2itemimg", query = "SELECT t FROM Tmenuitem t WHERE t.vc2itemimg = :vc2itemimg"),
-    @NamedQuery(name = "Tmenuitem.findByNumenable", query = "SELECT t FROM Tmenuitem t WHERE t.numenable = :numenable"),
-    @NamedQuery(name = "Tmenuitem.findByNumindex", query = "SELECT t FROM Tmenuitem t WHERE t.numindex = :numindex")})
 public class Tmenuitem implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

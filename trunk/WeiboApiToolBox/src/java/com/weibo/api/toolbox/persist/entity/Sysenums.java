@@ -24,14 +24,6 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "sysenums", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"vc2enumgroup"})})
-@NamedQueries({
-    @NamedQuery(name = "Sysenums.findAll", query = "SELECT s FROM Sysenums s"),
-    @NamedQuery(name = "Sysenums.findByNumenumid", query = "SELECT s FROM Sysenums s WHERE s.numenumid = :numenumid"),
-    @NamedQuery(name = "Sysenums.findByVc2enumgroup", query = "SELECT s FROM Sysenums s WHERE s.vc2enumgroup = :vc2enumgroup"),
-    @NamedQuery(name = "Sysenums.findByNumenumidx", query = "SELECT s FROM Sysenums s WHERE s.numenumidx = :numenumidx"),
-    @NamedQuery(name = "Sysenums.findByVc2enumvalue", query = "SELECT s FROM Sysenums s WHERE s.vc2enumvalue = :vc2enumvalue"),
-    @NamedQuery(name = "Sysenums.findByVc2enumname", query = "SELECT s FROM Sysenums s WHERE s.vc2enumname = :vc2enumname"),
-    @NamedQuery(name = "Sysenums.findByNumenable", query = "SELECT s FROM Sysenums s WHERE s.numenable = :numenable")})
 public class Sysenums implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

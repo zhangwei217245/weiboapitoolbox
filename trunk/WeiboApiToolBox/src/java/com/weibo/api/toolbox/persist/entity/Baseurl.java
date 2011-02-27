@@ -25,12 +25,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "baseurl")
-@NamedQueries({
-    @NamedQuery(name = "Baseurl.findAll", query = "SELECT b FROM Baseurl b"),
-    @NamedQuery(name = "Baseurl.findByNumbaseurlid", query = "SELECT b FROM Baseurl b WHERE b.numbaseurlid = :numbaseurlid"),
-    @NamedQuery(name = "Baseurl.findByVc2baseurl", query = "SELECT b FROM Baseurl b WHERE b.vc2baseurl = :vc2baseurl"),
-    @NamedQuery(name = "Baseurl.findByVc2desc", query = "SELECT b FROM Baseurl b WHERE b.vc2desc = :vc2desc"),
-    @NamedQuery(name = "Baseurl.findByNumindex", query = "SELECT b FROM Baseurl b WHERE b.numindex = :numindex")})
 public class Baseurl implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

@@ -30,15 +30,6 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "tuser", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"vc2email"}),
     @UniqueConstraint(columnNames = {"vc2username"})})
-@NamedQueries({
-    @NamedQuery(name = "Tuser.findAll", query = "SELECT t FROM Tuser t"),
-    @NamedQuery(name = "Tuser.findByNumuserid", query = "SELECT t FROM Tuser t WHERE t.numuserid = :numuserid"),
-    @NamedQuery(name = "Tuser.findByVc2email", query = "SELECT t FROM Tuser t WHERE t.vc2email = :vc2email"),
-    @NamedQuery(name = "Tuser.findByVc2username", query = "SELECT t FROM Tuser t WHERE t.vc2username = :vc2username"),
-    @NamedQuery(name = "Tuser.findByVc2realname", query = "SELECT t FROM Tuser t WHERE t.vc2realname = :vc2realname"),
-    @NamedQuery(name = "Tuser.findByVc2password", query = "SELECT t FROM Tuser t WHERE t.vc2password = :vc2password"),
-    @NamedQuery(name = "Tuser.findByNumenable", query = "SELECT t FROM Tuser t WHERE t.numenable = :numenable"),
-    @NamedQuery(name = "Tuser.findByNumsupervisor", query = "SELECT t FROM Tuser t WHERE t.numsupervisor = :numsupervisor")})
 public class Tuser implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

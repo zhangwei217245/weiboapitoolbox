@@ -26,14 +26,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tresponse")
-@NamedQueries({
-    @NamedQuery(name = "Tresponse.findAll", query = "SELECT t FROM Tresponse t"),
-    @NamedQuery(name = "Tresponse.findByNumresponseid", query = "SELECT t FROM Tresponse t WHERE t.numresponseid = :numresponseid"),
-    @NamedQuery(name = "Tresponse.findByVc2responsename", query = "SELECT t FROM Tresponse t WHERE t.vc2responsename = :vc2responsename"),
-    @NamedQuery(name = "Tresponse.findByNumdatatype", query = "SELECT t FROM Tresponse t WHERE t.numdatatype = :numdatatype"),
-    @NamedQuery(name = "Tresponse.findByNumrequired", query = "SELECT t FROM Tresponse t WHERE t.numrequired = :numrequired"),
-    @NamedQuery(name = "Tresponse.findByVc2desc", query = "SELECT t FROM Tresponse t WHERE t.vc2desc = :vc2desc"),
-    @NamedQuery(name = "Tresponse.findByVc2demovalue", query = "SELECT t FROM Tresponse t WHERE t.vc2demovalue = :vc2demovalue")})
 public class Tresponse implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

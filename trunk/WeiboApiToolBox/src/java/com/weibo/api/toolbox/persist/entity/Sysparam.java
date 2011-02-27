@@ -21,18 +21,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "sysparam")
-@NamedQueries({
-    @NamedQuery(name = "Sysparam.findAll", query = "SELECT s FROM Sysparam s"),
-    @NamedQuery(name = "Sysparam.findByNumparamid", query = "SELECT s FROM Sysparam s WHERE s.numparamid = :numparamid"),
-    @NamedQuery(name = "Sysparam.findByVc2paramname", query = "SELECT s FROM Sysparam s WHERE s.vc2paramname = :vc2paramname"),
-    @NamedQuery(name = "Sysparam.findByNumrequired", query = "SELECT s FROM Sysparam s WHERE s.numrequired = :numrequired"),
-    @NamedQuery(name = "Sysparam.findByNumstyle", query = "SELECT s FROM Sysparam s WHERE s.numstyle = :numstyle"),
-    @NamedQuery(name = "Sysparam.findByNumdatatype", query = "SELECT s FROM Sysparam s WHERE s.numdatatype = :numdatatype"),
-    @NamedQuery(name = "Sysparam.findByVc2desc", query = "SELECT s FROM Sysparam s WHERE s.vc2desc = :vc2desc"),
-    @NamedQuery(name = "Sysparam.findByVc2range", query = "SELECT s FROM Sysparam s WHERE s.vc2range = :vc2range"),
-    @NamedQuery(name = "Sysparam.findByVc2defaultvalue", query = "SELECT s FROM Sysparam s WHERE s.vc2defaultvalue = :vc2defaultvalue"),
-    @NamedQuery(name = "Sysparam.findByVc2demovalue", query = "SELECT s FROM Sysparam s WHERE s.vc2demovalue = :vc2demovalue"),
-    @NamedQuery(name = "Sysparam.findByNumenable", query = "SELECT s FROM Sysparam s WHERE s.numenable = :numenable")})
 public class Sysparam implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

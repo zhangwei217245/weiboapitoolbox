@@ -40,23 +40,6 @@ import org.hibernate.annotations.FetchMode;
  */
 @Entity
 @Table(name = "tspec")
-@NamedQueries({
-    @NamedQuery(name = "Tspec.findAll", query = "SELECT t FROM Tspec t"),
-    @NamedQuery(name = "Tspec.findByNumspecid", query = "SELECT t FROM Tspec t WHERE t.numspecid = :numspecid"),
-    @NamedQuery(name = "Tspec.findByVc2version", query = "SELECT t FROM Tspec t WHERE t.vc2version = :vc2version"),
-    @NamedQuery(name = "Tspec.findByVc2mainresource", query = "SELECT t FROM Tspec t WHERE t.vc2mainresource = :vc2mainresource"),
-    @NamedQuery(name = "Tspec.findByVc2subresource", query = "SELECT t FROM Tspec t WHERE t.vc2subresource = :vc2subresource"),
-    @NamedQuery(name = "Tspec.findByVc2httpmethod", query = "SELECT t FROM Tspec t WHERE t.vc2httpmethod = :vc2httpmethod"),
-    @NamedQuery(name = "Tspec.findByNumreqaccept", query = "SELECT t FROM Tspec t WHERE t.numreqaccept = :numreqaccept"),
-    @NamedQuery(name = "Tspec.findByNumauthtype", query = "SELECT t FROM Tspec t WHERE t.numauthtype = :numauthtype"),
-    @NamedQuery(name = "Tspec.findByNumratelimittype", query = "SELECT t FROM Tspec t WHERE t.numratelimittype = :numratelimittype"),
-    @NamedQuery(name = "Tspec.findByNumcateindex", query = "SELECT t FROM Tspec t WHERE t.numcateindex = :numcateindex"),
-    @NamedQuery(name = "Tspec.findByVc2shortdesc", query = "SELECT t FROM Tspec t WHERE t.vc2shortdesc = :vc2shortdesc"),
-    @NamedQuery(name = "Tspec.findByVc2maindesc", query = "SELECT t FROM Tspec t WHERE t.vc2maindesc = :vc2maindesc"),
-    @NamedQuery(name = "Tspec.findByVc2cautions", query = "SELECT t FROM Tspec t WHERE t.vc2cautions = :vc2cautions"),
-    @NamedQuery(name = "Tspec.findByNumenable", query = "SELECT t FROM Tspec t WHERE t.numenable = :numenable"),
-    @NamedQuery(name = "Tspec.findByNumstatus", query = "SELECT t FROM Tspec t WHERE t.numstatus = :numstatus"),
-    @NamedQuery(name = "Tspec.findByNumapitype", query = "SELECT t FROM Tspec t WHERE t.numapitype = :numapitype")})
 public class Tspec implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
