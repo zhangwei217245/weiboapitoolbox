@@ -72,10 +72,15 @@ public class MainLayoutComposer extends GenericForwardComposer implements
         if (href != null && href.length() > 0 && (!href.equals("NONE"))) {
             Executions.getCurrent().sendRedirect(href);
         } else {
-            itemList.setModel(getSelectedModel());
+            ListModel selectedModel = getSelectedModel();
+            int listsize = selectedModel.getSize();
+            itemList.setModel(selectedModel);
             if (item != null) {
                 itemList.renderAll();
                 ((Listitem) itemList.getFellow(item.getId())).setSelected(true);
+            } else if (listsize > 0){
+                itemList.setSelectedIndex(0);
+                onSelect$itemList();
             }
         }
     }
@@ -101,7 +106,7 @@ public class MainLayoutComposer extends GenericForwardComposer implements
         }
     }
 
-    public void onSelect$itemList(SelectEvent event) {
+    public void onSelect$itemList() {
         Listitem item = itemList.getSelectedItem();
 
         if (item != null) {

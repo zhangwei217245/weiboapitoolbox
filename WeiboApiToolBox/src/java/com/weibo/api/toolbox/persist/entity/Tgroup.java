@@ -6,10 +6,13 @@
 package com.weibo.api.toolbox.persist.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,13 +54,13 @@ public class Tgroup implements Serializable {
     @JoinTable(name = "tgroup_menuitem_relation", joinColumns = {
         @JoinColumn(name = "numgroupid", referencedColumnName = "numgroupid", nullable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "numitemid", referencedColumnName = "numitemid", nullable = false)})
-    @ManyToMany
-    private Set<Tmenuitem> tmenuitemSet;
+    @ManyToMany(cascade = CascadeType.MERGE,fetch=FetchType.EAGER)
+    private Set<Tmenuitem> tmenuitemSet = new HashSet<Tmenuitem>();
     @JoinTable(name = "tgroup_user_relation", joinColumns = {
         @JoinColumn(name = "numgroupid", referencedColumnName = "numgroupid", nullable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "numuserid", referencedColumnName = "numuserid", nullable = false)})
-    @ManyToMany
-    private Set<Tuser> tuserSet;
+    @ManyToMany(cascade = CascadeType.MERGE,fetch=FetchType.EAGER)
+    private Set<Tuser> tuserSet = new HashSet<Tuser>();
 
     public Tgroup() {
     }

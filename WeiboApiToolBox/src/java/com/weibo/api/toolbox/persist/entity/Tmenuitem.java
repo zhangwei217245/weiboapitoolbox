@@ -8,8 +8,10 @@ package com.weibo.api.toolbox.persist.entity;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -59,7 +61,7 @@ public class Tmenuitem implements Serializable {
     @Basic(optional = false)
     @Column(name = "numindex", nullable = false)
     private int numindex;
-    @ManyToMany(mappedBy = "tmenuitemSet")
+    @ManyToMany(mappedBy = "tmenuitemSet",fetch=FetchType.EAGER)
     private Set<Tgroup> tgroupSet;
     @JoinColumn(name = "numcateid", referencedColumnName = "numcateid", nullable = false)
     @ManyToOne(optional = false)

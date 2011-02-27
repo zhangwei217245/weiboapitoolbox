@@ -6,10 +6,13 @@
 package com.weibo.api.toolbox.persist.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -56,13 +59,19 @@ public class Tuser implements Serializable {
     @Column(name = "vc2password", nullable = false, length = 100)
     private String vc2password;
     @Basic(optional = false)
+    @Column(name = "vc2phone", nullable = false, length = 100)
+    private String vc2phone;
+    @Basic(optional = false)
+    @Column(name = "vc2department", nullable = false, length = 200)
+    private String vc2department;
+    @Basic(optional = false)
     @Column(name = "numenable", nullable = false)
     private int numenable;
     @Basic(optional = false)
     @Column(name = "numsupervisor", nullable = false)
     private int numsupervisor;
-    @ManyToMany(mappedBy = "tuserSet")
-    private Set<Tgroup> tgroupSet;
+    @ManyToMany(mappedBy = "tuserSet",cascade={CascadeType.ALL},fetch=FetchType.EAGER)
+    private Set<Tgroup> tgroupSet = new HashSet<Tgroup>();
 
     public Tuser() {
     }
@@ -135,6 +144,22 @@ public class Tuser implements Serializable {
 
     public void setNumsupervisor(int numsupervisor) {
         this.numsupervisor = numsupervisor;
+    }
+
+    public String getVc2department() {
+        return vc2department;
+    }
+
+    public void setVc2department(String vc2department) {
+        this.vc2department = vc2department;
+    }
+
+    public String getVc2phone() {
+        return vc2phone;
+    }
+
+    public void setVc2phone(String vc2phone) {
+        this.vc2phone = vc2phone;
     }
 
     public Set<Tgroup> getTgroupSet() {
