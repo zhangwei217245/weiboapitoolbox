@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?page id="userRegister" automaticTimeout="false" title="用户注册"?>
+<?variable-resolver class="org.zkoss.spring.DelegatingVariableResolver"?>
 <?link rel="stylesheet" type="text/css" href="/macros/userguide.css.dsp?v=${desktop.webApp.build}"?>
 <?script type="text/javascript" src="/macros/zkdemo.js.dsp?v=${desktop.webApp.build}"?>
 <?script type="text/javascript" content="jq.IE6_ALPHAFIX=/24x24.png|32x32.png|48x48.png|128x128.png|ButtonBlue.png|ButtonGray.png|small.png|small-sel.png|normal.png|normal-sel.png|large.png|large-sel.png/;"?>
@@ -18,33 +19,18 @@
 		import org.zkoss.lang.Strings;
 		import org.zkoss.lang.Objects;
 		]]><![CDATA[//@DECLARATION
-		public void doRegister(){
-			String name = nametb.getValue();
-			String pwd = pwdtb2.getValue();
-			String email = emailtb.getValue();
-			cpatb.getValue();
-
-			alert("Success!");
-		}
-		public void doOK(){
-			doRegister();
-		}
+		
 		Constraint pwc = new Constraint() {
 	    	public void validate(Component comp, Object value) throws WrongValueException {
 		       	if (!Objects.equals(pwdtb.getValue(),value)){
-					throw new WrongValueException(comp, "两次输入的密码不一致！");
+                            throw new WrongValueException(comp, "两次输入的密码不一致！");
 		    	}
-	    	}
-	 	};
-	 	Constraint email = new Constraint() {
-	    	public void validate(Component comp, Object value) throws WrongValueException {
-		       	
 	    	}
 	 	};
 
 		]]>
     </zscript>
-    <borderlayout id="register" sclass="${themeSClass}" apply="com.weibo.api.toolbox.page.login.RegisterComposer">
+    <borderlayout id="register" sclass="${themeSClass}" apply="${registerComposer}">
         <north border="none" size="20%" flex="true">
 
         </north>
@@ -52,18 +38,19 @@
 
         </west>
         <center border="none" flex="true">
-            <groupbox mold="3d" closable="false" >
-                <caption label="用户注册"/>
-                <div height="100%">
-                    <grid height="90%">
+                    <grid mold="default">
+                        <columns>
+                            <column label="用户注册"/>
+                            <column label=""/>
+                        </columns>
                         <rows height="100%">
                             <row height="20%">
 						Email :
-                                <textbox id="emailtb" width="200px" constraint="/.+@.+\.[a-z]+/: 请输入电子邮件地址" />
+                                <textbox id="emailtb" width="200px" constraint="${registerComposer.const_email}" />
                             </row>
                             <row height="20%">
 						用户名 :
-                                <textbox id="nametb" width="200px" constraint="no empty:请输入用户名"/>
+                                <textbox id="nametb" width="200px" constraint="${registerComposer.const_username}"/>
                             </row>
                             <row height="20%">
 						密码 :
@@ -79,14 +66,24 @@
 						真实姓名 :
                                 <textbox id="realnametb" width="200px" constraint="no empty:请输入真实姓名"/>
                             </row>
-                        
+                            <row height="20%">
+						手机 :
+                                <textbox id="mobiletb" width="200px" constraint="/1[0-9]{10}/:请输入手机号码"/>
+                            </row>
+                            <row height="20%">
+						部门 :
+                                <textbox id="departtb" width="200px" constraint="no empty:请输部门名称"/>
+                            </row>
                         </rows>
+                        <foot>
+                            <footer span="2">
+                                <hbox pack="center" height="10%" width="100%">
+                                    <button id="btn_submit" label="提交" />
+                                    <button id="btn_cancel" label="取消" />
+                                </hbox>
+                            </footer>
+                        </foot>
                     </grid>
-                    <hbox pack="center" height="10%" width="100%">
-                        <button label="注册" />
-                    </hbox>
-                </div>
-            </groupbox>
         </center>
         <east size="25%" border="none" flex="true">
 

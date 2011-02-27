@@ -6,11 +6,13 @@
 package com.weibo.api.toolbox.persist.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -57,8 +59,8 @@ public class Tcategory implements Serializable {
     @Basic(optional = false)
     @Column(name = "numindex", nullable = false)
     private int numindex;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "numcateid")
-    private Set<Tmenuitem> tmenuitemSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "numcateid",fetch=FetchType.EAGER)
+    private Set<Tmenuitem> tmenuitemSet = new HashSet<Tmenuitem>();
 
     public Tcategory() {
     }

@@ -40,7 +40,7 @@ public class LoginComposer extends GenericForwardComposer {
     private RbacProvider rbacProvider = (RbacProvider) SpringUtil.getBean("rbacProvider");
     private static Map _cateMap = new LinkedHashMap();
 
-    public void onOk$passWord(){
+    public void onOK$passWord(){
         onClick$btn_login();
     }
 

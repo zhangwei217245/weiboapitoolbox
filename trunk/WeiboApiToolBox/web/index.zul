@@ -47,7 +47,7 @@
                 </grid>
                 <hbox pack="center" width="100%">
                     <button id="btn_login" label="登录"/>
-<!--                    <button id="btn_register" label="注册"/>-->
+                    <button id="btn_register" label="注册"/>
                 </hbox>
                 <label id="msg" style="color:red"/>
             </div>
