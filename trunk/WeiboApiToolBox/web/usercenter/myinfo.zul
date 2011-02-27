@@ -13,7 +13,7 @@
 ]]>
     </zscript>
 <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./userInfogrid" ?>
-    <grid id="userInfogrid" mold="default" apply="${myinfoComposer}">
+    <grid id="userInfogrid" mold="default" apply="com.weibo.api.toolbox.page.usercenter.MyInfoComposer">
         <columns>
             <column label="用户注册"/>
             <column label=""/>
@@ -21,11 +21,11 @@
         <rows height="100%">
             <row height="20%">
 						Email :
-                <label value="@{myinfoComposer.currUser.vc2email}"></label>
+                <label value="@{userInfogrid$composer.currUser.vc2email}"></label>
             </row>
             <row height="20%">
 						用户名 :
-                <label value="@{myinfoComposer.currUser.vc2username}"></label>
+                <label value="@{userInfogrid$composer.currUser.vc2username}"></label>
             </row>
             <row height="20%">
 						密码 :
@@ -35,22 +35,22 @@
 						确认密码 :
                 <hbox>
                     <textbox id="pwdtb2" width="200px"
-							type="password" constraint="${myinfoComposer.pwc}"/>
+							type="password" constraint="${userInfogrid$composer.pwc}"/>
                     <button id="showpwd" label="显示密码"/>
                 </hbox>
                 
             </row>
             <row height="20%">
 						真实姓名 :
-                <textbox id="realnametb" inplace="true" width="200px" value="@{myinfoComposer.currUser.vc2realname}" constraint="no empty:请输入真实姓名"/>
+                <textbox id="realnametb" inplace="true" width="200px" value="@{userInfogrid$composer.currUser.vc2realname}" constraint="no empty:请输入真实姓名"/>
             </row>
             <row height="20%">
 						手机 :
-                <textbox id="mobiletb" width="200px" value="@{myinfoComposer.currUser.vc2phone}" constraint="/1[0-9]{10}/:请输入手机号码"/>
+                <textbox id="mobiletb" width="200px" value="@{userInfogrid$composer.currUser.vc2phone}" constraint="/1[0-9]{10}/:请输入手机号码"/>
             </row>
             <row height="20%">
 						部门 :
-                <textbox id="departtb" inplace="true" width="200px" value="@{myinfoComposer.currUser.vc2department}" constraint="no empty:请输部门名称"/>
+                <textbox id="departtb" inplace="true" width="200px" value="@{userInfogrid$composer.currUser.vc2department}" constraint="no empty:请输部门名称"/>
             </row>
         </rows>
         <foot>

@@ -47,7 +47,8 @@ public class MainLayoutComposer extends GenericForwardComposer implements
     private static final Log log = Log.lookup(MainLayoutComposer.class);
     Textbox searchBox;
     Listbox itemList;
-    Iframe xcontents;
+//    Iframe xcontents;
+    Include xcontents;
     Div header;
     Button _selected;
     Label lb_username;
