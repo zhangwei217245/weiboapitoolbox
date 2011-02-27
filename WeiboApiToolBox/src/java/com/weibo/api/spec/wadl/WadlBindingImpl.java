@@ -1,7 +1,10 @@
 package com.weibo.api.spec.wadl;
 
+import com.weibo.api.spec.basic.BaseArgument;
 import com.weibo.api.spec.wadl.wadl20090202.Application;
 import com.weibo.api.spec.wadl.wadl20090202.Doc;
+import com.weibo.api.spec.wadl.wadl20090202.Grammars;
+import com.weibo.api.spec.wadl.wadl20090202.Include;
 import com.weibo.api.spec.wadl.wadl20090202.Method;
 import com.weibo.api.spec.wadl.wadl20090202.Option;
 import com.weibo.api.spec.wadl.wadl20090202.Param;
@@ -12,8 +15,10 @@ import com.weibo.api.spec.wadl.wadl20090202.Resource;
 import com.weibo.api.spec.wadl.wadl20090202.Resources;
 import com.weibo.api.spec.wadl.wadl20090202.Response;
 import com.weibo.api.toolbox.common.enumerations.AcceptType;
+import com.weibo.api.toolbox.common.enumerations.ContentType;
 import com.weibo.api.toolbox.common.enumerations.DataTypes;
 import com.weibo.api.toolbox.common.enumerations.HttpMethod;
+import com.weibo.api.toolbox.persist.entity.Tdatastruct;
 import com.weibo.api.toolbox.persist.entity.Tenumgroup;
 import com.weibo.api.toolbox.persist.entity.Tenumvalues;
 import com.weibo.api.toolbox.persist.entity.Terrorcode;
@@ -21,14 +26,30 @@ import com.weibo.api.toolbox.persist.entity.Trequestparam;
 import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.xml.namespace.QName;
 
 /**
  *
  * @author x-spirit
  */
 public class WadlBindingImpl {
+
+    private static final String CDATA_PREFIX = "<![CDATA[\n";
+    private static final String CDATA_SUFFIX = "\n]]>";
+    @javax.annotation.Resource
+    BaseArgument baseArgument;
+
+    private Application appdefine = new Application();
+
+    private Grammars grammers = new Grammars();
+
+    private Set<String> schemaRef = new HashSet<String>();
+
+    public WadlBindingImpl() {
+    }
 
     /**
      * bind Resource node for each spec
@@ -42,7 +63,7 @@ public class WadlBindingImpl {
             ress.getResource().add(res);
             ress.setBase(spec.getNumbaseurlid().getVc2baseurl() + "/" + spec.getVc2version());
             Doc doc = new Doc();
-            doc.getContent().add("<![CDATA[\n" + spec.getNumbaseurlid().getVc2desc() + "\n]]>");
+            doc.getContent().add(CDATA_PREFIX + spec.getNumbaseurlid().getVc2desc() + CDATA_SUFFIX);
             ress.getDoc().add(doc);
         }
     }
@@ -159,27 +180,49 @@ public class WadlBindingImpl {
         List<Tresponse> tresponseSet = spec.getTresponseSet();
         for (Tresponse tresp : tresponseSet) {
             Response resp = new Response();
-            resp.getStatus().add(200l);
-            bindResponseRepresentation(resp, tresp);
+            resp.getStatus().add(200L);
+            DataTypes enumDataTypes = tresp.getEnumDataTypes();
+            if (DataTypes.OBJECT.equals(enumDataTypes)||DataTypes.ARRAY.equals(enumDataTypes)){
+                bindResponseRepresentation(resp, tresp);
+            } else {
+                //TODO: if return a primitive type, what should we expect?
+            }
             mtd.getResponse().add(resp);
         }
-
     }
 
     public void bindResponseRepresentation(Response resp, Tresponse tresp) {
         Representation repset = new Representation();
-        
+        Tdatastruct ds = tresp.getNumdatastructid();
+        ContentType enumContentType = tresp.getEnumContentType();
+        String schemalocal = null;
+        if (enumContentType.equals(ContentType.APP_XML)){
+            schemalocal = ds.getVc2version()+"/"+ds.getVc2structname()+".xsd";
+        } else if (enumContentType.equals(ContentType.APP_JSON)){
+            schemalocal = ds.getVc2version()+"/"+ds.getVc2structname()+".jssd";
+        }
+        this.schemaRef.add(schemalocal);
+        String uri = baseArgument.getHostBase()+"/"+schemalocal;
+        String localpart = ds.getVc2version()+"_"+ds.getVc2structname();
+        String prefix = "ds"+ds.getNumdatastructid();
+        repset.setElement(new QName(uri, localpart, prefix));
     }
 
-    private void bindErrorResponse(Method mtd, Tspec spec) {
+    public void bindErrorResponse(Method mtd, Tspec spec) {
         List<Terrorcode> terrorcodeSet = spec.getTerrorcodeSet();
         for (Terrorcode errcode : terrorcodeSet) {
             Response resp = new Response();
             resp.getStatus().add(Long.parseLong(errcode.getVc2httpcode()));
-
+            bindErrorRepresentation(resp,errcode);
+            mtd.getResponse().add(resp);
         }
     }
 
+    public void bindErrorRepresentation(Response resp, Terrorcode errcode) {
+        Representation repres = new Representation();
+        //TODO: don't know where put our error define
+    }
+    
     private void copyParamValue(Param par, Trequestparam reqparam) {
         par.setName(reqparam.getVc2paramname());
         par.setRequired(reqparam.getIsRequired());
@@ -204,4 +247,12 @@ public class WadlBindingImpl {
             }
         }
     }
+
+    public void addGrammerInclude(String schemaRef) {
+        Include inc = new Include();
+        inc.setHref(baseArgument.getSchemaBase()+"/"+schemaRef);
+        this.grammers.getInclude().add(inc);
+    }
+
+    
 }
