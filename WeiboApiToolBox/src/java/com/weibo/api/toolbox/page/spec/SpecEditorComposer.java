@@ -142,9 +142,9 @@ public class SpecEditorComposer extends GenericForwardComposer {
     }
 
     public void refreshDataBinding(){
-        if (currentSpec.getNumspecid()!=null){
-            sp.saveTspec(currentSpec);
-        }
+//        if (currentSpec.getNumspecid()!=null){
+//            sp.saveTspec(currentSpec);
+//        }
         AnnotateDataBinder binder = (AnnotateDataBinder) this.self.getAttribute("binder", true);
         binder.loadAll();
     }
