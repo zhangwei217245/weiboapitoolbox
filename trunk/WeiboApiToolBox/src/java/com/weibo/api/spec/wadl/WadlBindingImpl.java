@@ -27,6 +27,7 @@ import com.weibo.api.toolbox.persist.entity.Trequestparam;
 import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,34 +35,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.xml.namespace.QName;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import javax.xml.transform.stream.StreamResult;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 /**
  *
  * @author x-spirit
  */
-@Component("wadlbinder")
-@Scope(value="prototype")
 public class WadlBindingImpl implements WadlBinding {
 
-    private static final String CDATA_PREFIX = "<![CDATA[\n";
-    private static final String CDATA_SUFFIX = "\n]]>";
     @javax.annotation.Resource
     BaseArgument baseArgument;
+    @javax.annotation.Resource
+    Jaxb2Marshaller jaxb2Marshaller;
 
     private Set<String> schemaRef = new HashSet<String>();
+    private boolean docs;
 
     public WadlBindingImpl() {
     }
 
-    public Map<Baseurl,List<Tspec>> seperateSpecListByBaseUrl(List<Tspec> specList){
-        Map<Baseurl,List<Tspec>> specmap = new HashMap<Baseurl, List<Tspec>>();
+    public String marshall(Application app){
+        final StringWriter out = new StringWriter();
+        jaxb2Marshaller.marshal(app, new StreamResult(out));
+        return out.toString();
+    }
+    
+    public Map<String,List<Tspec>> seperateSpecListByBaseUrl(List<Tspec> specList){
+        Map<String,List<Tspec>> specmap = new HashMap<String, List<Tspec>>();
         for (Tspec spec : specList){
             Baseurl baseurl = spec.getNumbaseurlid();
-            List<Tspec> sublist = specmap.get(baseurl);
+            String base = baseurl.getVc2baseurl()+"/"+spec.getVc2version();
+            List<Tspec> sublist = specmap.get(base);
             if (sublist==null){
                 sublist = new ArrayList<Tspec>();
+                specmap.put(base, sublist);
             }
             sublist.add(spec);
         }
@@ -76,9 +84,9 @@ public class WadlBindingImpl implements WadlBinding {
     }
 
     public void bindResourcesByBaseUrl(Application appdefine, List<Tspec> specList) {
-        Map<Baseurl, List<Tspec>> specmap = seperateSpecListByBaseUrl(specList);
-        for (Baseurl baseurl : specmap.keySet()){
-            List<Tspec> sublist = specmap.get(baseurl);
+        Map<String, List<Tspec>> specmap = seperateSpecListByBaseUrl(specList);
+        for (String base : specmap.keySet()){
+            List<Tspec> sublist = specmap.get(base);
             Resources ress = new Resources();
             bindResources(ress,sublist);
             appdefine.getResources().add(ress);
@@ -111,9 +119,7 @@ public class WadlBindingImpl implements WadlBinding {
             bindResource(res, spec);
             ress.getResource().add(res);
             ress.setBase(spec.getNumbaseurlid().getVc2baseurl() + "/" + spec.getVc2version());
-            Doc doc = new Doc();
-            doc.getContent().add(CDATA_PREFIX + spec.getNumbaseurlid().getVc2desc() + CDATA_SUFFIX);
-            ress.getDoc().add(doc);
+            bindDocs(ress.getDoc(),spec.getNumbaseurlid().getVc2desc());
         }
     }
 
@@ -294,6 +300,15 @@ public class WadlBindingImpl implements WadlBinding {
                     par.getOption().add(opt);
                 }
             }
+        }
+    }
+
+    private void bindDocs(List<Doc> docs, String ...doc) {
+
+        for (String str : doc){
+            Doc document = new Doc();
+            document.getContent().add(str);
+            docs.add(document);
         }
     }
 }

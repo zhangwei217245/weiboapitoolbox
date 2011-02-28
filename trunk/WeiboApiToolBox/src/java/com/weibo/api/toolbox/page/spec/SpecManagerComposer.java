@@ -2,6 +2,7 @@ package com.weibo.api.toolbox.page.spec;
 
 import com.weibo.api.spec.wadl.WadlBinding;
 import com.weibo.api.spec.wadl.wadl20090202.Application;
+import com.weibo.api.toolbox.common.enumerations.AcceptType;
 import com.weibo.api.toolbox.common.enumerations.ApiStatus;
 import com.weibo.api.toolbox.common.enumerations.ApiType;
 import com.weibo.api.toolbox.common.enumerations.AuthType;
@@ -78,7 +79,8 @@ public class SpecManagerComposer extends GenericForwardComposer {
             List<Tspec> sl = new ArrayList<Tspec>();
             sl.add(currentSpec);
             Application app = wadlbinder.bindApplication(sl);
-            
+            String xml = wadlbinder.marshall(app);
+            System.out.println(xml);
         }
     }
 
@@ -128,6 +130,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
         Tspec spec = new Tspec();
         spec.setNumenable(1);
         spec.setNumapitype(ApiType.PUBLIC.getId());
+        spec.setEnumAcceptType(AcceptType.WILDCARD);
         spec.setNumstatus(ApiStatus.DRAFT.getId());
         spec.setNumauthtype(AuthType.REQUIRED.getId());
         spec.setNumratelimittype(RateLimit.USER_IP.getId());
