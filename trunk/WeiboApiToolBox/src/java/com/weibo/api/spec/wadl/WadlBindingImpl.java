@@ -18,6 +18,7 @@ import com.weibo.api.toolbox.common.enumerations.AcceptType;
 import com.weibo.api.toolbox.common.enumerations.ContentType;
 import com.weibo.api.toolbox.common.enumerations.DataTypes;
 import com.weibo.api.toolbox.common.enumerations.HttpMethod;
+import com.weibo.api.toolbox.persist.entity.Baseurl;
 import com.weibo.api.toolbox.persist.entity.Tdatastruct;
 import com.weibo.api.toolbox.persist.entity.Tenumgroup;
 import com.weibo.api.toolbox.persist.entity.Tenumvalues;
@@ -26,16 +27,23 @@ import com.weibo.api.toolbox.persist.entity.Trequestparam;
 import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.xml.namespace.QName;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author x-spirit
  */
-public class WadlBindingImpl {
+@Component("wadlbinder")
+@Scope(value="prototype")
+public class WadlBindingImpl implements WadlBinding {
 
     private static final String CDATA_PREFIX = "<![CDATA[\n";
     private static final String CDATA_SUFFIX = "\n]]>";
@@ -47,12 +55,34 @@ public class WadlBindingImpl {
     public WadlBindingImpl() {
     }
 
-    public void bindApplication(List<Tspec> specList){
+    public Map<Baseurl,List<Tspec>> seperateSpecListByBaseUrl(List<Tspec> specList){
+        Map<Baseurl,List<Tspec>> specmap = new HashMap<Baseurl, List<Tspec>>();
+        for (Tspec spec : specList){
+            Baseurl baseurl = spec.getNumbaseurlid();
+            List<Tspec> sublist = specmap.get(baseurl);
+            if (sublist==null){
+                sublist = new ArrayList<Tspec>();
+            }
+            sublist.add(spec);
+        }
+        return specmap;
+    }
+    
+    public Application bindApplication(List<Tspec> specList){
         Application appdefine = new Application();
-        Resources ress = new Resources();
-        bindResources(ress,specList);
+        bindResourcesByBaseUrl(appdefine,specList);
         bindGrammers(appdefine);
-        appdefine.getResources().add(ress);
+        return appdefine;
+    }
+
+    public void bindResourcesByBaseUrl(Application appdefine, List<Tspec> specList) {
+        Map<Baseurl, List<Tspec>> specmap = seperateSpecListByBaseUrl(specList);
+        for (Baseurl baseurl : specmap.keySet()){
+            List<Tspec> sublist = specmap.get(baseurl);
+            Resources ress = new Resources();
+            bindResources(ress,sublist);
+            appdefine.getResources().add(ress);
+        }
     }
 
     public void bindGrammers(Application appdefine) {
@@ -68,6 +98,7 @@ public class WadlBindingImpl {
         inc.setHref(baseArgument.getSchemaBase()+"/"+schemaRef);
         grammars.getInclude().add(inc);
     }
+
 
     /**
      * bind Resource node for each spec
