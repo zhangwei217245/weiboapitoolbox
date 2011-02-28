@@ -39,6 +39,27 @@
         <property name="wikiBase" value="wiki"/>
         <property name="hostBase" value="http://127.0.0.1/WeiboToolBox/specification"/>
     </bean>
+    <bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="classesToBeBound">
+            <list>
+                <value>com.weibo.api.spec.wadl.wadl20090202.Application</value>
+            </list>
+        </property>
+        <property name="marshallerProperties">
+            <map>
+                <entry>
+                    <key>
+                        <util:constant static-field="javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT" />
+                   </key>
+                  <value type="java.lang.Boolean">true</value>
+                </entry>
+            </map>
+        </property>
+        <property name="schema" value="classpath:com/weibo/api/spec/wadl/wadl20090202.xsd"/>
+    </bean>
+    <bean id="wadlbinder" class="com.weibo.api.spec.wadl.WadlBindingImpl">
+
+    </bean>
     <tx:annotation-driven transaction-manager="txManager"/>
     <!-- Enables ZK custom scopes for Spring Beans -->
     <zksp:zk-config/>

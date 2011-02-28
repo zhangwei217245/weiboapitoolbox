@@ -23,6 +23,8 @@ import java.util.List;
  */
 public interface WadlBinding {
 
+    String marshall(Application app);
+    
     Application bindApplication(List<Tspec> specList);
 
     void bindErrorRepresentation(Response resp, Terrorcode errcode);
