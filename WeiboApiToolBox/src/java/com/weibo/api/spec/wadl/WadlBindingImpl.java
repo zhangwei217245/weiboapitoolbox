@@ -42,13 +42,31 @@ public class WadlBindingImpl {
     @javax.annotation.Resource
     BaseArgument baseArgument;
 
-    private Application appdefine = new Application();
-
-    private Grammars grammers = new Grammars();
-
     private Set<String> schemaRef = new HashSet<String>();
 
     public WadlBindingImpl() {
+    }
+
+    public void bindApplication(List<Tspec> specList){
+        Application appdefine = new Application();
+        Resources ress = new Resources();
+        bindResources(ress,specList);
+        bindGrammers(appdefine);
+        appdefine.getResources().add(ress);
+    }
+
+    public void bindGrammers(Application appdefine) {
+        Grammars grammars = new Grammars();
+        for (String sr : schemaRef){
+            addGrammerInclude(grammars, sr);
+        }
+        appdefine.setGrammars(grammars);
+    }
+
+    public void addGrammerInclude(Grammars grammars,String schemaRef) {
+        Include inc = new Include();
+        inc.setHref(baseArgument.getSchemaBase()+"/"+schemaRef);
+        grammars.getInclude().add(inc);
     }
 
     /**
@@ -247,12 +265,4 @@ public class WadlBindingImpl {
             }
         }
     }
-
-    public void addGrammerInclude(String schemaRef) {
-        Include inc = new Include();
-        inc.setHref(baseArgument.getSchemaBase()+"/"+schemaRef);
-        this.grammers.getInclude().add(inc);
-    }
-
-    
 }
