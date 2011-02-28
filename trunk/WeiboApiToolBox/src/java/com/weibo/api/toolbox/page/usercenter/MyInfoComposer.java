@@ -27,6 +27,8 @@ import static org.zkoss.lang.Strings.isBlank;
  */
 public class MyInfoComposer extends GenericForwardComposer{
 
+    private static final long serialVersionUID = 1416756736243614017L;
+    
     Textbox pwdtb;
     Textbox pwdtb2;
     Textbox realnametb;
