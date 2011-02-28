@@ -50,7 +50,6 @@ public class WadlBindingImpl implements WadlBinding {
     Jaxb2Marshaller jaxb2Marshaller;
 
     private Set<String> schemaRef = new HashSet<String>();
-    private boolean docs;
 
     public WadlBindingImpl() {
     }
