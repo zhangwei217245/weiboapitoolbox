@@ -1,9 +1,10 @@
 package com.weibo.api.toolbox.page.spec;
 
+import com.weibo.api.spec.wadl.WadlBinding;
+import com.weibo.api.spec.wadl.wadl20090202.Application;
 import com.weibo.api.toolbox.common.enumerations.ApiStatus;
 import com.weibo.api.toolbox.common.enumerations.ApiType;
 import com.weibo.api.toolbox.common.enumerations.AuthType;
-import com.weibo.api.toolbox.common.enumerations.ContentType;
 import com.weibo.api.toolbox.common.enumerations.HttpMethod;
 import com.weibo.api.toolbox.common.enumerations.RateLimit;
 import com.weibo.api.toolbox.persist.IJpaDaoService;
@@ -12,6 +13,7 @@ import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.service.spec.CategoryProvider;
 import com.weibo.api.toolbox.service.spec.SpecProvider;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +50,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
     CategoryProvider cp = (CategoryProvider) SpringUtil.getBean("categoryProvider");
     SpecProvider sp = (SpecProvider) SpringUtil.getBean("specProvider");
     IJpaDaoService daoService = (IJpaDaoService) SpringUtil.getBean("jpaDaoService");
+    WadlBinding wadlbinder = (WadlBinding) SpringUtil.getBean("wadlbinder");
     private Tree catetree;
     private Listbox specList;
     private SpecCategoryTreeModel specTreeModel;
@@ -63,6 +66,20 @@ public class SpecManagerComposer extends GenericForwardComposer {
         catetree.setTreeitemRenderer(new SpecTreeRender());
         specTreeModel = new SpecCategoryTreeModel(cp.getRootCate());
         catetree.setModel(specTreeModel);
+    }
+
+    public void onClick$ctxm_genwadllist(){
+        
+    }
+    
+    public void onClick$ctxm_genwadl() {
+        if (specList.getSelectedCount() > 0) {
+            currentSpec = (Tspec) specList.getSelectedItem().getValue();
+            List<Tspec> sl = new ArrayList<Tspec>();
+            sl.add(currentSpec);
+            Application app = wadlbinder.bindApplication(sl);
+            
+        }
     }
 
     public void onClick$ctxm_editspec() {
