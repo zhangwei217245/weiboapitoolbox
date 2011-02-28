@@ -26,7 +26,7 @@
     <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./groupmana" ?>
     <borderlayout id="groupmana" sclass="${themeSClass}" apply="com.weibo.api.toolbox.page.admin.GroupManagerComposer">
         <north size="60%" zindex="1" border="none" flex="true">
-            <groupbox id="pkg" mold="3d" width="400px">
+            <groupbox id="group" mold="3d" width="600px">
                 <caption label="用户组"/>
                 <hbox>
                     <listbox id="grouplistbox" width="500px" height="60%" rows="10"

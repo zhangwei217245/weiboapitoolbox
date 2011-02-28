@@ -1,5 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?link rel="stylesheet" type="text/css" href="/macros/userguide.css.dsp?v=${desktop.webApp.build}"?>
+<?script type="text/javascript" src="/macros/zkdemo.js.dsp?v=${desktop.webApp.build}"?>
+<?script type="text/javascript" content="jq.IE6_ALPHAFIX=/24x24.png|32x32.png|48x48.png|128x128.png|ButtonBlue.png|ButtonGray.png|small.png|small-sel.png|normal.png|normal-sel.png|large.png|large-sel.png/;"?>
 <zk xmlns="http://www.zkoss.org/2005/zul">
-userManager
+    <zscript>
+        <![CDATA[
+        import com.weibo.api.toolbox.common.Themes;
+        import org.zkoss.zul.Listbox;
+        import org.zkoss.zul.Listitem;
+        import com.weibo.api.toolbox.persist.entity.Tuser;
+        import com.weibo.api.toolbox.persist.entity.Tgroup;
+        import java.util.List;
+        ]]>
+        <![CDATA[
+	boolean isBreeze = Themes.isBreeze(execution) &&
+		Themes.hasBreezeLib();
+	boolean isSilvergray = Themes.isSilvergray(execution) &&
+		Themes.hasSilvergrayLib();
+	String themeSClass = isBreeze? "breeze" : isSilvergray? "silvergray" : "blue";
+        void move(Component dragged){
+            Listitem draggeditem = (Listitem)dragged;
+            Listitem droppeditem = (Listitem)self;
+            Tuser draguser = (Tuser)draggeditem.getValue();
+            Tgroup dropgroup = (Tgroup)droppeditem.getValue();
+            for (Tgroup group : draguser.getTgroupSet()){
+                draguser.getTgroupSet().remove(group);
+                jpaDaoService.edit(draguser);
+            }
+            draguser.getTgroupSet().add(dropgroup);
+            dropgroup.getTuserSet().add(draguser);
+            System.out.println(draguser.getTgroupSet().toString());
+            jpaDaoService.edit(draguser);
+            ((AnnotateDataBinder)usermana.getAttribute("binder")).loadAll();
+        }
+    ]]>
+    </zscript>
+    <menupopup id="groupPopup">
+        <menuitem id="useradd" label="新建用户" image="/img/smallicons/action_add.gif"/>
+    </menupopup>
+    <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./usermana" ?>
+    <borderlayout id="usermana" sclass="${themeSClass}" apply="com.weibo.api.toolbox.page.admin.UserManagerComposer">
+        <north size="60%" zindex="1" border="none" flex="true">
+            <hbox>
+                <groupbox id="gb_group" mold="3d" width="350px">
+                    <caption label="用户组"/>
+                        <listbox id="grouplistbox" width="300px" height="60%" rows="10"
+                    model="@{usermana$composer.groupList,load-after='btn_save.onClick'}"
+                    selectedItem="@{usermana$composer.currTgroup}"
+			oddRowSclass="non-odd" fixedLayout="true">
+                            <listhead >
+                                <listheader label="名称"/>
+                                <listheader label="描述"/>
+                            </listhead>
+                            <listitem self="@{each='group'}" onDrop="move(event.dragged)" value="@{group}" context="groupPopup" droppable="true">
+                                <listcell image="@{group.imgEnable}" label="@{group.vc2groupname}" />
+                                <listcell label="@{group.vc2groupdesc}" />
+                            </listitem>
+                        </listbox>
+                </groupbox>
+                <groupbox id="gb_user" mold="3d" width="550px">
+                    <caption label="用户"/>
+                        <listbox id="userlistbox" width="500px" height="60%" rows="10"
+                    model="@{usermana$composer.currTgroup.tuserSet,load-after='grouplistbox.onSelect'}"
+                    selectedItem="@{usermana$composer.currTuser}"
+			oddRowSclass="non-odd" fixedLayout="true">
+                            <listhead >
+                                <listheader label="邮箱" width="150px"/>
+                                <listheader label="用户名" width="130px"/>
+                                <listheader label="姓名" width="120px"/>
+                                <listheader label="部门" width="100px"/>
+                            </listhead>
+                            <listitem self="@{each='user'}" value="@{user}" draggable="true">
+                                <listcell image="@{user.imgEnable}" label="@{user.vc2email}"/>
+                                <listcell label="@{user.vc2username}"/>
+                                <listcell label="@{user.vc2realname}"/>
+                                <listcell label="@{user.vc2department}"/>
+                            </listitem>
+                        </listbox>
+                </groupbox>
+            </hbox>
+        </north>
+        <south id="attrlayout" size="40%" zindex="5" minsize="250" maxsize="500"
+        title="编辑用户信息" border="none" flex="true" collapsible="true" splittable="true">
+            <panel>
+                <panelchildren>
+                    <grid width="800px">
+                        <columns>
+                            <column width="140px" label="属性"/>
+                            <column width="260px" label="值"/>
+                            <column width="140px" label="属性"/>
+                            <column width="260px" label="值"/>
+                        </columns>
+                        <rows>
+                            <row>
+                        邮箱：
+                                <textbox id="emailtb" value="@{usermana$composer.currTuser.vc2email,load-after='userlistbox.onSelect'}" width="240px"/>
+                        用户名：
+                                <textbox id="nametb" value="@{usermana$composer.currTuser.vc2username,load-after='userlistbox.onSelect'}" width="240px"/>
+                            </row>
+                            <row>
+                        密码：
+                                <textbox id="pwdtb" type="password" width="240px"/>
+                        确认密码：
+                                <textbox id="pwdtb2" type="password" width="240px"/>
+                            </row>
+                            <row>
+                        真实姓名:
+                                <textbox id="realnametb" value="@{usermana$composer.currTuser.vc2realname,load-after='userlistbox.onSelect'}" width="240px"/>
+                        手机号：
+                                <textbox id="mobiletb" value="@{usermana$composer.currTuser.vc2phone,load-after='userlistbox.onSelect'}" width="240px"/>
+                            </row>
+                            <row>
+                        部门：
+                                <textbox id="departtb" value="@{usermana$composer.currTuser.vc2department,load-after='userlistbox.onSelect'}" width="240px"/>
+                        启用：
+                                <checkbox id="enable" checked="@{usermana$composer.currTuser.isEnable}" />
+                            </row>
+                        
+                            <row spans="4">
+                                <hbox pack="center" height="10%" width="100%">
+                                    <button id="btn_save" label="保存"/>
+                                </hbox>
+                            </row>
+                            
+                        </rows>
+                        
+                    </grid>
+                </panelchildren>
+            </panel>
+        </south>
+    </borderlayout>
 </zk>
