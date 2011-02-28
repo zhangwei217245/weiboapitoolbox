@@ -1,5 +1,6 @@
 package com.weibo.api.toolbox.page.spec;
 
+import com.weibo.api.spec.wadl.WadlBinding;
 import com.weibo.api.toolbox.common.ConfirmBoxEventListener;
 import com.weibo.api.toolbox.common.EventListenerAction;
 import com.weibo.api.toolbox.common.enumerations.AcceptType;
@@ -58,7 +59,7 @@ public class SpecEditorComposer extends GenericForwardComposer {
     CategoryProvider cp = (CategoryProvider) SpringUtil.getBean("categoryProvider");
     SpecProvider sp = (SpecProvider) SpringUtil.getBean("specProvider");
     IJpaDaoService daoService = (IJpaDaoService) SpringUtil.getBean("jpaDaoService");
-
+    
     Tspec currentSpec;
     Listbox paramgrid;
     Listbox errgrid;
