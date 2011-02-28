@@ -146,6 +146,20 @@ public class Tmenuitem implements Serializable {
         this.numcateid = numcateid;
     }
 
+    public boolean getIsEnable(){
+        return this.numenable>0;
+    }
+    public void setIsEnable(boolean enable){
+        this.numenable = (enable?1:0);
+    }
+    public String getImgEnable(){
+        if (this.numenable>0){
+            return "/img/smallicons/right_small.png";
+        }else{
+            return "/img/smallicons/wrong_small.png";
+        }
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
