@@ -20,7 +20,7 @@ public enum DataTypes {
             return "integer";
         }
         public String getXsdType(){
-            return "xsd:integer";
+            return "integer";
         }
     },INT64{
         public int getId(){
@@ -36,7 +36,7 @@ public enum DataTypes {
             return "integer";
         }
         public String getXsdType(){
-            return "xsd:long";
+            return "long";
         }
     },FLOAT{
         public int getId(){
@@ -52,7 +52,7 @@ public enum DataTypes {
             return "number";
         }
         public String getXsdType(){
-            return "xsd:float";
+            return "float";
         }
     },FLOAT64{
         public int getId(){
@@ -68,7 +68,7 @@ public enum DataTypes {
             return "number";
         }
         public String getXsdType(){
-            return "xsd:double";
+            return "double";
         }
     },BOOLEAN{
         public int getId(){
@@ -84,7 +84,7 @@ public enum DataTypes {
             return "boolean";
         }
         public String getXsdType(){
-            return "xsd:boolean";
+            return "boolean";
         }
     },DATETIME{
         public int getId(){
@@ -100,7 +100,7 @@ public enum DataTypes {
             return "string";
         }
         public String getXsdType(){
-            return "xsd:dateTime";
+            return "dateTime";
         }
     },STRING{
         public int getId(){
@@ -116,7 +116,7 @@ public enum DataTypes {
             return "string";
         }
         public String getXsdType(){
-            return "xsd:string";
+            return "string";
         }
     },BINARY{
         public int getId(){
@@ -132,7 +132,7 @@ public enum DataTypes {
             return "any";
         }
         public String getXsdType(){
-            return "xsd:base64Binary";
+            return "base64Binary";
         }
     },ARRAY{
         public int getId(){
@@ -180,7 +180,7 @@ public enum DataTypes {
             return "any";
         }
         public String getXsdType(){
-            return null;
+            return "string";
         }
     },WILDCARD{
         public int getId(){

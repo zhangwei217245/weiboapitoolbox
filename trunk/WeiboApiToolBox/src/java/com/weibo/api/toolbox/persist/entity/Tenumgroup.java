@@ -45,7 +45,7 @@ public class Tenumgroup implements Serializable {
     private Set<Trequestparam> trequestparamSet;
     @OneToMany(mappedBy = "numenumgroupid")
     private Set<Sysparam> sysparamSet;
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "numenumgroupid")
+    @OneToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER,mappedBy = "numenumgroupid")
     private Set<Tenumvalues> tenumvaluesSet;
     @OneToMany(mappedBy = "numenumgroupid")
     private Set<Tstructfield> tstructfieldSet;

@@ -6,6 +6,7 @@ import com.weibo.api.spec.wadl.wadl20090202.Doc;
 import com.weibo.api.spec.wadl.wadl20090202.Grammars;
 import com.weibo.api.spec.wadl.wadl20090202.Include;
 import com.weibo.api.spec.wadl.wadl20090202.Method;
+import com.weibo.api.spec.wadl.wadl20090202.ObjectFactory;
 import com.weibo.api.spec.wadl.wadl20090202.Option;
 import com.weibo.api.spec.wadl.wadl20090202.Param;
 import com.weibo.api.spec.wadl.wadl20090202.ParamStyle;
@@ -181,10 +182,11 @@ public class WadlBindingImpl implements WadlBinding {
         for (HttpMethod hm : enumHttpMethod) {
             Method mtd = new Method();
             mtd.setName(hm.getName());
-            mtd.setId(spec.getVc2specname());
+            //mtd.setId(spec.getVc2specname());
             bindRequest(mtd, spec);
             bindResponse(mtd, spec);
             bindErrorResponse(mtd, spec);
+            rs.getMethodOrResource().add(mtd);
         }
     }
 
@@ -215,7 +217,6 @@ public class WadlBindingImpl implements WadlBinding {
         rep.setMediaType(spec.getEnumAcceptType().getMediaString());
         bindRepresentationParameters(rep, spec);
         req.getRepresentation().add(rep);
-
     }
 
     public void bindRepresentationParameters(Representation rep, Tspec spec) {
@@ -250,16 +251,18 @@ public class WadlBindingImpl implements WadlBinding {
         Tdatastruct ds = tresp.getNumdatastructid();
         ContentType enumContentType = tresp.getEnumContentType();
         String schemalocal = null;
+        repset.setMediaType(tresp.getEnumContentType().getMediaString());
         if (enumContentType.equals(ContentType.APP_XML)){
             schemalocal = ds.getVc2version()+"/"+ds.getVc2structname()+".xsd";
         } else if (enumContentType.equals(ContentType.APP_JSON)){
             schemalocal = ds.getVc2version()+"/"+ds.getVc2structname()+".jssd";
         }
         this.schemaRef.add(schemalocal);
-        String uri = baseArgument.getHostBase()+"/"+schemalocal;
-        String localpart = ds.getVc2version()+"_"+ds.getVc2structname();
-        String prefix = "ds"+ds.getNumdatastructid();
+        String uri = baseArgument.getHostBase()+"/datastruct";
+        String localpart = tresp.getVc2responsename();
+        String prefix = "ds";
         repset.setElement(new QName(uri, localpart, prefix));
+        resp.getRepresentation().add(repset);
     }
 
     public void bindErrorResponse(Method mtd, Tspec spec) {
@@ -282,6 +285,8 @@ public class WadlBindingImpl implements WadlBinding {
         par.setRequired(reqparam.getIsRequired());
         par.setStyle(reqparam.getEnumParamStyle().getWadlStyle());
         par.setRepeating(reqparam.getIsRepeating());
+        par.setType(new QName("http://www.w3.org/2001/XMLSchema",
+                reqparam.getEnumDataTypes().getXsdType()));
         if (ToolBoxUtil.isNotEmpty(reqparam.getVc2defaultvalue())) {
             par.setDefault(reqparam.getVc2defaultvalue());
         }
