@@ -87,4 +87,16 @@ public class BaseArgument {
                 +"/"+getAllDocDir()
                 +"/"+getSchemaBase();
     }
+
+    public String getWikiBaseURI(){
+        return getHostBase()
+                +"/"+getAllDocDir()
+                +"/"+getWikiBase();
+    }
+
+    public String getWikiFileBaseDir(){
+        return getFileBase()
+                +"/"+getAllDocDir()
+                +"/"+getWikiBase();
+    }
 }
