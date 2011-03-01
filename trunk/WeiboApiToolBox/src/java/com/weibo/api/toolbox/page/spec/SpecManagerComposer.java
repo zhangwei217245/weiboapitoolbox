@@ -64,8 +64,10 @@ public class SpecManagerComposer extends GenericForwardComposer {
     List specListByCate;
     Intbox idfilter;
     Textbox versionfilter;
-    String docbase = (Strings.isEmpty(baseArgument.getFileBase())||baseArgument.getFileBase().equals("${webdoc}")
-            )?Executions.getCurrent().getDesktop().getWebApp().getRealPath("/docs"):baseArgument.getFileBase();
+    String docbase = (Strings.isEmpty(baseArgument.getFileBase())
+            ||baseArgument.getFileBase().equals("${webdoc}"))?
+                Executions.getCurrent().getDesktop().getWebApp().getRealPath(baseArgument.getAllDocDir()):
+                baseArgument.getFileBase()+"/"+baseArgument.getAllDocDir();
 
     @Override
     public void doAfterCompose(Component comp) throws Exception {
