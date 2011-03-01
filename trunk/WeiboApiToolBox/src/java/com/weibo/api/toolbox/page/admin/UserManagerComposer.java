@@ -12,11 +12,13 @@ import com.weibo.api.toolbox.persist.qlgenerator.JPQLGenerator;
 import com.weibo.api.toolbox.persist.qlgenerator.QLGenerator;
 import com.weibo.api.toolbox.util.MD5Util;
 import java.util.List;
+import org.zkoss.lang.Strings;
 import org.zkoss.spring.SpringUtil;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zkplus.databind.AnnotateDataBinder;
 import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 
 /**
@@ -30,6 +32,12 @@ public class UserManagerComposer extends GenericForwardComposer{
 
     Listbox grouplistbox;
     Listbox userlistbox;
+
+    Textbox emailtb;
+    Textbox nametb;
+    Textbox realnametb;
+    Textbox mobiletb;
+    Textbox departtb;
     Textbox pwdtb;
     Textbox pwdtb2;
 
@@ -38,9 +46,10 @@ public class UserManagerComposer extends GenericForwardComposer{
 
     public void onClick$userlistbox(){
         if (userlistbox.getSelectedCount()>0){
-            Tuser seluser = (Tuser)userlistbox.getSelectedItem().getValue();
-            pwdtb.setValue(seluser.getVc2pwdstr());
-            pwdtb2.setValue(seluser.getVc2pwdstr());
+            currTuser = (Tuser)userlistbox.getSelectedItem().getValue();
+            pwdtb.setValue(currTuser.getVc2pwdstr());
+            pwdtb2.setValue(currTuser.getVc2pwdstr());
+            refreshDataBinding(userlistbox);
         }
     }
     public void onClick$useradd(){
@@ -52,15 +61,38 @@ public class UserManagerComposer extends GenericForwardComposer{
         jpaDaoService.edit(currTuser);
         pwdtb.setValue(currTuser.getVc2pwdstr());
         pwdtb2.setValue(currTuser.getVc2pwdstr());
-        refreshDataBinding();
+        refreshDataBinding(this.self);
     }
-    public void onClick$btn_save(){
-        if (!(currTuser.getNumuserid().equals(1))){
+    public void onClick$btn_save() throws InterruptedException{
+        if (!(currTuser==null||currTuser.getNumuserid().equals(1))){
+            if (Strings.isEmpty(emailtb.getValue())||(!emailtb.getValue().matches(".+@.+\\.[a-z]+"))){
+                emailtb.clearErrorMessage(true);
+            }
+            if (Strings.isEmpty(nametb.getValue())||Strings.isBlank(nametb.getValue())){
+                nametb.clearErrorMessage(true);
+            }
+            if (Strings.isEmpty(pwdtb.getValue())||Strings.isBlank(pwdtb.getValue())){
+                pwdtb.clearErrorMessage(true);
+            }
+            if (Strings.isEmpty(pwdtb2.getValue())||(!pwdtb.getValue().equals(pwdtb2.getValue()))){
+                pwdtb2.clearErrorMessage(true);
+            }
+            if (Strings.isEmpty(realnametb.getValue())||Strings.isBlank(realnametb.getValue())){
+                realnametb.clearErrorMessage(true);
+            }
+            if (Strings.isEmpty(mobiletb.getValue())||(!mobiletb.getValue().matches("1[0-9]{10}"))){
+                mobiletb.clearErrorMessage(true);
+            }
+            if (Strings.isEmpty(departtb.getValue())||Strings.isBlank(departtb.getValue())){
+                departtb.clearErrorMessage(true);
+            }
             currTuser.setVc2pwdstr(pwdtb.getValue());
             currTuser.setVc2password(MD5Util.md5Digest(pwdtb.getValue()));
             jpaDaoService.edit(currTuser);
+        } else {
+            Messagebox.show("当前选择的用户信息不可更改，请重新选择用户", "错误", Messagebox.OK, Messagebox.ERROR);
         }
-        refreshDataBinding();
+        refreshDataBinding(this.self);
     }
     public List<Tgroup> getGroupList(){
         QLGenerator qlgen = new JPQLGenerator();
@@ -84,8 +116,8 @@ public class UserManagerComposer extends GenericForwardComposer{
         this.currTuser = currTuser;
     }
 
-    public void refreshDataBinding(){
-        AnnotateDataBinder binder = (AnnotateDataBinder) this.self.getAttribute("binder", true);
+    public void refreshDataBinding(Component compt){
+        AnnotateDataBinder binder = (AnnotateDataBinder) compt.getAttribute("binder", true);
         binder.loadAll();
     }
     @Override
