@@ -3,7 +3,8 @@
 ---{version}
 ----{public type}
 -----{api status}
-------{spec_name}
+------{spec_cate}
+-------{specid}.wadl
 --schema
 ---{version}
 ----{ds_name}.(xsd|jssd)
