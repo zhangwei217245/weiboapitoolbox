@@ -27,13 +27,19 @@ import com.weibo.api.toolbox.persist.entity.Trequestparam;
 import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamResult;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -58,6 +64,25 @@ public class WadlBindingImpl implements WadlBinding {
         final StringWriter out = new StringWriter();
         jaxb2Marshaller.marshal(app, new StreamResult(out));
         return out.toString();
+    }
+
+    public void marshall(Application app,String docpath){
+        PrintStream out = null;
+        try {
+            File doc = new File(docpath);
+            doc.getParentFile().mkdirs();
+            out = new PrintStream(doc, "UTF-8");
+            jaxb2Marshaller.marshal(app, new StreamResult(out));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(WadlBindingImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(WadlBindingImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                out.close();
+            } catch (Exception e) {
+            }
+        }
     }
     
     public Map<String,List<Tspec>> seperateSpecListByBaseUrl(List<Tspec> specList){

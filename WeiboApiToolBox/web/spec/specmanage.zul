@@ -117,7 +117,7 @@
                 top : pw.top,
                 width : w.width(),
                 height : w.height()
-            },  600, 'swing', function() {
+            },  500, 'swing', function() {
                 w.css({visibility: 'visible'});
                 jq('$spectabs').slideDown();
                 jq(this).remove();

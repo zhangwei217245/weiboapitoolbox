@@ -16,11 +16,12 @@
     <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./speceditor" ?>
     <window id="speceditor" border="normal" width="760px" title="Spec Editor"
     xmlns:c="client" closable="true" style="visibility: hidden" maximizable="true" maximized="true" sizable="true"
-    apply="com.weibo.api.toolbox.page.spec.SpecEditorComposer">
+    apply="com.weibo.api.toolbox.page.spec.SpecEditorComposer"
+    action="hide:slideUp({duration:500})">
         <attribute c:name="onClose"><![CDATA[
         event.stop();
         var w = this;
-        jq(this).slideUp(600, function() {
+        jq(this).slideUp(500, function() {
             w.sendAU_(event);
             flowDown(event.target._left, event.target._top);
         });
