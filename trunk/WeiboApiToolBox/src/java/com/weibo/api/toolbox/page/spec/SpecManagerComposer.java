@@ -36,6 +36,7 @@ import org.zkoss.zkplus.databind.AnnotateDataBinder;
 import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Treecell;
 import org.zkoss.zul.Treeitem;
@@ -79,7 +80,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
         catetree.setModel(specTreeModel);
     }
 
-    public void onClick$ctxm_genwadllist() {
+    public void onClick$ctxm_genwadllist() throws InterruptedException {
         Tspeccategory cate = null;
         if (catetree.getSelectedCount() > 0) {
             Set selitems = catetree.getSelectedItems();
@@ -88,14 +89,17 @@ public class SpecManagerComposer extends GenericForwardComposer {
                 cate = (Tspeccategory) ti.getValue();
             }
             List<Tspec> _specList = sp.getSpecListByCategory(cate, null, null);
-            for (Tspec spec : _specList) {
-                genOneSpecWadl(spec);
+
+            if (ToolBoxUtil.isNotEmpty(_specList)){
+                String docpath = genMultiSpecInOneWadl(_specList);
+                Map windowparam = new HashMap();
+                windowparam.put(SpecDocViewer.ARG_DOCPATH, docpath);
+                windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.XML.lowerName());
+                showDocViewer(windowparam);
+            } else {
+                Messagebox.show("该分类下没有有效的SPEC定义！", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
             }
-            String docpath = genMultiSpecInOneWadl(_specList);
-            Map windowparam = new HashMap();
-            windowparam.put(SpecDocViewer.ARG_DOCPATH, docpath);
-            windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.XML.lowerName());
-            showDocViewer(windowparam);
+            
         }
     }
 
@@ -264,6 +268,9 @@ public class SpecManagerComposer extends GenericForwardComposer {
             Tspec samplespec = _specList.get(0);
             String doccatedir = getWadlDocCateDir(samplespec);
             ToolBoxUtil.deleteFile(new File(doccatedir));
+            for (Tspec spec : _specList) {
+                genOneSpecWadl(spec);
+            }
             String docpath = doccatedir
                     + "/" + "pack" + ".wadl";
             Application app = wadlbinder.bindApplication(_specList);
