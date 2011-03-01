@@ -9,9 +9,6 @@
         import com.weibo.api.toolbox.common.Themes;
         import org.zkoss.zul.Listbox;
         import org.zkoss.zul.Listitem;
-        import com.weibo.api.toolbox.persist.entity.Tclazzpackage;
-        import com.weibo.api.toolbox.persist.entity.Tspeccategory;
-        import com.weibo.api.toolbox.service.spec.CategoryProvider;
         import java.util.List;
         import org.zkoss.spring.SpringUtil;
         ]]>
