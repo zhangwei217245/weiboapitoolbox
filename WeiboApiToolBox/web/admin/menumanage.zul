@@ -1,5 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?link rel="stylesheet" type="text/css" href="/macros/userguide.css.dsp?v=${desktop.webApp.build}"?>
+<?script type="text/javascript" src="/macros/zkdemo.js.dsp?v=${desktop.webApp.build}"?>
+<?script type="text/javascript" content="jq.IE6_ALPHAFIX=/24x24.png|32x32.png|48x48.png|128x128.png|ButtonBlue.png|ButtonGray.png|small.png|small-sel.png|normal.png|normal-sel.png|large.png|large-sel.png/;"?>
 <zk xmlns="http://www.zkoss.org/2005/zul">
-menuManager
+    <zscript>
+        <![CDATA[
+        import com.weibo.api.toolbox.common.Themes;
+        import org.zkoss.zul.Listbox;
+        import org.zkoss.zul.Listitem;
+        import java.util.List;
+        import org.zkoss.spring.SpringUtil;
+        ]]>
+        <![CDATA[
+	boolean isBreeze = Themes.isBreeze(execution) &&
+		Themes.hasBreezeLib();
+	boolean isSilvergray = Themes.isSilvergray(execution) &&
+		Themes.hasSilvergrayLib();
+	String themeSClass = isBreeze? "breeze" : isSilvergray? "silvergray" : "blue";
+    ]]>
+    </zscript>
+    <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./menumana" ?>
+    <borderlayout id="menumana" sclass="${themeSClass}" apply="com.weibo.api.toolbox.page.admin.MenuManagerComposer">
+        <north size="60%" zindex="1" border="none" flex="true">
+            <groupbox id="group" mold="3d" width="600px">
+                <caption label="用户组"/>
+                <hbox>
+                    <listbox id="grouplistbox" width="500px" height="60%" rows="10"
+                    model="@{groupmana$composer.groupList,load-after='groupadd.onClick,groupdel.onClick,attrsave.onClick'}"
+                    selectedItem="@{groupmana$composer.currTgroup}"
+			oddRowSclass="non-odd" fixedLayout="true">
+                        <listhead >
+                            <listheader label="名称"/>
+                            <listheader label="描述"/>
+                        </listhead>
+                        <listitem self="@{each='group'}" value="@{group}">
+                            <listcell image="@{group.imgEnable}" label="@{group.vc2groupname}" />
+                            <listcell label="@{group.vc2groupdesc}" />
+                        </listitem>
+                    </listbox>
+                    <vbox>
+                        <button id="groupadd" label="添加"/>
+                        <button id="groupdel" label="删除"/>
+                    </vbox>
+                </hbox>
+            </groupbox>
+        </north>
+        <south id="attrlayout" size="40%" zindex="5" minsize="250" maxsize="500"
+        title="编辑用户组" border="none" flex="true" collapsible="true" splittable="true">
+            <panel>
+                <panelchildren>
+                    <grid>
+
+                        <rows>
+                            <row>
+						名称 :
+                                <textbox id="name" width="90%" value="@{groupmana$composer.currTgroup.vc2groupname}" constraint="/.{1,100}/: 请输入用户组名称，长度1～100个字符。" />
+                            </row>
+                            <row>
+                                启用:
+                                <checkbox id="enable" checked="@{groupmana$composer.currTgroup.isEnable}" />
+                            </row>
+                            <row>
+						描述 :
+                                <textbox id="intro" width="90%" rows="3" value="@{groupmana$composer.currTgroup.vc2groupdesc}" constraint="/.{1,100}/: 请输入用户组名称，长度1～100个字符。" />
+                                <hbox pack="center" width="100%">
+                                    <button id="attrsave" label="保存" />
+                                </hbox>
+                            </row>
+                        </rows>
+                    </grid>
+                </panelchildren>
+            </panel>
+        </south>
+    </borderlayout>
 </zk>
