@@ -16,6 +16,8 @@ import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.service.spec.CategoryProvider;
 import com.weibo.api.toolbox.service.spec.SpecProvider;
 import com.weibo.api.toolbox.util.CodeMirrorSyntax;
+import com.weibo.api.toolbox.util.ToolBoxUtil;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -260,7 +262,9 @@ public class SpecManagerComposer extends GenericForwardComposer {
     private String genMultiSpecInOneWadl(List<Tspec> _specList) {
         if (_specList != null && _specList.size() > 0) {
             Tspec samplespec = _specList.get(0);
-            String docpath = getWadlDocDir(samplespec)
+            String doccatedir = getWadlDocCateDir(samplespec);
+            ToolBoxUtil.deleteFile(new File(doccatedir));
+            String docpath = doccatedir
                     + "/" + "pack" + ".wadl";
             Application app = wadlbinder.bindApplication(_specList);
             wadlbinder.marshall(app, docpath);
@@ -271,16 +275,18 @@ public class SpecManagerComposer extends GenericForwardComposer {
     }
 
     private String genOneSpecWadl(Tspec spec) {
-        String docpath = getWadlDocDir(spec)
+        String docpath = getWadlDocCateDir(spec)
+                + "/" + spec.getVc2version()
                 + "/" + spec.getNumspecid() + ".wadl";
-        Application app = wadlbinder.bindApplication(spec);
-        wadlbinder.marshall(app, docpath);
+        if (!new File(docpath).exists()){
+            Application app = wadlbinder.bindApplication(spec);
+            wadlbinder.marshall(app, docpath);
+        }
         return docpath;
     }
 
-    private String getWadlDocDir(Tspec samplespec){
+    private String getWadlDocCateDir(Tspec samplespec){
         String dirpath = docbase + "/" + baseArgument.getSpecBase()
-                    + "/" + samplespec.getVc2version()
                     + "/" + samplespec.getEnumApiType().name()
                     + "/" + samplespec.getEnumApiStatus().name()
                     + "/" + samplespec.getNumcateid().getVc2catename();

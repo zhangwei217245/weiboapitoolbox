@@ -1,15 +1,15 @@
 -docBase
 --spec
----{version}
-----{public type}
------{api status}
-------{spec_cate}
+---{public type}
+----{api status}
+-----{spec_cate}
+------{version}
 -------{specid}.wadl
 --schema
 ---{version}
 ----{ds_name}.(xsd|jssd)
 --wiki
----{version}
-----{public type}
------{api status}
-------{spec_cate}
+---{public type}
+----{api status}
+-----{spec_cate}
+------{version}

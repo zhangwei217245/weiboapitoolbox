@@ -6,9 +6,8 @@ package com.weibo.api.toolbox.util;
 
 import com.weibo.api.toolbox.persist.IJpaDaoService;
 import com.weibo.api.toolbox.persist.entity.Tdatastruct;
+import java.io.File;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import org.zkoss.spring.SpringUtil;
 
 /**
@@ -36,5 +35,16 @@ public class ToolBoxUtil {
     public static Tdatastruct getNonStruct(){
         IJpaDaoService jpaDaoService = (IJpaDaoService) SpringUtil.getBean("jpaDaoService");
         return jpaDaoService.findOneEntityById(Tdatastruct.class, 1);
+    }
+
+    public static void deleteFile(File file) {
+        if (file.isDirectory()) {
+            File[] subfiles = file.listFiles();
+            for (File f : subfiles) {
+                deleteFile(f);
+            }
+        }
+        System.out.println("Delete: " + file.getName());
+        file.delete();
     }
 }
