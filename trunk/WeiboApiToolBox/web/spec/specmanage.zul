@@ -53,7 +53,7 @@
     </menupopup>
     <menupopup id="specListPopup">
         <menuitem id="ctxm_editspec" label="编辑SPEC" image="/img/smallicons/reply.gif"/>
-        <menuitem id="ctxm_genwadl" label="生成WADL归档" image="/img/smallicons/file.gif"/>
+        <menuitem id="ctxm_genwadl" label="查看WADL归档" image="/img/smallicons/file.gif"/>
     </menupopup>
     <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./specmanage" ?>
         <borderlayout id="specmanage"  apply="com.weibo.api.toolbox.page.spec.SpecManagerComposer">
