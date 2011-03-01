@@ -43,11 +43,13 @@ import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamResult;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author x-spirit
  */
+@Component("wadlbinder")
 public class WadlBindingImpl implements WadlBinding {
 
     @javax.annotation.Resource
