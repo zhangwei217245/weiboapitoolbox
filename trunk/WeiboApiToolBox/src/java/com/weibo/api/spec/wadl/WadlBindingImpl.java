@@ -281,16 +281,23 @@ public class WadlBindingImpl implements WadlBinding {
         ContentType enumContentType = tresp.getEnumContentType();
         String schemalocal = null;
         repset.setMediaType(tresp.getEnumContentType().getMediaString());
-        if (enumContentType.equals(ContentType.APP_XML)){
-            schemalocal = "xml/"+ds.getVc2version()+"/"+ds.getVc2structname()+".xsd";
-        } else if (enumContentType.equals(ContentType.APP_JSON)){
-            schemalocal = "json/"+ds.getVc2version()+"/"+ds.getVc2structname()+".jssd";
-        }
+        
         String uri = baseArgument.getSchemaBaseURI();
-        this.schemaRef.add(uri+"/"+schemalocal);
-        String localpart = tresp.getVc2responsename();
         String prefix = "ds";
+        String localpart = tresp.getVc2responsename();
+
+        if (enumContentType.equals(ContentType.APP_XML)){
+            prefix = "xsd";
+            schemalocal = ds.getVc2version()+"/"+ds.getVc2structname()+".xsd";
+        } else if (enumContentType.equals(ContentType.APP_JSON)){
+            prefix = "jssd";
+            schemalocal = ds.getVc2version()+"/"+ds.getVc2structname()+".jssd";
+        }
+
+        this.schemaRef.add(uri+"/"+schemalocal);
+        
         repset.setElement(new QName(uri, localpart, prefix));
+        
         resp.getRepresentation().add(repset);
     }
 
