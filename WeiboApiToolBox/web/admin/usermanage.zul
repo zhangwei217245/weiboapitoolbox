@@ -9,9 +9,14 @@
         import com.weibo.api.toolbox.common.Themes;
         import org.zkoss.zul.Listbox;
         import org.zkoss.zul.Listitem;
+        import com.weibo.api.toolbox.persist.qlgenerator.JPQLGenerator;
+        import com.weibo.api.toolbox.persist.qlgenerator.QLGenerator;
         import com.weibo.api.toolbox.persist.entity.Tuser;
         import com.weibo.api.toolbox.persist.entity.Tgroup;
         import java.util.List;
+        import java.util.HashMap;
+        import org.zkoss.lang.Strings;
+        import org.zkoss.lang.Objects;
         ]]>
         <![CDATA[
 	boolean isBreeze = Themes.isBreeze(execution) &&
@@ -19,20 +24,74 @@
 	boolean isSilvergray = Themes.isSilvergray(execution) &&
 		Themes.hasSilvergrayLib();
 	String themeSClass = isBreeze? "breeze" : isSilvergray? "silvergray" : "blue";
+        Constraint pwc = new Constraint() {
+	    	public void validate(Component comp, Object value) throws WrongValueException {
+		       	if (!Objects.equals(pwdtb.getValue(),value)){
+                            throw new WrongValueException(comp, "两次输入的密码不一致！");
+		    	}
+	    	}
+	 	};
+        Constraint const_email = new Constraint() {
+            public void validate(org.zkoss.zk.ui.Component cmpnt, Object o) throws WrongValueException {
+                if (Strings.isEmpty((String)o)||(!((String)o).matches(".+@.+\\.[a-z]+"))){
+                    throw new WrongValueException(cmpnt, "请输入正确的E-mail地址");
+                }
+                if (isDuplicatedEmail((String)o)){
+                    throw new WrongValueException(cmpnt, "该E-mail地址已经被占用！");
+                }
+            }
+        };
+        Constraint const_username = new Constraint() {
+
+            public void validate(org.zkoss.zk.ui.Component cmpnt, Object o) throws WrongValueException {
+                if (Strings.isEmpty((String)o)){
+                    throw new WrongValueException(cmpnt, "请输入用户名");
+                }
+                if (isDuplicatedUsername((String)o)){
+                    throw new WrongValueException(cmpnt, "该用户名已经被占用！");
+                }
+            }
+
+        };
         void move(Component dragged){
             Listitem draggeditem = (Listitem)dragged;
             Listitem droppeditem = (Listitem)self;
             Tuser draguser = (Tuser)draggeditem.getValue();
+            if (draguser.getNumuserid().equals(1)){
+                return;
+            }
             Tgroup dropgroup = (Tgroup)droppeditem.getValue();
             for (Tgroup group : draguser.getTgroupSet()){
-                draguser.getTgroupSet().remove(group);
-                jpaDaoService.edit(draguser);
+                group.getTuserSet().remove(draguser);
+                jpaDaoService.edit(group);
+                //draguser.getTgroupSet().remove(group);
+                //jpaDaoService.edit(draguser);
             }
             draguser.getTgroupSet().add(dropgroup);
             dropgroup.getTuserSet().add(draguser);
-            System.out.println(draguser.getTgroupSet().toString());
             jpaDaoService.edit(draguser);
             ((AnnotateDataBinder)usermana.getAttribute("binder")).loadAll();
+        }
+        private boolean isDuplicatedEmail(String email){
+            QLGenerator qlgen = new JPQLGenerator();
+            qlgen.select("count(t)").from("Tuser t").where(null, "t.vc2email = :vc2email")
+            .where(null,"t <> :currTuser");
+            Map param = new HashMap();
+            param.put("vc2email", email);
+            param.put("currTuser",usermana$composer.currTuser);
+            int count = jpaDaoService.getEntityCount(qlgen.toString(), param).intValue();
+            return count > 0;
+        }
+
+        private boolean isDuplicatedUsername(String username){
+            QLGenerator qlgen = new JPQLGenerator();
+            qlgen.select("count(t)").from("Tuser t").where(null, "t.vc2username = :vc2username")
+            .where(null,"t <> :currTuser");
+            Map param = new HashMap();
+            param.put("vc2username", username);
+            param.put("currTuser",usermana$composer.currTuser);
+            int count = jpaDaoService.getEntityCount(qlgen.toString(), param).intValue();
+            return count > 0;
         }
     ]]>
     </zscript>
@@ -53,7 +112,7 @@
                                 <listheader label="名称"/>
                                 <listheader label="描述"/>
                             </listhead>
-                            <listitem self="@{each='group'}" onDrop="move(event.dragged)" value="@{group}" context="groupPopup" droppable="true">
+                            <listitem self="@{each='group'}" value="@{group}" context="groupPopup" droppable="true" onDrop="move(event.dragged)">
                                 <listcell image="@{group.imgEnable}" label="@{group.vc2groupname}" />
                                 <listcell label="@{group.vc2groupdesc}" />
                             </listitem>
@@ -95,27 +154,27 @@
                         <rows>
                             <row>
                         邮箱：
-                                <textbox id="emailtb" value="@{usermana$composer.currTuser.vc2email,load-after='userlistbox.onSelect'}" width="240px"/>
+                                <textbox id="emailtb" value="@{usermana$composer.currTuser.vc2email,load-after='userlistbox.onSelect'}" constraint="${const_email}" width="240px"/>
                         用户名：
-                                <textbox id="nametb" value="@{usermana$composer.currTuser.vc2username,load-after='userlistbox.onSelect'}" width="240px"/>
+                                <textbox id="nametb" value="@{usermana$composer.currTuser.vc2username,load-after='userlistbox.onSelect'}" constraint="${const_username}" width="240px"/>
                             </row>
                             <row>
                         密码：
-                                <textbox id="pwdtb" type="password" width="240px"/>
+                                <textbox id="pwdtb" type="password" width="240px" constraint="no empty:请输入密码"/>
                         确认密码：
-                                <textbox id="pwdtb2" type="password" width="240px"/>
+                                <textbox id="pwdtb2" type="password" width="240px" constraint="${pwc}"/>
                             </row>
                             <row>
                         真实姓名:
-                                <textbox id="realnametb" value="@{usermana$composer.currTuser.vc2realname,load-after='userlistbox.onSelect'}" width="240px"/>
+                                <textbox id="realnametb" value="@{usermana$composer.currTuser.vc2realname,load-after='userlistbox.onSelect'}" constraint="no empty:请输入真实姓名" width="240px"/>
                         手机号：
-                                <textbox id="mobiletb" value="@{usermana$composer.currTuser.vc2phone,load-after='userlistbox.onSelect'}" width="240px"/>
+                                <textbox id="mobiletb" value="@{usermana$composer.currTuser.vc2phone,load-after='userlistbox.onSelect'}" constraint="/1[0-9]{10}/:请输入手机号码" width="240px"/>
                             </row>
                             <row>
                         部门：
-                                <textbox id="departtb" value="@{usermana$composer.currTuser.vc2department,load-after='userlistbox.onSelect'}" width="240px"/>
+                                <textbox id="departtb" value="@{usermana$composer.currTuser.vc2department,load-after='userlistbox.onSelect'}" constraint="no empty:请输部门名称" width="240px"/>
                         启用：
-                                <checkbox id="enable" checked="@{usermana$composer.currTuser.isEnable}" />
+                                <checkbox id="enable" checked="@{usermana$composer.currTuser.isEnable}"/>
                             </row>
                         
                             <row spans="4">

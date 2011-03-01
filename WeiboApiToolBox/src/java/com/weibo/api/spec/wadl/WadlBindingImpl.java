@@ -6,7 +6,6 @@ import com.weibo.api.spec.wadl.wadl20090202.Doc;
 import com.weibo.api.spec.wadl.wadl20090202.Grammars;
 import com.weibo.api.spec.wadl.wadl20090202.Include;
 import com.weibo.api.spec.wadl.wadl20090202.Method;
-import com.weibo.api.spec.wadl.wadl20090202.ObjectFactory;
 import com.weibo.api.spec.wadl.wadl20090202.Option;
 import com.weibo.api.spec.wadl.wadl20090202.Param;
 import com.weibo.api.spec.wadl.wadl20090202.ParamStyle;
