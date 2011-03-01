@@ -133,10 +133,9 @@ public class WadlBindingImpl implements WadlBinding {
 
     public void addGrammerInclude(Grammars grammars,String schemaRef) {
         Include inc = new Include();
-        inc.setHref(baseArgument.getSchemaBase()+"/"+schemaRef);
+        inc.setHref(schemaRef);
         grammars.getInclude().add(inc);
     }
-
 
     /**
      * bind Resource node for each spec
@@ -283,12 +282,12 @@ public class WadlBindingImpl implements WadlBinding {
         String schemalocal = null;
         repset.setMediaType(tresp.getEnumContentType().getMediaString());
         if (enumContentType.equals(ContentType.APP_XML)){
-            schemalocal = ds.getVc2version()+"/"+ds.getVc2structname()+".xsd";
+            schemalocal = "xml/"+ds.getVc2version()+"/"+ds.getVc2structname()+".xsd";
         } else if (enumContentType.equals(ContentType.APP_JSON)){
-            schemalocal = ds.getVc2version()+"/"+ds.getVc2structname()+".jssd";
+            schemalocal = "json/"+ds.getVc2version()+"/"+ds.getVc2structname()+".jssd";
         }
-        this.schemaRef.add(schemalocal);
-        String uri = baseArgument.getHostBase()+"/datastruct";
+        String uri = baseArgument.getSchemaBaseURI();
+        this.schemaRef.add(uri+"/"+schemalocal);
         String localpart = tresp.getVc2responsename();
         String prefix = "ds";
         repset.setElement(new QName(uri, localpart, prefix));

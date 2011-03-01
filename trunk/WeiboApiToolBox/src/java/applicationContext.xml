@@ -33,11 +33,12 @@
     </bean>
     <bean id="jpqlGenerator" scope="prototype" class="com.weibo.api.toolbox.persist.qlgenerator.JPQLGenerator"/>
     <bean id="baseArgument" class="com.weibo.api.spec.basic.BaseArgument">
-        <property name="docBase" value="/home/x-spirit/apispecdocs"/>
+        <property name="fileBase" value="/home/x-spirit"/>
+        <property name="allDocDir" value="apispecdocs"/>
         <property name="specBase" value="spec"/>
         <property name="schemaBase" value="schema"/>
         <property name="wikiBase" value="wiki"/>
-        <property name="hostBase" value="http://127.0.0.1/WeiboToolBox/specification"/>
+        <property name="hostBase" value="http://127.0.0.1/WeiboToolBox"/>
     </bean>
     <bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
         <property name="classesToBeBound">

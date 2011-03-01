@@ -11,18 +11,19 @@ package com.weibo.api.spec.basic;
  */
 public class BaseArgument {
     private String hostBase;
-    private String docBase;
+    private String fileBase;
     private String wikiBase;
     private String specBase;
     private String schemaBase;
+    private String allDocDir;
     
 
-    public String getDocBase() {
-        return docBase;
+    public String getFileBase() {
+        return fileBase;
     }
 
-    public void setDocBase(String docBase) {
-        this.docBase = docBase;
+    public void setFileBase(String fileBase) {
+        this.fileBase = fileBase;
     }
 
     public String getSchemaBase() {
@@ -55,5 +56,35 @@ public class BaseArgument {
 
     public void setHostBase(String hostBase) {
         this.hostBase = hostBase;
+    }
+
+    public String getAllDocDir() {
+        return allDocDir;
+    }
+
+    public void setAllDocDir(String allDocDir) {
+        this.allDocDir = allDocDir;
+    }
+
+    public String getWadlBaseURI(){
+        return getHostBase()
+                +"/"+getAllDocDir()
+                +"/"+getSpecBase();
+    }
+    public String getWadlFileBaseDir(){
+        return getFileBase()
+                +"/"+getAllDocDir()
+                +"/"+getSpecBase();
+    }
+    public String getSchemaBaseURI(){
+        return getHostBase()
+                +"/"+getAllDocDir()
+                +"/"+getSchemaBase();
+    }
+
+    public String getSchemaFileBaseDir(){
+        return getFileBase()
+                +"/"+getAllDocDir()
+                +"/"+getSchemaBase();
     }
 }
