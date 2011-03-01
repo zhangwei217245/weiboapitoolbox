@@ -33,7 +33,7 @@
     </bean>
     <bean id="jpqlGenerator" scope="prototype" class="com.weibo.api.toolbox.persist.qlgenerator.JPQLGenerator"/>
     <bean id="baseArgument" class="com.weibo.api.spec.basic.BaseArgument">
-        <property name="fileBase" value="/home/x-spirit"/>
+        <property name="fileBase" value="${webdoc}"/>
         <property name="allDocDir" value="apispecdocs"/>
         <property name="specBase" value="spec"/>
         <property name="schemaBase" value="schema"/>

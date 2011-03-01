@@ -283,7 +283,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
 
     private String genOneSpecWadl(Tspec spec) {
         String docpath = getWadlDocCateDir(spec)
-                + "/" + spec.getVc2version()
+                + "/" + spec.getVc2version().trim()
                 + "/" + spec.getNumspecid() + ".wadl";
         if (!new File(docpath).exists()){
             Application app = wadlbinder.bindApplication(spec);
@@ -296,7 +296,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
         String dirpath = docbase + "/" + baseArgument.getSpecBase()
                     + "/" + samplespec.getEnumApiType().name()
                     + "/" + samplespec.getEnumApiStatus().name()
-                    + "/" + samplespec.getNumcateid().getVc2catename();
+                    + "/" + samplespec.getNumcateid().getVc2catename().trim();
         return dirpath;
     }
 }
