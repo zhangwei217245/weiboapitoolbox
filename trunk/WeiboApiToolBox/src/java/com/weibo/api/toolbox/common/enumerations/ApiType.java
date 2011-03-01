@@ -16,6 +16,10 @@ public enum ApiType {
             return "公开接口";
         }
 
+        public String getEnName(){
+            return "Public";
+        }
+
         public String getDesc() {
             return "公开开放的接口";
         }
@@ -27,6 +31,10 @@ public enum ApiType {
 
         public String getName() {
             return "合作方接口";
+        }
+
+        public String getEnName(){
+            return "Cooperation";
         }
 
         public String getDesc() {
@@ -42,6 +50,10 @@ public enum ApiType {
             return "内部接口";
         }
 
+        public String getEnName(){
+            return "Internal";
+        }
+
         public String getDesc() {
             return "内部接口";
         }
@@ -50,6 +62,8 @@ public enum ApiType {
     public abstract int getId();
 
     public abstract String getName();
+
+    public abstract String getEnName();
 
     public abstract String getDesc();
 

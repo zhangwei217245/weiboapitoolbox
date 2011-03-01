@@ -14,6 +14,7 @@ import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.service.spec.CategoryProvider;
 import com.weibo.api.toolbox.service.spec.SpecProvider;
+import com.weibo.api.toolbox.util.CodeMirrorSyntax;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +61,9 @@ public class SpecManagerComposer extends GenericForwardComposer {
     List specListByCate;
     Intbox idfilter;
     Textbox versionfilter;
+    String docbase = Executions
+            .getCurrent().getDesktop()
+            .getWebApp().getRealPath("/docs");
 
     @Override
     public void doAfterCompose(Component comp) throws Exception {
@@ -78,9 +82,17 @@ public class SpecManagerComposer extends GenericForwardComposer {
             currentSpec = (Tspec) specList.getSelectedItem().getValue();
             List<Tspec> sl = new ArrayList<Tspec>();
             sl.add(currentSpec);
+            String docpath = docbase + "/" +currentSpec.getVc2version()
+                    + "/" + currentSpec.getEnumApiType().name()
+                    + "/" + currentSpec.getEnumApiStatus().name()
+                    + "/" + currentSpec.getNumspecid() + ".wadl";
+
             Application app = wadlbinder.bindApplication(sl);
-            String xml = wadlbinder.marshall(app);
-            System.out.println(xml);
+            wadlbinder.marshall(app,docpath);
+            Map windowparam = new HashMap();
+            windowparam.put(SpecDocViewer.ARG_DOCPATH, docpath);
+            windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.XML.lowerName());
+            showDocViewer(windowparam);
         }
     }
 
@@ -188,6 +200,17 @@ public class SpecManagerComposer extends GenericForwardComposer {
                 dataRow.setDroppable("true");
                 dataRow.addEventListener("onDrop", new TreeitemDropListener());
             }
+        }
+    }
+
+    private void showDocViewer(Map args){
+        try {
+            Window wadlviewer = (Window) Executions.createComponents("/spec/specdocviewer.zul", null, args);
+            wadlviewer.doModal();
+        } catch (InterruptedException ex) {
+            log.warning("InterruptedException:", ex);
+        } catch (SuspendNotAllowedException ex) {
+            log.warning("SuspendNotAllowedException:", ex);
         }
     }
 
