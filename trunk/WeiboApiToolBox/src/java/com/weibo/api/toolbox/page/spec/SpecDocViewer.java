@@ -39,7 +39,6 @@ public class SpecDocViewer extends GenericForwardComposer {
     }
 
     public void setCode(String syntax,String docpath) {
-         System.out.println(syntax+":"+docpath);
         try {
             String value = read(docpath);
             code.setSyntax(syntax);
@@ -53,7 +52,6 @@ public class SpecDocViewer extends GenericForwardComposer {
     }
 
     public void setCodeString(String syntax,String codeString){
-        System.out.println(syntax+":"+codeString);
         code.setSyntax(syntax);
         code.setValue(codeString);
         textbox.setValue(codeString);
@@ -62,7 +60,6 @@ public class SpecDocViewer extends GenericForwardComposer {
     @Override
     public void doAfterCompose(Component comp) throws Exception {
         Map argmap = Executions.getCurrent().getArg();
-        System.out.println(argmap);
         super.doAfterCompose(comp);
         String syntax = argmap.get(ARG_SYNTAX)==null?"txt":argmap.get(ARG_SYNTAX)+"";
         if (argmap.get(ARG_CODEVAL)!=null){

@@ -99,6 +99,12 @@ public class WadlBindingImpl implements WadlBinding {
         }
         return specmap;
     }
+
+    public Application bindApplication(Tspec spec){
+        List<Tspec> specList = new ArrayList<Tspec>();
+        specList.add(spec);
+        return bindApplication(specList);
+    }
     
     public Application bindApplication(List<Tspec> specList){
         Application appdefine = new Application();

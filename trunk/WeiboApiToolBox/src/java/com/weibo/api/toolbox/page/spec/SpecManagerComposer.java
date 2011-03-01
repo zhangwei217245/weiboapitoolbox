@@ -61,9 +61,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
     List specListByCate;
     Intbox idfilter;
     Textbox versionfilter;
-    String docbase = Executions
-            .getCurrent().getDesktop()
-            .getWebApp().getRealPath("/docs");
+    String docbase = Executions.getCurrent().getDesktop().getWebApp().getRealPath("/docs");
 
     @Override
     public void doAfterCompose(Component comp) throws Exception {
@@ -73,27 +71,62 @@ public class SpecManagerComposer extends GenericForwardComposer {
         catetree.setModel(specTreeModel);
     }
 
-    public void onClick$ctxm_genwadllist(){
-        
-    }
-    
-    public void onClick$ctxm_genwadl() {
-        if (specList.getSelectedCount() > 0) {
-            currentSpec = (Tspec) specList.getSelectedItem().getValue();
-            List<Tspec> sl = new ArrayList<Tspec>();
-            sl.add(currentSpec);
-            String docpath = docbase + "/" +currentSpec.getVc2version()
-                    + "/" + currentSpec.getEnumApiType().name()
-                    + "/" + currentSpec.getEnumApiStatus().name()
-                    + "/" + currentSpec.getNumspecid() + ".wadl";
-
-            Application app = wadlbinder.bindApplication(sl);
-            wadlbinder.marshall(app,docpath);
+    public void onClick$ctxm_genwadllist() {
+        Tspeccategory cate = null;
+        if (catetree.getSelectedCount() > 0) {
+            Set selitems = catetree.getSelectedItems();
+            for (Object sel : selitems) {
+                Treeitem ti = (Treeitem) sel;
+                cate = (Tspeccategory) ti.getValue();
+            }
+            List<Tspec> _specList = sp.getSpecListByCategory(cate, null, null);
+            for (Tspec spec : _specList) {
+                genOneSpecWadl(spec);
+            }
+            String docpath = genMultiSpecInOneWadl(_specList);
             Map windowparam = new HashMap();
             windowparam.put(SpecDocViewer.ARG_DOCPATH, docpath);
             windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.XML.lowerName());
             showDocViewer(windowparam);
         }
+    }
+
+    public void onClick$ctxm_genwadl() {
+        if (specList.getSelectedCount() > 0) {
+            currentSpec = (Tspec) specList.getSelectedItem().getValue();
+            String docpath = genOneSpecWadl(currentSpec);
+            Map windowparam = new HashMap();
+            windowparam.put(SpecDocViewer.ARG_DOCPATH, docpath);
+            windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.XML.lowerName());
+            showDocViewer(windowparam);
+        }
+    }
+
+    private String genMultiSpecInOneWadl(List<Tspec> _specList) {
+        if (_specList != null && _specList.size() > 0) {
+            Tspec samplespec = _specList.get(0);
+            String docpath = docbase + "/" + samplespec.getVc2version()
+                    + "/" + samplespec.getEnumApiType().name()
+                    + "/" + samplespec.getEnumApiStatus().name()
+                    + "/" + samplespec.getNumcateid().getVc2catename()
+                    + "/" + "pack" + ".wadl";
+            Application app = wadlbinder.bindApplication(_specList);
+            wadlbinder.marshall(app, docpath);
+            return docpath;
+        } else {
+            return null;
+        }
+    }
+
+    private String genOneSpecWadl(Tspec spec) {
+        String docpath = docbase + "/" + spec.getVc2version()
+                + "/" + spec.getEnumApiType().name()
+                + "/" + spec.getEnumApiStatus().name()
+                + "/" + spec.getNumcateid().getVc2catename()
+                + "/" + spec.getNumspecid() + ".wadl";
+        Application app = wadlbinder.bindApplication(spec);
+        wadlbinder.marshall(app, docpath);
+        return docpath;
     }
 
     public void onClick$ctxm_editspec() {
@@ -172,9 +205,9 @@ public class SpecManagerComposer extends GenericForwardComposer {
         public void onEvent(Event event) throws Exception {
             DropEvent evt = (DropEvent) event;
             Listitem dragged = (Listitem) evt.getDragged();
-            Treeitem dropped = (Treeitem)evt.getTarget().getParent();
-            Tspeccategory dropcate = (Tspeccategory)dropped.getValue();
-            Tspec dragspec = (Tspec)dragged.getValue();
+            Treeitem dropped = (Treeitem) evt.getTarget().getParent();
+            Tspeccategory dropcate = (Tspeccategory) dropped.getValue();
+            Tspec dragspec = (Tspec) dragged.getValue();
             dragspec.setNumcateid(dropcate);
             daoService.edit(dragspec);
             refreshDataBinding();
@@ -203,7 +236,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
         }
     }
 
-    private void showDocViewer(Map args){
+    private void showDocViewer(Map args) {
         try {
             Window wadlviewer = (Window) Executions.createComponents("/spec/specdocviewer.zul", null, args);
             wadlviewer.doModal();
@@ -244,5 +277,4 @@ public class SpecManagerComposer extends GenericForwardComposer {
     public void setSpecListByCate(List specListByCate) {
         this.specListByCate = specListByCate;
     }
-    
 }
