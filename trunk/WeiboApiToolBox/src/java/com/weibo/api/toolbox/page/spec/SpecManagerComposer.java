@@ -1,5 +1,6 @@
 package com.weibo.api.toolbox.page.spec;
 
+import com.weibo.api.spec.basic.BaseArgument;
 import com.weibo.api.spec.wadl.WadlBinding;
 import com.weibo.api.spec.wadl.wadl20090202.Application;
 import com.weibo.api.toolbox.common.enumerations.AcceptType;
@@ -15,11 +16,11 @@ import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.service.spec.CategoryProvider;
 import com.weibo.api.toolbox.service.spec.SpecProvider;
 import com.weibo.api.toolbox.util.CodeMirrorSyntax;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.zkoss.lang.Strings;
 import org.zkoss.spring.SpringUtil;
 import org.zkoss.util.logging.Log;
 import org.zkoss.zk.ui.Component;
@@ -53,6 +54,8 @@ public class SpecManagerComposer extends GenericForwardComposer {
     SpecProvider sp = (SpecProvider) SpringUtil.getBean("specProvider");
     IJpaDaoService daoService = (IJpaDaoService) SpringUtil.getBean("jpaDaoService");
     WadlBinding wadlbinder = (WadlBinding) SpringUtil.getBean("wadlbinder");
+    BaseArgument baseArgument = (BaseArgument)SpringUtil.getBean("baseArgument");
+    
     private Tree catetree;
     private Listbox specList;
     private SpecCategoryTreeModel specTreeModel;
@@ -61,7 +64,8 @@ public class SpecManagerComposer extends GenericForwardComposer {
     List specListByCate;
     Intbox idfilter;
     Textbox versionfilter;
-    String docbase = Executions.getCurrent().getDesktop().getWebApp().getRealPath("/docs");
+    String docbase = (Strings.isEmpty(baseArgument.getDocBase())||baseArgument.getDocBase().equals("${webdoc}")
+            )?Executions.getCurrent().getDesktop().getWebApp().getRealPath("/docs"):baseArgument.getDocBase();
 
     @Override
     public void doAfterCompose(Component comp) throws Exception {
@@ -100,33 +104,6 @@ public class SpecManagerComposer extends GenericForwardComposer {
             windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.XML.lowerName());
             showDocViewer(windowparam);
         }
-    }
-
-    private String genMultiSpecInOneWadl(List<Tspec> _specList) {
-        if (_specList != null && _specList.size() > 0) {
-            Tspec samplespec = _specList.get(0);
-            String docpath = docbase + "/" + samplespec.getVc2version()
-                    + "/" + samplespec.getEnumApiType().name()
-                    + "/" + samplespec.getEnumApiStatus().name()
-                    + "/" + samplespec.getNumcateid().getVc2catename()
-                    + "/" + "pack" + ".wadl";
-            Application app = wadlbinder.bindApplication(_specList);
-            wadlbinder.marshall(app, docpath);
-            return docpath;
-        } else {
-            return null;
-        }
-    }
-
-    private String genOneSpecWadl(Tspec spec) {
-        String docpath = docbase + "/" + spec.getVc2version()
-                + "/" + spec.getEnumApiType().name()
-                + "/" + spec.getEnumApiStatus().name()
-                + "/" + spec.getNumcateid().getVc2catename()
-                + "/" + spec.getNumspecid() + ".wadl";
-        Application app = wadlbinder.bindApplication(spec);
-        wadlbinder.marshall(app, docpath);
-        return docpath;
     }
 
     public void onClick$ctxm_editspec() {
@@ -189,6 +166,15 @@ public class SpecManagerComposer extends GenericForwardComposer {
         return spec;
     }
 
+    public List getSpecListByCate() {
+        getSpecByCate();
+        return specListByCate;
+    }
+
+    public void setSpecListByCate(List specListByCate) {
+        this.specListByCate = specListByCate;
+    }
+    
     public void getSpecByCate() {
         int selcount = catetree.getSelectedCount();
         if (selcount > 0) {
@@ -269,12 +255,33 @@ public class SpecManagerComposer extends GenericForwardComposer {
         binder.loadAll();
     }
 
-    public List getSpecListByCate() {
-        getSpecByCate();
-        return specListByCate;
+    private String genMultiSpecInOneWadl(List<Tspec> _specList) {
+        if (_specList != null && _specList.size() > 0) {
+            Tspec samplespec = _specList.get(0);
+            String docpath = getWadlDocDir(samplespec)
+                    + "/" + "pack" + ".wadl";
+            Application app = wadlbinder.bindApplication(_specList);
+            wadlbinder.marshall(app, docpath);
+            return docpath;
+        } else {
+            return null;
+        }
     }
 
-    public void setSpecListByCate(List specListByCate) {
-        this.specListByCate = specListByCate;
+    private String genOneSpecWadl(Tspec spec) {
+        String docpath = getWadlDocDir(spec)
+                + "/" + spec.getNumspecid() + ".wadl";
+        Application app = wadlbinder.bindApplication(spec);
+        wadlbinder.marshall(app, docpath);
+        return docpath;
+    }
+
+    private String getWadlDocDir(Tspec samplespec){
+        String dirpath = docbase + "/" + baseArgument.getSpecBase()
+                    + "/" + samplespec.getVc2version()
+                    + "/" + samplespec.getEnumApiType().name()
+                    + "/" + samplespec.getEnumApiStatus().name()
+                    + "/" + samplespec.getNumcateid().getVc2catename();
+        return dirpath;
     }
 }
