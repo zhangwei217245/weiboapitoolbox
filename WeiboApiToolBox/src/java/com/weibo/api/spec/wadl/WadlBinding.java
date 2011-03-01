@@ -28,6 +28,8 @@ public interface WadlBinding {
     
     void marshall(Application app, String docpath);
 
+    Application bindApplication(Tspec spec);
+
     Application bindApplication(List<Tspec> specList);
 
     void bindErrorRepresentation(Response resp, Terrorcode errcode);
