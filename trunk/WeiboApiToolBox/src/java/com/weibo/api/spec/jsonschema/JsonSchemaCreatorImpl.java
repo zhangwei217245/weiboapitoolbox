@@ -6,8 +6,11 @@ import com.weibo.api.toolbox.persist.entity.Tdatastruct;
 import com.weibo.api.toolbox.persist.entity.Tenumvalues;
 import com.weibo.api.toolbox.persist.entity.Tstructfield;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,24 +23,24 @@ import org.codehaus.jackson.map.ObjectMapper;
  *
  * @author x-spirit
  */
-
 public class JsonSchemaCreatorImpl implements JsonSchemaCreator {
 
     @javax.annotation.Resource
     BaseArgument baseArgument;
-    
     ObjectMapper om = new ObjectMapper();
 
-    public String writeToString(Map schemaMap) throws IOException{
+    public String writeToString(Map schemaMap) throws IOException {
         return om.defaultPrettyPrintingWriter().writeValueAsString(schemaMap);
     }
 
-    public void writeToFile(File file,Map schemaMap) throws IOException{
+    public void writeToFile(File file, Map schemaMap) throws IOException {
+        PrintStream out = null;
         file.getParentFile().mkdirs();
-        om.defaultPrettyPrintingWriter().writeValue(file, schemaMap);
+        out = new PrintStream(file, "UTF-8");
+        writeToStream(out, schemaMap);
     }
 
-    public void writeToStream(OutputStream out, Map schemaMap) throws IOException{
+    public void writeToStream(OutputStream out, Map schemaMap) throws IOException {
         om.defaultPrettyPrintingWriter().writeValue(out, schemaMap);
     }
 
@@ -113,9 +116,9 @@ public class JsonSchemaCreatorImpl implements JsonSchemaCreator {
 
     private boolean calcRequired(Tstructfield field) {
         //TODO: simply mark the private field as not required.
-        return (!field.getIsPrivate())&&field.getIsRequired();
+        return (!field.getIsPrivate()) && field.getIsRequired();
     }
-    
+
     public static void main(String[] args) throws IOException {
         /**Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Map param = new HashMap();
@@ -144,5 +147,4 @@ public class JsonSchemaCreatorImpl implements JsonSchemaCreator {
         String writeValueAsString = om.defaultPrettyPrintingWriter().writeValueAsString(param);
         System.out.println(writeValueAsString);
     }
-    
 }

@@ -29,6 +29,7 @@ import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.StringWriter;
@@ -55,47 +56,36 @@ public class WadlBindingImpl implements WadlBinding {
     BaseArgument baseArgument;
     @javax.annotation.Resource
     Jaxb2Marshaller jaxb2Marshaller;
-
     private Set<String> schemaRef = new HashSet<String>();
 
     public WadlBindingImpl() {
     }
 
-    public String marshallToString(Application app){
+    public String marshallToString(Application app) {
         final StringWriter out = new StringWriter();
         jaxb2Marshaller.marshal(app, new StreamResult(out));
         return out.toString();
     }
 
-    public void marshallToStream(Application app,OutputStream os){
+    public void marshallToStream(Application app, OutputStream os) {
         jaxb2Marshaller.marshal(app, new StreamResult(os));
     }
 
-    public void marshallToFile(Application app,File docFile){
+    public void marshallToFile(Application app, File docFile) throws IOException {
         PrintStream out = null;
-        try {
-            docFile.getParentFile().mkdirs();
-            out = new PrintStream(docFile, "UTF-8");
-            jaxb2Marshaller.marshal(app, new StreamResult(out));
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(WadlBindingImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(WadlBindingImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                out.close();
-            } catch (Exception e) {
-            }
-        }
+        docFile.getParentFile().mkdirs();
+        out = new PrintStream(docFile, "UTF-8");
+        marshallToStream(app, out);
+        out.close();
     }
-    
-    public Map<String,List<Tspec>> seperateSpecListByBaseUrl(List<Tspec> specList){
-        Map<String,List<Tspec>> specmap = new HashMap<String, List<Tspec>>();
-        for (Tspec spec : specList){
+
+    public Map<String, List<Tspec>> seperateSpecListByBaseUrl(List<Tspec> specList) {
+        Map<String, List<Tspec>> specmap = new HashMap<String, List<Tspec>>();
+        for (Tspec spec : specList) {
             Baseurl baseurl = spec.getNumbaseurlid();
-            String base = baseurl.getVc2baseurl()+"/"+spec.getVc2version();
+            String base = baseurl.getVc2baseurl() + "/" + spec.getVc2version();
             List<Tspec> sublist = specmap.get(base);
-            if (sublist==null){
+            if (sublist == null) {
                 sublist = new ArrayList<Tspec>();
                 specmap.put(base, sublist);
             }
@@ -104,38 +94,38 @@ public class WadlBindingImpl implements WadlBinding {
         return specmap;
     }
 
-    public Application bindApplication(Tspec spec){
+    public Application bindApplication(Tspec spec) {
         List<Tspec> specList = new ArrayList<Tspec>();
         specList.add(spec);
         return bindApplication(specList);
     }
-    
-    public Application bindApplication(List<Tspec> specList){
+
+    public Application bindApplication(List<Tspec> specList) {
         Application appdefine = new Application();
-        bindResourcesByBaseUrl(appdefine,specList);
+        bindResourcesByBaseUrl(appdefine, specList);
         bindGrammers(appdefine);
         return appdefine;
     }
 
     public void bindResourcesByBaseUrl(Application appdefine, List<Tspec> specList) {
         Map<String, List<Tspec>> specmap = seperateSpecListByBaseUrl(specList);
-        for (String base : specmap.keySet()){
+        for (String base : specmap.keySet()) {
             List<Tspec> sublist = specmap.get(base);
             Resources ress = new Resources();
-            bindResources(ress,sublist);
+            bindResources(ress, sublist);
             appdefine.getResources().add(ress);
         }
     }
 
     public void bindGrammers(Application appdefine) {
         Grammars grammars = new Grammars();
-        for (String sr : schemaRef){
+        for (String sr : schemaRef) {
             addGrammerInclude(grammars, sr);
         }
         appdefine.setGrammars(grammars);
     }
 
-    public void addGrammerInclude(Grammars grammars,String schemaRef) {
+    public void addGrammerInclude(Grammars grammars, String schemaRef) {
         Include inc = new Include();
         inc.setHref(schemaRef);
         grammars.getInclude().add(inc);
@@ -152,7 +142,7 @@ public class WadlBindingImpl implements WadlBinding {
             bindResource(res, spec);
             ress.getResource().add(res);
             ress.setBase(spec.getNumbaseurlid().getVc2baseurl() + "/" + spec.getVc2version());
-            bindDocs(ress.getDoc(),spec.getNumbaseurlid().getVc2desc());
+            bindDocs(ress.getDoc(), spec.getNumbaseurlid().getVc2desc());
         }
     }
 
@@ -198,7 +188,7 @@ public class WadlBindingImpl implements WadlBinding {
                 par = new Param();
                 copyParamValue(par, reqparam);
             }
-            if (par!=null){
+            if (par != null) {
                 res.getParam().add(par);
             }
         }
@@ -237,7 +227,7 @@ public class WadlBindingImpl implements WadlBinding {
         List<Trequestparam> trequestparamSet = spec.getTrequestparamSet();
         for (Trequestparam reqparam : trequestparamSet) {
             if (reqparam.getEnumParamStyle().getWadlStyle().equals(ParamStyle.HEADER)
-                    ||reqparam.getEnumParamStyle().getWadlStyle().equals(ParamStyle.QUERY)){
+                    || reqparam.getEnumParamStyle().getWadlStyle().equals(ParamStyle.QUERY)) {
                 Param par = new Param();
                 copyParamValue(par, reqparam);
                 req.getParam().add(par);
@@ -256,7 +246,7 @@ public class WadlBindingImpl implements WadlBinding {
         List<Trequestparam> trequestparamSet = spec.getTrequestparamSet();
         for (Trequestparam reqparam : trequestparamSet) {
             if (reqparam.getEnumParamStyle().getWadlStyle().equals(ParamStyle.HEADER)
-                    ||reqparam.getEnumParamStyle().getWadlStyle().equals(ParamStyle.QUERY)){
+                    || reqparam.getEnumParamStyle().getWadlStyle().equals(ParamStyle.QUERY)) {
                 Param par = new Param();
                 copyParamValue(par, reqparam);
                 rep.getParam().add(par);
@@ -270,7 +260,7 @@ public class WadlBindingImpl implements WadlBinding {
             Response resp = new Response();
             resp.getStatus().add(200L);
             DataTypes enumDataTypes = tresp.getEnumDataTypes();
-            if (DataTypes.OBJECT.equals(enumDataTypes)||DataTypes.ARRAY.equals(enumDataTypes)){
+            if (DataTypes.OBJECT.equals(enumDataTypes) || DataTypes.ARRAY.equals(enumDataTypes)) {
                 bindResponseRepresentation(resp, tresp);
             } else {
                 //TODO: if return a primitive type, what should we expect?
@@ -285,23 +275,23 @@ public class WadlBindingImpl implements WadlBinding {
         ContentType enumContentType = tresp.getEnumContentType();
         String schemalocal = null;
         repset.setMediaType(tresp.getEnumContentType().getMediaString());
-        
+
         String uri = baseArgument.getSchemaBaseURI();
         String prefix = "ds";
         String localpart = tresp.getVc2responsename();
 
-        if (enumContentType.equals(ContentType.APP_XML)){
+        if (enumContentType.equals(ContentType.APP_XML)) {
             prefix = "xsd";
-            schemalocal = ds.getStructDocName()+".xsd";
-        } else if (enumContentType.equals(ContentType.APP_JSON)){
+            schemalocal = ds.getStructDocName() + ".xsd";
+        } else if (enumContentType.equals(ContentType.APP_JSON)) {
             prefix = "jssd";
-            schemalocal = ds.getStructDocName()+".jssd";
+            schemalocal = ds.getStructDocName() + ".jssd";
         }
 
-        this.schemaRef.add(uri+"/"+schemalocal);
-        
+        this.schemaRef.add(uri + "/" + schemalocal);
+
         repset.setElement(new QName(uri, localpart, prefix));
-        
+
         resp.getRepresentation().add(repset);
     }
 
@@ -310,7 +300,7 @@ public class WadlBindingImpl implements WadlBinding {
         for (Terrorcode errcode : terrorcodeSet) {
             Response resp = new Response();
             resp.getStatus().add(Long.parseLong(errcode.getVc2httpcode()));
-            bindErrorRepresentation(resp,errcode);
+            bindErrorRepresentation(resp, errcode);
             mtd.getResponse().add(resp);
         }
     }
@@ -319,7 +309,7 @@ public class WadlBindingImpl implements WadlBinding {
         Representation repres = new Representation();
         //TODO: don't know where put our error define
     }
-    
+
     private void copyParamValue(Param par, Trequestparam reqparam) {
         par.setName(reqparam.getVc2paramname());
         par.setRequired(reqparam.getIsRequired());
@@ -334,11 +324,11 @@ public class WadlBindingImpl implements WadlBinding {
             par.setFixed(reqparam.getVc2demovalue());
         }
         if (reqparam.getEnumDataTypes().equals(DataTypes.ENUM)
-                &&reqparam.getNumenumgroupid()!=null){
+                && reqparam.getNumenumgroupid() != null) {
             Tenumgroup enumvals = reqparam.getNumenumgroupid();
             Set<Tenumvalues> tenumvaluesSet = enumvals.getTenumvaluesSet();
-            for (Tenumvalues enumv : tenumvaluesSet){
-                if (enumv.getIsEnable()){
+            for (Tenumvalues enumv : tenumvaluesSet) {
+                if (enumv.getIsEnable()) {
                     Option opt = new Option();
                     opt.setValue(enumv.getVc2enumvalue());
                     par.getOption().add(opt);
@@ -347,9 +337,9 @@ public class WadlBindingImpl implements WadlBinding {
         }
     }
 
-    private void bindDocs(List<Doc> docs, String ...doc) {
+    private void bindDocs(List<Doc> docs, String... doc) {
 
-        for (String str : doc){
+        for (String str : doc) {
             Doc document = new Doc();
             document.getContent().add(str);
             docs.add(document);

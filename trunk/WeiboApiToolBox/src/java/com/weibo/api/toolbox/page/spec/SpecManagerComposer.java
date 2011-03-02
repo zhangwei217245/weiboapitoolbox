@@ -15,6 +15,7 @@ import com.weibo.api.toolbox.service.spec.SpecDocService;
 import com.weibo.api.toolbox.service.spec.SpecProvider;
 import com.weibo.api.toolbox.util.CodeMirrorSyntax;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -318,7 +319,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
     }
 
     private String read(String docpath) throws FileNotFoundException, IOException {
-        java.io.Reader reader = new java.io.FileReader(docpath);
+        java.io.Reader reader = new java.io.InputStreamReader(new FileInputStream(docpath), "UTF-8");
         String result = new String(org.zkoss.io.Files.readAll(reader));
         reader.close();
         return result;
