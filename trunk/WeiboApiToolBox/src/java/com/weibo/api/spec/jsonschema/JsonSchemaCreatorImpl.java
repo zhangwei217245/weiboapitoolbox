@@ -28,12 +28,18 @@ public class JsonSchemaCreatorImpl {
     private void generateProperties(Map properties, List<Tstructfield> tstructfieldSet) {
         for (Tstructfield field : tstructfieldSet){
             String name = field.getVc2fieldname();
-            addPropertiesValues(name,properties);
+            addPropertyValues(field,properties);
             DataTypes dataType = field.getEnumDataTypes();
             if (dataType.equals(DataTypes.ENUM)){
 
             }
         }
+    }
+
+    private void addPropertyValues(Tstructfield field, Map properties) {
+        Map propertyValues = new HashMap();
+        propertyValues.put("type", field.getEnumDataTypes().getJsonType());
+        //propertyValues.put("", field.get);
     }
 
     public static void main(String[] args) throws IOException {
@@ -58,10 +64,6 @@ public class JsonSchemaCreatorImpl {
         ObjectMapper om = new ObjectMapper();
         String writeValueAsString = om.defaultPrettyPrintingWriter().writeValueAsString(param);
         System.out.println(writeValueAsString);
-    }
-
-    private void addPropertiesValues(String name, Map properties) {
-        
     }
 
     
