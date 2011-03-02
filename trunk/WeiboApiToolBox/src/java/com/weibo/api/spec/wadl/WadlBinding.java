@@ -15,6 +15,7 @@ import com.weibo.api.spec.wadl.wadl20090202.Response;
 import com.weibo.api.toolbox.persist.entity.Terrorcode;
 import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
+import java.io.File;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -25,11 +26,11 @@ import java.util.List;
 public interface WadlBinding {
 
 
-    String marshall(Application app);
+    String marshallToString(Application app);
 
-    void marshall(Application app,OutputStream os);
+    void marshallToStream(Application app,OutputStream os);
     
-    void marshall(Application app, String docpath);
+    void marshallToFile(Application app, File docFile);
 
     Application bindApplication(Tspec spec);
 

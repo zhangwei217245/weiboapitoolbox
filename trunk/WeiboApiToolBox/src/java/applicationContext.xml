@@ -59,6 +59,7 @@
         <property name="schema" value="classpath:com/weibo/api/spec/wadl/wadl20090202.xsd"/>
     </bean>
     <bean id="wadlbinder" class="com.weibo.api.spec.wadl.WadlBindingImpl" scope="prototype"/>
+    <bean id="jsonSchemaCreator" class="com.weibo.api.spec.jsonschema.JsonSchemaCreatorImpl" scope="prototype"/>
     <tx:annotation-driven transaction-manager="txManager"/>
     <!-- Enables ZK custom scopes for Spring Beans -->
     <zksp:zk-config/>

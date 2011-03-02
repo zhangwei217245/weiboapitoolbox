@@ -156,6 +156,12 @@ public class Tdatastruct implements Serializable {
         this.datastructExtendedSet = datastructExtendedSet;
     }
 
+    public String getStructDocName(){
+        return this.vc2version + "_" + this.numdatastructid;
+    }
+    public String getStructDisplayName(){
+        return this.vc2version + "." + this.vc2structname;
+    }
     @Override
     public int hashCode() {
         int hash = 0;

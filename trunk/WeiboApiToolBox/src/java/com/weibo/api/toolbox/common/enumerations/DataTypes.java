@@ -177,7 +177,7 @@ public enum DataTypes {
             return "枚举型";
         }
         public String getJsonType(){
-            return "any";
+            return "[\"string\",\"number\",\"integer\"]";
         }
         public String getXsdType(){
             return "string";
