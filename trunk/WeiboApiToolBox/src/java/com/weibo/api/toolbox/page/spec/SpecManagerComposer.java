@@ -127,6 +127,10 @@ public class SpecManagerComposer extends GenericForwardComposer {
 
             if (ToolBoxUtil.isNotEmpty(_specList)) {
                 String docpath = docService.genMultiSpecInOneWadl(_specList);
+                if (Strings.isEmpty(docpath)){
+                    Messagebox.show("生成汇总WADL失败，可能该分类下某些SPEC定义有误，请检查后重试!", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
+                    return;
+                }
                 Map windowparam = new HashMap();
                 windowparam.put(SpecDocViewer.ARG_DOCPATH, docpath);
                 windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.XML.lowerName());
@@ -138,10 +142,14 @@ public class SpecManagerComposer extends GenericForwardComposer {
         }
     }
 
-    public void onClick$ctxm_genwadl() {
+    public void onClick$ctxm_genwadl() throws InterruptedException {
         if (specList.getSelectedCount() > 0) {
             currentSpec = (Tspec) specList.getSelectedItem().getValue();
             String docpath = docService.genOneSpecWadl(currentSpec);
+            if (Strings.isEmpty(docpath)) {
+                Messagebox.show("生成SPEC失败，请检查SPEC内容！", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
+                return;
+            }
             Map windowparam = new HashMap();
             windowparam.put(SpecDocViewer.ARG_DOCPATH, docpath);
             windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.XML.lowerName());
