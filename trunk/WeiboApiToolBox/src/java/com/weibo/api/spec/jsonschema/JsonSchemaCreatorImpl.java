@@ -33,6 +33,7 @@ public class JsonSchemaCreatorImpl implements JsonSchemaCreator {
     }
 
     public void writeToFile(File file,Map schemaMap) throws IOException{
+        file.getParentFile().mkdirs();
         om.defaultPrettyPrintingWriter().writeValue(file, schemaMap);
     }
 
