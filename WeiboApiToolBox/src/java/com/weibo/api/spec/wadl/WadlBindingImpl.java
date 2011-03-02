@@ -29,6 +29,7 @@ import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -66,6 +67,10 @@ public class WadlBindingImpl implements WadlBinding {
         final StringWriter out = new StringWriter();
         jaxb2Marshaller.marshal(app, new StreamResult(out));
         return out.toString();
+    }
+
+    public void marshall(Application app,OutputStream os){
+        jaxb2Marshaller.marshal(app, new StreamResult(os));
     }
 
     public void marshall(Application app,String docpath){

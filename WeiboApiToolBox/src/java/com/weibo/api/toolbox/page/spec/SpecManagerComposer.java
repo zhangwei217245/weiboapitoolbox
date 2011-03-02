@@ -14,6 +14,7 @@ import com.weibo.api.toolbox.persist.entity.Baseurl;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.service.spec.CategoryProvider;
+import com.weibo.api.toolbox.service.spec.SpecDocService;
 import com.weibo.api.toolbox.service.spec.SpecProvider;
 import com.weibo.api.toolbox.util.CodeMirrorSyntax;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
@@ -56,8 +57,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
     CategoryProvider cp = (CategoryProvider) SpringUtil.getBean("categoryProvider");
     SpecProvider sp = (SpecProvider) SpringUtil.getBean("specProvider");
     IJpaDaoService daoService = (IJpaDaoService) SpringUtil.getBean("jpaDaoService");
-    WadlBinding wadlbinder = (WadlBinding) SpringUtil.getBean("wadlbinder");
-    BaseArgument baseArgument = (BaseArgument)SpringUtil.getBean("baseArgument");
+    SpecDocService docService = (SpecDocService)SpringUtil.getBean("specDocService");
     
     private Tree catetree;
     private Listbox specList;
@@ -67,10 +67,6 @@ public class SpecManagerComposer extends GenericForwardComposer {
     List specListByCate;
     Intbox idfilter;
     Textbox versionfilter;
-    String docbase = (Strings.isEmpty(baseArgument.getFileBase())
-            ||baseArgument.getFileBase().equals("${webdoc}"))?
-                Executions.getCurrent().getDesktop().getWebApp().getRealPath(baseArgument.getAllDocDir()):
-                baseArgument.getFileBase()+"/"+baseArgument.getAllDocDir();
 
     @Override
     public void doAfterCompose(Component comp) throws Exception {
@@ -91,7 +87,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
             List<Tspec> _specList = sp.getSpecListByCategory(cate, null, null);
 
             if (ToolBoxUtil.isNotEmpty(_specList)){
-                String docpath = genMultiSpecInOneWadl(_specList);
+                String docpath = docService.genMultiSpecInOneWadl(_specList);
                 Map windowparam = new HashMap();
                 windowparam.put(SpecDocViewer.ARG_DOCPATH, docpath);
                 windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.XML.lowerName());
@@ -106,7 +102,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
     public void onClick$ctxm_genwadl() {
         if (specList.getSelectedCount() > 0) {
             currentSpec = (Tspec) specList.getSelectedItem().getValue();
-            String docpath = genOneSpecWadl(currentSpec);
+            String docpath = docService.genOneSpecWadl(currentSpec);
             Map windowparam = new HashMap();
             windowparam.put(SpecDocViewer.ARG_DOCPATH, docpath);
             windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.XML.lowerName());
@@ -263,40 +259,5 @@ public class SpecManagerComposer extends GenericForwardComposer {
         binder.loadAll();
     }
 
-    private String genMultiSpecInOneWadl(List<Tspec> _specList) {
-        if (_specList != null && _specList.size() > 0) {
-            Tspec samplespec = _specList.get(0);
-            String doccatedir = getWadlDocCateDir(samplespec);
-            ToolBoxUtil.deleteFile(new File(doccatedir));
-            for (Tspec spec : _specList) {
-                genOneSpecWadl(spec);
-            }
-            String docpath = doccatedir
-                    + "/" + "pack" + ".wadl";
-            Application app = wadlbinder.bindApplication(_specList);
-            wadlbinder.marshall(app, docpath);
-            return docpath;
-        } else {
-            return null;
-        }
-    }
-
-    private String genOneSpecWadl(Tspec spec) {
-        String docpath = getWadlDocCateDir(spec)
-                + "/" + spec.getVc2version().trim()
-                + "/" + spec.getNumspecid() + ".wadl";
-        if (!new File(docpath).exists()){
-            Application app = wadlbinder.bindApplication(spec);
-            wadlbinder.marshall(app, docpath);
-        }
-        return docpath;
-    }
-
-    private String getWadlDocCateDir(Tspec samplespec){
-        String dirpath = docbase + "/" + baseArgument.getSpecBase()
-                    + "/" + samplespec.getEnumApiType().name()
-                    + "/" + samplespec.getEnumApiStatus().name()
-                    + "/" + samplespec.getNumcateid().getVc2catename().trim();
-        return dirpath;
-    }
+    
 }

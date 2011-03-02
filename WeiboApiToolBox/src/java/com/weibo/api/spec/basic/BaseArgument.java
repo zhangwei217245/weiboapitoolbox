@@ -5,6 +5,9 @@
 
 package com.weibo.api.spec.basic;
 
+import org.zkoss.lang.Strings;
+import org.zkoss.zk.ui.Executions;
+
 /**
  *
  * @author x-spirit
@@ -72,8 +75,7 @@ public class BaseArgument {
                 +"/"+getSpecBase();
     }
     public String getWadlFileBaseDir(){
-        return getFileBase()
-                +"/"+getAllDocDir()
+        return getDocBase()
                 +"/"+getSpecBase();
     }
     public String getSchemaBaseURI(){
@@ -83,8 +85,7 @@ public class BaseArgument {
     }
 
     public String getSchemaFileBaseDir(){
-        return getFileBase()
-                +"/"+getAllDocDir()
+        return getDocBase()
                 +"/"+getSchemaBase();
     }
 
@@ -95,8 +96,15 @@ public class BaseArgument {
     }
 
     public String getWikiFileBaseDir(){
-        return getFileBase()
-                +"/"+getAllDocDir()
+        return getDocBase()
                 +"/"+getWikiBase();
+    }
+
+    public String getDocBase(){
+        String docbase = (Strings.isEmpty(getFileBase())
+            ||getFileBase().equals("${webdoc}"))?
+                Executions.getCurrent().getDesktop().getWebApp().getRealPath(getAllDocDir()):
+                getFileBase()+"/"+getAllDocDir();
+        return docbase;
     }
 }
