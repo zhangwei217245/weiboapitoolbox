@@ -15,8 +15,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.Fetch;
@@ -47,6 +47,13 @@ public class Tdatastruct implements Serializable {
     private int numenable;
     @Column(name = "vc2version", length = 20)
     private String vc2version;
+    
+    @OneToMany(mappedBy = "numinheritfrom")
+    private Set<Tdatastruct> datastructExtendedSet;
+    @JoinColumn(name = "numinheritfrom", referencedColumnName = "numdatastructid")
+    @ManyToOne
+    private Tdatastruct numinheritfrom;
+
     @OneToMany(mappedBy = "numdatastructid")
     private Set<Tresponse> tresponseSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "numparentdatastructid", fetch = FetchType.EAGER)
@@ -133,7 +140,21 @@ public class Tdatastruct implements Serializable {
         this.tstructtypefieldSet = tstructtypefieldSet;
     }
 
-    
+    public Tdatastruct getNuminheritfrom() {
+        return numinheritfrom;
+    }
+
+    public void setNuminheritfrom(Tdatastruct numinheritfrom) {
+        this.numinheritfrom = numinheritfrom;
+    }
+
+    public Set<Tdatastruct> getDatastructExtendedSet() {
+        return datastructExtendedSet;
+    }
+
+    public void setDatastructExtendedSet(Set<Tdatastruct> datastructExtendedSet) {
+        this.datastructExtendedSet = datastructExtendedSet;
+    }
 
     @Override
     public int hashCode() {

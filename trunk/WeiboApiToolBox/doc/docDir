@@ -1,18 +1,17 @@
 -docBase
 --spec
----{public type}
-----{api status}
------{spec_cate}
-------{version}
--------{specid}.wadl
+---{specid}.wadl
+
+
 --schema
 ---base
-----{version}
------{ds_name}.(xsd|jssd)单个数据对象
+----{version}_{struct_id}.(xsd|jssd)单个数据对象
+
 ---response
 ----{version}
 -----{mainresource}
 ------{subresource}
+
 
 --wiki
 ---{public type}

@@ -61,6 +61,10 @@
                         错误信息
                         <textbox value="@{syserrormanage$composer.currSysError.vc2errmsg,load-after='sysErrorList.onSelect'}" width="480px" constraint="no empty"/>
                     </row>
+                    <row spans="1,3">
+                        错误信息(中文)
+                        <textbox value="@{syserrormanage$composer.currSysError.vc2cnmsg,load-after='sysErrorList.onSelect'}" width="480px" constraint="no empty"/>
+                    </row>
                     <row spans="1,2,1">
                         描述：
                         <textbox rows="3" value="@{syserrormanage$composer.currSysError.vc2desc,load-after='sysErrorList.onSelect'}" constraint="no empty" width="280px"/>
