@@ -1,8 +1,5 @@
 package com.weibo.api.toolbox.page.spec;
 
-import com.weibo.api.spec.basic.BaseArgument;
-import com.weibo.api.spec.wadl.WadlBinding;
-import com.weibo.api.spec.wadl.wadl20090202.Application;
 import com.weibo.api.toolbox.common.enumerations.AcceptType;
 import com.weibo.api.toolbox.common.enumerations.ApiStatus;
 import com.weibo.api.toolbox.common.enumerations.ApiType;
@@ -18,11 +15,14 @@ import com.weibo.api.toolbox.service.spec.SpecDocService;
 import com.weibo.api.toolbox.service.spec.SpecProvider;
 import com.weibo.api.toolbox.util.CodeMirrorSyntax;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.zkoss.lang.Strings;
 import org.zkoss.spring.SpringUtil;
 import org.zkoss.util.logging.Log;
@@ -57,8 +57,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
     CategoryProvider cp = (CategoryProvider) SpringUtil.getBean("categoryProvider");
     SpecProvider sp = (SpecProvider) SpringUtil.getBean("specProvider");
     IJpaDaoService daoService = (IJpaDaoService) SpringUtil.getBean("jpaDaoService");
-    SpecDocService docService = (SpecDocService)SpringUtil.getBean("specDocService");
-    
+    SpecDocService docService = (SpecDocService) SpringUtil.getBean("specDocService");
     private Tree catetree;
     private Listbox specList;
     private SpecCategoryTreeModel specTreeModel;
@@ -76,6 +75,45 @@ public class SpecManagerComposer extends GenericForwardComposer {
         catetree.setModel(specTreeModel);
     }
 
+    public void onClick$ctxm_genschemalist() throws InterruptedException {
+        Tspeccategory cate = null;
+        if (catetree.getSelectedCount() > 0) {
+            Set selitems = catetree.getSelectedItems();
+            for (Object sel : selitems) {
+                Treeitem ti = (Treeitem) sel;
+                cate = (Tspeccategory) ti.getValue();
+            }
+            List<Tspec> _specList = sp.getSpecListByCategory(cate, null, null);
+
+            if (ToolBoxUtil.isNotEmpty(_specList)) {
+                Map<String, String> docpathMap = docService.genMultiSchemaForEachSpec(_specList);
+                if (docpathMap == null || docpathMap.isEmpty()) {
+                    Messagebox.show("该分类的所有SPEC下没有有效的数据结构定义！", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
+                    return;
+                }
+                showSchemaDocs(docpathMap);
+            } else {
+                Messagebox.show("该分类下没有有效的SPEC定义！", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
+            }
+
+        }
+    }
+
+    public void onClick$ctxm_genschema() throws InterruptedException {
+        if (specList.getSelectedCount() > 0) {
+            currentSpec = (Tspec) specList.getSelectedItem().getValue();
+            String docpath = docService.genOneSchemaForOneSpec(currentSpec);
+            if (Strings.isEmpty(docpath)) {
+                Messagebox.show("该SPEC下没有有效的数据结构定义！", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
+                return;
+            }
+            Map windowparam = new HashMap();
+            windowparam.put(SpecDocViewer.ARG_DOCPATH, docpath);
+            windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.JS.lowerName());
+            showDocViewer(windowparam);
+        }
+    }
+
     public void onClick$ctxm_genwadllist() throws InterruptedException {
         Tspeccategory cate = null;
         if (catetree.getSelectedCount() > 0) {
@@ -86,7 +124,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
             }
             List<Tspec> _specList = sp.getSpecListByCategory(cate, null, null);
 
-            if (ToolBoxUtil.isNotEmpty(_specList)){
+            if (ToolBoxUtil.isNotEmpty(_specList)) {
                 String docpath = docService.genMultiSpecInOneWadl(_specList);
                 Map windowparam = new HashMap();
                 windowparam.put(SpecDocViewer.ARG_DOCPATH, docpath);
@@ -95,7 +133,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
             } else {
                 Messagebox.show("该分类下没有有效的SPEC定义！", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
             }
-            
+
         }
     }
 
@@ -178,7 +216,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
     public void setSpecListByCate(List specListByCate) {
         this.specListByCate = specListByCate;
     }
-    
+
     public void getSpecByCate() {
         int selcount = catetree.getSelectedCount();
         if (selcount > 0) {
@@ -188,6 +226,26 @@ public class SpecManagerComposer extends GenericForwardComposer {
         } else {
             specListByCate = sp.getSpecListByCategory(null, idfilter.getValue(), versionfilter.getValue());
         }
+    }
+
+    private void showSchemaDocs(Map<String,String> docpathMap) {
+        StringBuilder codesb = new StringBuilder();
+        for (String specKey : docpathMap.keySet()) {
+            codesb.append("======= ").append(specKey).append(" =======\n");
+            String docpath = docpathMap.get(specKey);
+            String docvalue = "";
+            try {
+                docvalue = read(docpath);
+            } catch (Exception ex) {
+                docvalue = "Exception:" + ex.getLocalizedMessage();
+                Logger.getLogger(SpecManagerComposer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            codesb.append(docvalue).append("\n");
+        }
+        Map windowparam = new HashMap();
+        windowparam.put(SpecDocViewer.ARG_CODEVAL, codesb.toString());
+        windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.JS.lowerName());
+        showDocViewer(windowparam);
     }
 
     private final class TreeitemDropListener implements EventListener {
@@ -259,5 +317,10 @@ public class SpecManagerComposer extends GenericForwardComposer {
         binder.loadAll();
     }
 
-    
+    private String read(String docpath) throws FileNotFoundException, IOException {
+        java.io.Reader reader = new java.io.FileReader(docpath);
+        String result = new String(org.zkoss.io.Files.readAll(reader));
+        reader.close();
+        return result;
+    }
 }
