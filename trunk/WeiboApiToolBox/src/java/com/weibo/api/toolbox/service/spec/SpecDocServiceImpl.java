@@ -9,7 +9,6 @@ import com.weibo.api.spec.jsonschema.JsonSchemaCreator;
 import com.weibo.api.spec.wadl.WadlBinding;
 import com.weibo.api.spec.wadl.wadl20090202.Application;
 import com.weibo.api.toolbox.common.enumerations.ContentType;
-import com.weibo.api.toolbox.common.enumerations.DataTypes;
 import com.weibo.api.toolbox.persist.entity.Tdatastruct;
 import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
