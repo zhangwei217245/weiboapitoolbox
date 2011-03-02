@@ -105,11 +105,16 @@ public class JsonSchemaCreatorImpl implements JsonSchemaCreator {
 
     private void processStructSchema(Map map, String refORschema, Tdatastruct struct) {
         String jssdUri = baseArgument.getSchemaBaseURI()
-                + "/"
+                + "/base/"
                 + struct.getStructDocName() + ".jssd";
         map.put(refORschema, jssdUri);
     }
 
+    private boolean calcRequired(Tstructfield field) {
+        //TODO: simply mark the private field as not required.
+        return (!field.getIsPrivate())&&field.getIsRequired();
+    }
+    
     public static void main(String[] args) throws IOException {
         /**Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Map param = new HashMap();
@@ -138,10 +143,5 @@ public class JsonSchemaCreatorImpl implements JsonSchemaCreator {
         String writeValueAsString = om.defaultPrettyPrintingWriter().writeValueAsString(param);
         System.out.println(writeValueAsString);
     }
-
     
-    private boolean calcRequired(Tstructfield field) {
-        //TODO: simply mark the private field as not required.
-        return (!field.getIsPrivate())&&field.getIsRequired();
-    }
 }

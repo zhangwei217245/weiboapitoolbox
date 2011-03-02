@@ -49,11 +49,15 @@
     </zscript>
     <menupopup id="specCatePopup">
         <menuitem id="ctxm_newspec" label="新建SPEC" image="/img/smallicons/action_add.gif"/>
+        <menuseparator/>
         <menuitem id="ctxm_genwadllist" label="生成WADL归档" image="/img/smallicons/folder_files.gif"/>
+        <menuitem id="ctxm_genschemalist" label="生成Schema归档" image="/img/smallicons/folder_files.gif"/>
     </menupopup>
     <menupopup id="specListPopup">
         <menuitem id="ctxm_editspec" label="编辑SPEC" image="/img/smallicons/reply.gif"/>
+        <menuseparator/>
         <menuitem id="ctxm_genwadl" label="查看WADL归档" image="/img/smallicons/file.gif"/>
+        <menuitem id="ctxm_genschema" label="查看schema归档" image="/img/smallicons/file.gif"/>
     </menupopup>
     <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./specmanage" ?>
         <borderlayout id="specmanage"  apply="com.weibo.api.toolbox.page.spec.SpecManagerComposer">
