@@ -270,6 +270,7 @@
                                     <listheader width="150px" label="错误码"/>
                                     <listheader label="HTTP状态码"/>
                                     <listheader label="错误信息"/>
+                                    <listheader label="错误信息(中文)"/>
                                     <listheader label="描述"/>
                                 </listhead>
                                 <listitem self="@{each='errcode'}" value="@{errcode}">
@@ -281,6 +282,9 @@
                                     </listcell>
                                     <listcell>
                                         <textbox inplace="true" onChange='self.style="font-weight:bold"' value="@{errcode.vc2errmsg}" width="250px" />
+                                    </listcell>
+                                    <listcell>
+                                        <textbox inplace="true" onChange='self.style="font-weight:bold"' value="@{errcode.vc2cnmsg}" width="250px" />
                                     </listcell>
                                     <listcell>
                                         <textbox inplace="true" onChange='self.style="font-weight:bold"' value="@{errcode.vc2desc}" width="250px" />
