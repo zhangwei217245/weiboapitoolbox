@@ -4,6 +4,7 @@
  */
 package com.weibo.api.toolbox.page.spec;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class SpecDocViewer extends GenericForwardComposer {
     Textbox textbox;
 
     public String read(String docpath) throws FileNotFoundException, IOException {
-        java.io.Reader reader = new java.io.FileReader(docpath);
+        java.io.Reader reader = new java.io.InputStreamReader(new FileInputStream(docpath), "UTF-8");
         String result = new String(org.zkoss.io.Files.readAll(reader));
         reader.close();
         return result;

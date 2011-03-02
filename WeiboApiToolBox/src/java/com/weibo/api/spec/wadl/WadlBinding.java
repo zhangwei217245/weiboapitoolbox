@@ -16,6 +16,7 @@ import com.weibo.api.toolbox.persist.entity.Terrorcode;
 import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public interface WadlBinding {
 
     void marshallToStream(Application app,OutputStream os);
     
-    void marshallToFile(Application app, File docFile);
+    void marshallToFile(Application app, File docFile) throws IOException;
 
     Application bindApplication(Tspec spec);
 
