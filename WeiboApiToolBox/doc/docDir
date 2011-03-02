@@ -6,8 +6,14 @@
 ------{version}
 -------{specid}.wadl
 --schema
----{version}
-----{ds_name}.(xsd|jssd)
+---base
+----{version}
+-----{ds_name}.(xsd|jssd)单个数据对象
+---response
+----{version}
+-----{mainresource}
+------{subresource}
+
 --wiki
 ---{public type}
 ----{api status}
