@@ -44,13 +44,11 @@ import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamResult;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.stereotype.Component;
 
 /**
  *
  * @author x-spirit
  */
-@Component("wadlbinder")
 public class WadlBindingImpl implements WadlBinding {
 
     @javax.annotation.Resource
@@ -63,22 +61,21 @@ public class WadlBindingImpl implements WadlBinding {
     public WadlBindingImpl() {
     }
 
-    public String marshall(Application app){
+    public String marshallToString(Application app){
         final StringWriter out = new StringWriter();
         jaxb2Marshaller.marshal(app, new StreamResult(out));
         return out.toString();
     }
 
-    public void marshall(Application app,OutputStream os){
+    public void marshallToStream(Application app,OutputStream os){
         jaxb2Marshaller.marshal(app, new StreamResult(os));
     }
 
-    public void marshall(Application app,String docpath){
+    public void marshallToFile(Application app,File docFile){
         PrintStream out = null;
         try {
-            File doc = new File(docpath);
-            doc.getParentFile().mkdirs();
-            out = new PrintStream(doc, "UTF-8");
+            docFile.getParentFile().mkdirs();
+            out = new PrintStream(docFile, "UTF-8");
             jaxb2Marshaller.marshal(app, new StreamResult(out));
         } catch (FileNotFoundException ex) {
             Logger.getLogger(WadlBindingImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -295,10 +292,10 @@ public class WadlBindingImpl implements WadlBinding {
 
         if (enumContentType.equals(ContentType.APP_XML)){
             prefix = "xsd";
-            schemalocal = ds.getVc2version()+"/"+ds.getVc2structname()+".xsd";
+            schemalocal = ds.getStructDocName()+".xsd";
         } else if (enumContentType.equals(ContentType.APP_JSON)){
             prefix = "jssd";
-            schemalocal = ds.getVc2version()+"/"+ds.getVc2structname()+".jssd";
+            schemalocal = ds.getStructDocName()+".jssd";
         }
 
         this.schemaRef.add(uri+"/"+schemalocal);

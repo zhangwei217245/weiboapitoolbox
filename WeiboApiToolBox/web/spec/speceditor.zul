@@ -243,7 +243,7 @@
                                     </listcell>
                                     <listcell>
                                         <combobox inplace="true" width="100px" onChange='self.style="font-weight:bold;width:100px"' mold="rounded" model="@{speceditor$composer.allAvailDataStructs}" selectedItem="@{df.numdatastructid}">
-                                            <comboitem self="@{each='datastruct'}" label="@{datastruct.vc2structname}"/>
+                                            <comboitem self="@{each='datastruct'}" label="@{datastruct.structDisplayName}"/>
                                         </combobox>
                                     </listcell>
                                     <listcell>

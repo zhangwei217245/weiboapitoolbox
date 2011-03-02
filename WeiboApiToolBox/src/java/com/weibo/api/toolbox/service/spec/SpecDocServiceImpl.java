@@ -6,6 +6,7 @@
 package com.weibo.api.toolbox.service.spec;
 
 import com.weibo.api.spec.basic.BaseArgument;
+import com.weibo.api.spec.jsonschema.JsonSchemaCreator;
 import com.weibo.api.spec.wadl.WadlBinding;
 import com.weibo.api.spec.wadl.wadl20090202.Application;
 import com.weibo.api.toolbox.persist.entity.Tspec;
@@ -24,6 +25,8 @@ public class SpecDocServiceImpl implements SpecDocService {
     WadlBinding wadlbinder;
     @Resource
     BaseArgument baseArgument;
+    @Resource
+    JsonSchemaCreator jsonSchemaCreator;
 
     public String genMultiSpecInOneWadl(List<Tspec> _specList) {
         if (_specList != null && _specList.size() > 0) {
@@ -39,7 +42,7 @@ public class SpecDocServiceImpl implements SpecDocService {
                     + samplespec.getNumcateid().getNumcateid()
                     + ".wadl";
             Application app = wadlbinder.bindApplication(_specList);
-            wadlbinder.marshall(app, docpath);
+            wadlbinder.marshallToFile(app, new File(docpath));
             return docpath;
         } else {
             return null;
@@ -51,7 +54,7 @@ public class SpecDocServiceImpl implements SpecDocService {
                 + "/" + spec.getNumspecid() + ".wadl";
         if (!new File(docpath).exists()){
             Application app = wadlbinder.bindApplication(spec);
-            wadlbinder.marshall(app, docpath);
+            wadlbinder.marshallToFile(app, new File(docpath));
         }
         return docpath;
     }
