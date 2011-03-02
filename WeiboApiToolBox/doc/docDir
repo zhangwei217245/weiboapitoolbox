@@ -8,9 +8,7 @@
 ----{version}_{struct_id}.(xsd|jssd)单个数据对象
 
 ---response
-----{version}
------{mainresource}
-------{subresource}
+----{specid}.(xsd|jssd)
 
 
 --wiki
