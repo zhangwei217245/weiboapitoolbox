@@ -70,7 +70,7 @@
             <listbox id="fieldlist" model="@{datastructlayout$composer.currentDataStruct.tstructfieldSet}"
                 multiple="true" checkmark="true" sizedByContent="true">
                 <auxhead>
-                    <auxheader colspan="7">数据结构字段</auxheader>
+                    <auxheader colspan="8">字段</auxheader>
                 </auxhead>
                 <listhead>
                     <listheader label="名称" width="150px" align="center"/>
