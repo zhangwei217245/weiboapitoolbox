@@ -221,6 +221,7 @@
                                     <listheader label="Content-Type"  align="center"/>
                                     <listheader label="数据类型"  align="center"/>
                                     <listheader label="数据结构"  align="center"/>
+                                    <listheader label="枚举"  align="center"/>
                                     <listheader label="描述"  align="center" />
                                     <listheader label="示例值"  align="center" />
                                 </listhead>
@@ -244,6 +245,11 @@
                                     <listcell>
                                         <combobox inplace="true" width="100px" onChange='self.style="font-weight:bold;width:100px"' mold="rounded" model="@{speceditor$composer.allAvailDataStructs}" selectedItem="@{df.numdatastructid}">
                                             <comboitem self="@{each='datastruct'}" label="@{datastruct.structDisplayName}"/>
+                                        </combobox>
+                                    </listcell>
+                                    <listcell>
+                                        <combobox inplace="true" onChange='self.style="font-weight:bold"' mold="rounded" model="@{speceditor$composer.allEnableEnumGroups}" selectedItem="@{df.numenumgroupid}" width="100px">
+                                            <comboitem self="@{each='enumgroups'}" label="@{enumgroups.vc2enumgroupname}" tooltiptext="@{enumgroups.vc2enumgroupdesc}"/>
                                         </combobox>
                                     </listcell>
                                     <listcell>

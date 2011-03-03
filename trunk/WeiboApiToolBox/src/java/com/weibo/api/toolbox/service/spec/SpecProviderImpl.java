@@ -4,6 +4,7 @@
  */
 package com.weibo.api.toolbox.service.spec;
 
+import com.weibo.api.toolbox.common.enumerations.ContentType;
 import com.weibo.api.toolbox.common.enumerations.DataTypes;
 import com.weibo.api.toolbox.persist.IJpaDaoService;
 import com.weibo.api.toolbox.persist.entity.Baseurl;
@@ -11,6 +12,7 @@ import com.weibo.api.toolbox.persist.entity.Tdatastruct;
 import com.weibo.api.toolbox.persist.entity.Tenumgroup;
 import com.weibo.api.toolbox.persist.entity.Tenumvalues;
 import com.weibo.api.toolbox.persist.entity.Trequestparam;
+import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.persist.entity.Tstructfield;
@@ -129,10 +131,8 @@ public class SpecProviderImpl implements SpecProvider {
     }
 
     public void saveTspec(Tspec spec) {
-        List<Trequestparam> trequestparamSet = spec.getTrequestparamSet();
-        for (Trequestparam param : trequestparamSet){
-            processParamEnumRange(param);
-        }
+        fixMalParams(spec.getTrequestparamSet());
+        fixMalResponse(spec.getTresponseSet());
         if (spec.getNumspecid() == null) {
             jpaDaoService.create(spec);
         } else {
@@ -144,7 +144,6 @@ public class SpecProviderImpl implements SpecProvider {
         if (param.getEnumDataTypes().equals(DataTypes.ENUM)){
             param.setVc2range(getEnumRange(param.getNumenumgroupid()));
         }
-        //jpaDaoService.edit(param);
     }
 
     public void delReqParamById(String[] paramid) {
@@ -192,6 +191,7 @@ public class SpecProviderImpl implements SpecProvider {
     }
 
     public void saveDataStruct(Tdatastruct struct) {
+        fixMalFields(struct.getTstructfieldSet());
         if (struct.getNumdatastructid() == null) {
             jpaDaoService.create(struct);
         } else {
@@ -240,6 +240,83 @@ public class SpecProviderImpl implements SpecProvider {
         params.put("numcateid", spec.getNumcateid());
         if (ql != null) {
             jpaDaoService.executeUpdate(ql, params);
+        }
+    }
+
+    private void fixMalFields(List<Tstructfield> tstructfieldSet) {
+        if (ToolBoxUtil.isNotEmpty(tstructfieldSet)){
+            for (Tstructfield field : tstructfieldSet){
+                fixMalType(field);
+            }
+        }
+    }
+
+    private void fixMalType(Tstructfield field){
+        if (!field.getEnumDataTypes().isStruct()){
+            field.setNumdatastructid(null);
+        } else if (!hasDataStruct(field.getNumdatastructid())){
+            field.setEnumDataTypes(DataTypes.STRING);
+            field.setNumdatastructid(null);
+        }
+
+        if (!field.getEnumDataTypes().equals(DataTypes.ENUM)){
+            field.setNumenumgroupid(null);
+        } else if (!hasEnumGroup(field.getNumenumgroupid())){
+            field.setEnumDataTypes(DataTypes.STRING);
+            field.setNumenumgroupid(null);
+        }
+    }
+
+    private boolean hasDataStruct(Tdatastruct struct){
+        return struct!=null&&struct.getNumdatastructid()!=1;
+    }
+    private boolean hasEnumGroup(Tenumgroup enumgroup){
+        return enumgroup!=null&&enumgroup.getNumenumgroupid()!=1;
+    }
+
+    private void fixMalParams(List<Trequestparam> trequestparamSet) {
+        if (ToolBoxUtil.isNotEmpty(trequestparamSet)){
+            for (Trequestparam param : trequestparamSet){
+                fixMalType(param);
+            }
+        }
+    }
+
+    private void fixMalResponse(List<Tresponse> tresponseSet) {
+        if (ToolBoxUtil.isNotEmpty(tresponseSet)){
+            for (Tresponse response : tresponseSet){
+                fixMalType(response);
+            }
+        }
+    }
+
+    private void fixMalType(Trequestparam param) {
+        if (param.getEnumDataTypes().equals(DataTypes.ENUM)&&hasEnumGroup(param.getNumenumgroupid())){
+            param.setVc2range(getEnumRange(param.getNumenumgroupid()));
+        }else if (!param.getEnumDataTypes().equals(DataTypes.ENUM)){
+            param.setNumenumgroupid(null);
+        } else if (!hasEnumGroup(param.getNumenumgroupid())){
+            param.setEnumDataTypes(DataTypes.STRING);
+            param.setNumenumgroupid(null);
+        }
+    }
+
+    private void fixMalType(Tresponse response) {
+        if (response.getEnumDataTypes().isStruct()&&hasDataStruct(response.getNumdatastructid())){
+            response.setEnumContentType(ContentType.APP_JSON);
+        }else if (!response.getEnumDataTypes().isStruct()){
+            response.setNumdatastructid(null);
+            response.setEnumContentType(ContentType.PLAIN_TXT);
+        } else if (!hasDataStruct(response.getNumdatastructid())){
+            response.setEnumDataTypes(DataTypes.STRING);
+            response.setNumdatastructid(null);
+            response.setEnumContentType(ContentType.PLAIN_TXT);
+        }
+        if (!response.getEnumDataTypes().equals(DataTypes.ENUM)){
+            response.setNumenumgroupid(null);
+        } else if (!hasEnumGroup(response.getNumenumgroupid())){
+            response.setEnumDataTypes(DataTypes.STRING);
+            response.setNumenumgroupid(null);
         }
     }
 }
