@@ -5,12 +5,5 @@
 // Generated on: 2011.02.22 at 02:02:51 下午 CST 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://wadl.dev.java.net/2009/02",
-elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED,
-        xmlns={
-        @javax.xml.bind.annotation.XmlNs(prefix="xsd",namespaceURI="http://www.w3.org/2001/XMLSchema"),
-        @javax.xml.bind.annotation.XmlNs(prefix="tns",namespaceURI="urn:weibo:wn"),
-        @javax.xml.bind.annotation.XmlNs(prefix="wn",namespaceURI="urn:weibo:wn"),
-        @javax.xml.bind.annotation.XmlNs(prefix="wa",namespaceURI="urn:weibo:api")
-},attributeFormDefault=javax.xml.bind.annotation.XmlNsForm.UNQUALIFIED)
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://wadl.dev.java.net/2009/02", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package com.weibo.api.spec.wadl.wadl20090202;

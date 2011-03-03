@@ -1,5 +1,6 @@
 package com.weibo.api.toolbox.page.spec;
 
+import com.google.common.collect.Collections2;
 import com.weibo.api.toolbox.common.enumerations.AcceptType;
 import com.weibo.api.toolbox.common.enumerations.ApiStatus;
 import com.weibo.api.toolbox.common.enumerations.ApiType;
@@ -26,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.lang.Strings;
 import org.zkoss.spring.SpringUtil;
+import org.zkoss.util.CollectionsX;
 import org.zkoss.util.logging.Log;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
@@ -87,7 +89,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
             List<Tspec> _specList = sp.getSpecListByCategory(cate, null, null);
 
             if (ToolBoxUtil.isNotEmpty(_specList)) {
-                Map<String, String> docpathMap = docService.genMultiSchemaForEachSpec(_specList);
+                Map<String, List<String>> docpathMap = docService.genMultiSchemaForEachSpec(_specList);
                 if (docpathMap == null || docpathMap.isEmpty()) {
                     Messagebox.show("该分类的所有SPEC下没有有效的数据结构定义！", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
                     return;
@@ -103,13 +105,25 @@ public class SpecManagerComposer extends GenericForwardComposer {
     public void onClick$ctxm_genschema() throws InterruptedException {
         if (specList.getSelectedCount() > 0) {
             currentSpec = (Tspec) specList.getSelectedItem().getValue();
-            String docpath = docService.genOneSchemaForOneSpec(currentSpec);
-            if (Strings.isEmpty(docpath)) {
+            List<String> docPathList = docService.genOneSchemaForOneSpec(currentSpec);
+            if (ToolBoxUtil.isEmpty(docPathList)) {
                 Messagebox.show("该SPEC下没有有效的数据结构定义！", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
                 return;
             }
+            StringBuilder codesb = new StringBuilder();
+            for (String docpath : docPathList) {
+                String docvalue = "";
+                try {
+                    docvalue = read(docpath);
+                } catch (Exception ex) {
+                    docvalue = "Exception:" + ex.getLocalizedMessage();
+                    Logger.getLogger(SpecManagerComposer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                codesb.append("====== ").append(docpath).append(" ======\n");
+                codesb.append(docvalue).append("\n");
+            }
             Map windowparam = new HashMap();
-            windowparam.put(SpecDocViewer.ARG_DOCPATH, docpath);
+            windowparam.put(SpecDocViewer.ARG_CODEVAL, codesb.toString());
             windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.JS.lowerName());
             showDocViewer(windowparam);
         }
@@ -127,7 +141,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
 
             if (ToolBoxUtil.isNotEmpty(_specList)) {
                 String docpath = docService.genMultiSpecInOneWadl(_specList);
-                if (Strings.isEmpty(docpath)){
+                if (Strings.isEmpty(docpath)) {
                     Messagebox.show("生成汇总WADL失败，可能该分类下某些SPEC定义有误，请检查后重试!", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
                     return;
                 }
@@ -237,19 +251,23 @@ public class SpecManagerComposer extends GenericForwardComposer {
         }
     }
 
-    private void showSchemaDocs(Map<String,String> docpathMap) {
+    private void showSchemaDocs(Map<String, List<String>> docpathMap) {
         StringBuilder codesb = new StringBuilder();
         for (String specKey : docpathMap.keySet()) {
-            codesb.append("======= ").append(specKey).append(" =======\n");
-            String docpath = docpathMap.get(specKey);
-            String docvalue = "";
-            try {
-                docvalue = read(docpath);
-            } catch (Exception ex) {
-                docvalue = "Exception:" + ex.getLocalizedMessage();
-                Logger.getLogger(SpecManagerComposer.class.getName()).log(Level.SEVERE, null, ex);
+            codesb.append("[ ").append(specKey).append(" ]\n");
+            List<String> docPathList = docpathMap.get(specKey);
+            for (String docpath : docPathList) {
+                String docvalue = "";
+                try {
+                    docvalue = read(docpath);
+                } catch (Exception ex) {
+                    docvalue = "Exception:" + ex.getLocalizedMessage();
+                    Logger.getLogger(SpecManagerComposer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                codesb.append("====== ").append(docpath).append(" ======\n");
+                codesb.append(docvalue).append("\n");
             }
-            codesb.append(docvalue).append("\n");
+
         }
         Map windowparam = new HashMap();
         windowparam.put(SpecDocViewer.ARG_CODEVAL, codesb.toString());
