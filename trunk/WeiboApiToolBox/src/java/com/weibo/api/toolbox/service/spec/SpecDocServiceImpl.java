@@ -12,8 +12,10 @@ import com.weibo.api.toolbox.common.enumerations.ContentType;
 import com.weibo.api.toolbox.persist.entity.Tdatastruct;
 import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
+import com.weibo.api.toolbox.persist.entity.Tstructfield;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,25 +38,26 @@ public class SpecDocServiceImpl implements SpecDocService {
     @Resource
     JsonSchemaCreator jsonSchemaCreator;
 
-    public Map<String, String> genMultiSchemaForEachSpec(List<Tspec> _specList) {
-        Map<String, String> schemaDocMap = null;
+    public Map<String, List<String>> genMultiSchemaForEachSpec(List<Tspec> _specList) {
+        Map<String, List<String>> schemaDocMap = null;
         if (_specList != null && _specList.size() > 0) {
-            schemaDocMap = new HashMap<String, String>();
+            schemaDocMap = new HashMap<String, List<String>>();
             for (Tspec spec : _specList) {
-                String schemaPath = genOneSchemaForOneSpec(spec);
-                schemaDocMap.put(spec.getSpecTitle(), schemaPath);
+                List<String> structPathList = genOneSchemaForOneSpec(spec);
+                schemaDocMap.put(spec.getSpecTitle(), structPathList);
             }
         }
         return schemaDocMap;
     }
 
-    public String genOneSchemaForOneSpec(Tspec spec) {
+    public List<String> genOneSchemaForOneSpec(Tspec spec) {
+        List<String> structPathList = new ArrayList<String>();
         for (Tresponse response : spec.getTresponseSet()) {
             if (response.getEnumContentType().equals(ContentType.APP_JSON)) {
-                return generateJsonSchema(response);
+                generateJsonSchema(structPathList,response);
             }
         }
-        return null;
+        return structPathList;
     }
 
     public String genMultiSpecInOneWadl(List<Tspec> _specList) {
@@ -93,19 +96,34 @@ public class SpecDocServiceImpl implements SpecDocService {
         return docpath;
     }
 
-    private String generateJsonSchema(Tresponse response) {
-        String schemaFilePath = null;
+    private void generateJsonSchema(List<String> structPathList,Tresponse response) {
         if (response.getEnumDataTypes().isStruct()) {
-            try {
                 Tdatastruct struct = response.getNumdatastructid();
-                Map schemaMap = jsonSchemaCreator.generateSchemaMap(struct);
-                schemaFilePath = baseArgument.getSchemaFileBaseDir()
-                        + "/" + struct.getStructDocName() + ".jssd";
-                jsonSchemaCreator.writeToFile(new File(schemaFilePath), schemaMap);
-            } catch (IOException ex) {
-                Logger.getLogger(SpecDocServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                generateJsonSchemaByStruct(structPathList, struct);
+        }
+    }
+
+    private void generateJsonSchemaByStruct(List<String> structPathList,Tdatastruct struct) {
+        String schemaFilePath = baseArgument.getSchemaFileBaseDir()
+                + "/" + struct.getStructDocName() + ".jssd";
+        File schemaFile = new File(schemaFilePath);
+        long interval = System.currentTimeMillis()-schemaFile.lastModified();
+        if(schemaFile.exists()&&interval<5000){
+            return;
+        }
+        try {
+            Map schemaMap = jsonSchemaCreator.generateSchemaMap(struct);
+            jsonSchemaCreator.writeToFile(schemaFile, schemaMap);
+            structPathList.add(schemaFilePath);
+        } catch (IOException ex) {
+            Logger.getLogger(SpecDocServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        for (Tstructfield field : struct.getTstructfieldSet()){
+            Tdatastruct fieldstruct = field.getNumdatastructid();
+            if (field.getEnumDataTypes().isStruct()&&fieldstruct!=null){
+                generateJsonSchemaByStruct(structPathList, fieldstruct);
             }
         }
-        return schemaFilePath;
     }
 }

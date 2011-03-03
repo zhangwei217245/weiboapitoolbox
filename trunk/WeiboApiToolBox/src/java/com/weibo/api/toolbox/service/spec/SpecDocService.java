@@ -15,9 +15,9 @@ import java.util.Map;
  */
 public interface SpecDocService {
 
-    Map<String,String> genMultiSchemaForEachSpec(List<Tspec> _specList);
+    Map<String, List<String>> genMultiSchemaForEachSpec(List<Tspec> _specList);
 
-    String genOneSchemaForOneSpec(Tspec spec);
+    List<String> genOneSchemaForOneSpec(Tspec spec);
 
     String genMultiSpecInOneWadl(List<Tspec> _specList);
 

@@ -326,7 +326,7 @@ public class Tspec implements Serializable {
     }
 
     public String getSpecTitle(){
-        return "当前编辑：" + (this.numspecid==null?"":"#"+this.numspecid+" - ") + getResourcePath();
+        return "SPEC: " + (this.numspecid==null?"":"#"+this.numspecid+" - ") + getResourcePath();
     }
 
     /**
