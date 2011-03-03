@@ -6,6 +6,7 @@ package com.weibo.api.toolbox.util;
 
 import com.weibo.api.toolbox.persist.IJpaDaoService;
 import com.weibo.api.toolbox.persist.entity.Tdatastruct;
+import com.weibo.api.toolbox.persist.entity.Tenumgroup;
 import java.io.File;
 import java.util.Collection;
 import org.zkoss.spring.SpringUtil;
@@ -35,6 +36,11 @@ public class ToolBoxUtil {
     public static Tdatastruct getNonStruct(){
         IJpaDaoService jpaDaoService = (IJpaDaoService) SpringUtil.getBean("jpaDaoService");
         return jpaDaoService.findOneEntityById(Tdatastruct.class, 1);
+    }
+
+    public static Tenumgroup getNonEnumGroup(){
+        IJpaDaoService jpaDaoService = (IJpaDaoService) SpringUtil.getBean("jpaDaoService");
+        return jpaDaoService.findOneEntityById(Tenumgroup.class, 1);
     }
 
     public static void deleteFile(File file) {

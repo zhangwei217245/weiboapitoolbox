@@ -49,6 +49,8 @@ public class Tenumgroup implements Serializable {
     private Set<Tenumvalues> tenumvaluesSet;
     @OneToMany(mappedBy = "numenumgroupid")
     private Set<Tstructfield> tstructfieldSet;
+    @OneToMany(mappedBy = "numenumgroupid")
+    private Set<Tresponse> tresponseSet;
 
     public Tenumgroup() {
     }
@@ -126,6 +128,14 @@ public class Tenumgroup implements Serializable {
 
     public void setTstructfieldSet(Set<Tstructfield> tstructfieldSet) {
         this.tstructfieldSet = tstructfieldSet;
+    }
+
+    public Set<Tresponse> getTresponseSet() {
+        return tresponseSet;
+    }
+
+    public void setTresponseSet(Set<Tresponse> tresponseSet) {
+        this.tresponseSet = tresponseSet;
     }
 
     public String getEnableImg(){

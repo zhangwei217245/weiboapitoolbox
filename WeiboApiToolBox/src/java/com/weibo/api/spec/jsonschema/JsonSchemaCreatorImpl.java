@@ -104,6 +104,7 @@ public class JsonSchemaCreatorImpl implements JsonSchemaCreator {
             propertyValues.put("items", urimap);
         } else if (type.equals(DataTypes.OBJECT)) {
             processStructSchema(propertyValues, "$ref", field.getNumdatastructid());
+            propertyValues.remove("type");
         }
     }
 

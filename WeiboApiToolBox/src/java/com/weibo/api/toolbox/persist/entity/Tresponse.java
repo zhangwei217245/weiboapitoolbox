@@ -56,6 +56,9 @@ public class Tresponse implements Serializable {
     @JoinColumn(name = "numspecid", referencedColumnName = "numspecid", nullable = false)
     @ManyToOne(optional = false)
     private Tspec numspecid;
+    @JoinColumn(name = "numenumgroupid", referencedColumnName = "numenumgroupid")
+    @ManyToOne
+    private Tenumgroup numenumgroupid;
 
     public Tresponse() {
     }
@@ -145,7 +148,14 @@ public class Tresponse implements Serializable {
         this.numcontenttype = numcontenttype;
     }
 
-    
+    public Tenumgroup getNumenumgroupid() {
+        return numenumgroupid;
+    }
+
+    public void setNumenumgroupid(Tenumgroup numenumgroupid) {
+        this.numenumgroupid = numenumgroupid;
+    }
+
     /**
      * Resolve Enum Values
      */

@@ -69,14 +69,23 @@ public class SysDataProviderImpl implements SysDataProvider {
     }
 
     public void saveSysParam(Sysparam sysparam){
-        if (sysparam.getEnumDataTypes().equals(DataTypes.ENUM)){
+        if (sysparam.getEnumDataTypes().equals(DataTypes.ENUM)&&hasEnumGroup(sysparam)){
             sysparam.setVc2range(getEnumRange(sysparam.getNumenumgroupid()));
+        } else if (!sysparam.getEnumDataTypes().equals(DataTypes.ENUM)){
+            sysparam.setNumenumgroupid(null);
+        } else if (!hasEnumGroup(sysparam)){
+            sysparam.setEnumDataTypes(DataTypes.STRING);
+            sysparam.setNumenumgroupid(null);
         }
         if (sysparam.getNumparamid()==null){
             jpaDaoService.create(sysparam);
         }else{
             jpaDaoService.edit(sysparam);
         }
+    }
+
+    private boolean hasEnumGroup(Sysparam sysparam){
+        return sysparam.getNumenumgroupid()!=null&&sysparam.getNumenumgroupid().getNumenumgroupid()!=1;
     }
 
     public void saveSysError(Syserror syserr){
