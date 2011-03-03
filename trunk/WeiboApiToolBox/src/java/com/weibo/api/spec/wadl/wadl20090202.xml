@@ -19,7 +19,9 @@
             <ns0:method>
                 <ns0:response status="">
                     <ns0:representation >
+
                     </ns0:representation>
+                    <ns0:param ></ns0:param>
                 </ns0:response>
             </ns0:method>
         </ns0:resource>
