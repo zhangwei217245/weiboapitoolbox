@@ -1,5 +1,6 @@
 package com.weibo.api.toolbox.page.spec;
 
+import com.weibo.api.spec.basic.BaseArgument;
 import com.weibo.api.toolbox.common.ConfirmBoxEventListener;
 import com.weibo.api.toolbox.common.EventListenerAction;
 import com.weibo.api.toolbox.common.enumerations.AcceptType;
@@ -62,6 +63,7 @@ public class SpecEditorComposer extends GenericForwardComposer {
     SpecProvider sp = (SpecProvider) SpringUtil.getBean("specProvider");
     IJpaDaoService daoService = (IJpaDaoService) SpringUtil.getBean("jpaDaoService");
     SysDataProvider sdprovider = (SysDataProvider)SpringUtil.getBean("sysDataProvider");
+    BaseArgument baseArgument = (BaseArgument)SpringUtil.getBean("baseArgument");
     
     Tspec currentSpec;
     Listbox paramgrid;
@@ -208,7 +210,6 @@ public class SpecEditorComposer extends GenericForwardComposer {
         Trequestparam trequestparam = new Trequestparam(null, "参数名", 1, 1, 1, "输入参数描述", 1);
         trequestparam.setNumspecid(currentSpec);
         trequestparamSet.add(trequestparam);
-        addSysparams(trequestparamSet,currentSpec);
         refreshDataBinding();
     }
 
@@ -232,7 +233,7 @@ public class SpecEditorComposer extends GenericForwardComposer {
         Terrorcode terrorcode = new Terrorcode(null, "错误码", "http状态码", "错误消息", "错误描述", 1);
         terrorcode.setNumspecid(currentSpec);
         terrorcodeSet.add(terrorcode);
-        addSysErrors(terrorcodeSet,currentSpec);
+        
         refreshDataBinding();
     }
 
@@ -258,6 +259,10 @@ public class SpecEditorComposer extends GenericForwardComposer {
         initReqParamSet();
         initErrorSet();
         initResponse();
+//        if (baseArgument.isPutSysDefineIntoSpec()){
+//            addSysparams(currentSpec);
+//            addSysErrors(currentSpec);
+//        }
         super.doAfterCompose(comp);
         autoCheck("cbhm", currentSpec.getVc2httpmethod(), ",", comp);
     }
@@ -457,8 +462,9 @@ public class SpecEditorComposer extends GenericForwardComposer {
         return sp.getAllDataStruct(null,null, true, -1, -1);
     }
 
-    private void addSysparams(List<Trequestparam> trequestparamSet, Tspec currentSpec) {
-        Tspeccategory numcateid = currentSpec.getNumcateid();
+    private void addSysparams(Tspec currentSpec) {
+        List<Trequestparam> trequestparamSet = currentSpec.getTrequestparamSet();
+        Tspeccategory numcateid = currentSpec.getNumcateid().getNumparentcateid();
         List<Sysparam> sysParametersByCate = sdprovider.getSysParametersByCate(numcateid);
         for (Sysparam syspar : sysParametersByCate){
             Trequestparam reqparam = new Trequestparam();
@@ -482,8 +488,9 @@ public class SpecEditorComposer extends GenericForwardComposer {
         reqparam.setVc2range(syspar.getVc2range());
     }
 
-    private void addSysErrors(List<Terrorcode> terrorcodeSet, Tspec currentSpec) {
-        Tspeccategory numcateid = currentSpec.getNumcateid();
+    private void addSysErrors(Tspec currentSpec) {
+        List<Terrorcode> terrorcodeSet = currentSpec.getTerrorcodeSet();
+        Tspeccategory numcateid = currentSpec.getNumcateid().getNumparentcateid();
         List<Syserror> syserrorlst = sdprovider.getSyserrorByCate(numcateid);
         for (Syserror syserr : syserrorlst){
             Terrorcode errcode = new Terrorcode();
