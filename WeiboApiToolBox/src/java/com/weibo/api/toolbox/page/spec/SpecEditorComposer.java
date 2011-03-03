@@ -1,6 +1,5 @@
 package com.weibo.api.toolbox.page.spec;
 
-import com.weibo.api.spec.wadl.WadlBinding;
 import com.weibo.api.toolbox.common.ConfirmBoxEventListener;
 import com.weibo.api.toolbox.common.EventListenerAction;
 import com.weibo.api.toolbox.common.enumerations.AcceptType;
@@ -14,6 +13,8 @@ import com.weibo.api.toolbox.common.enumerations.ParamStyle;
 import com.weibo.api.toolbox.common.enumerations.RateLimit;
 import com.weibo.api.toolbox.persist.IJpaDaoService;
 import com.weibo.api.toolbox.persist.entity.Baseurl;
+import com.weibo.api.toolbox.persist.entity.Syserror;
+import com.weibo.api.toolbox.persist.entity.Sysparam;
 import com.weibo.api.toolbox.persist.entity.Tdatastruct;
 import com.weibo.api.toolbox.persist.entity.Tenumgroup;
 import com.weibo.api.toolbox.persist.entity.Terrorcode;
@@ -23,6 +24,7 @@ import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.service.spec.CategoryProvider;
 import com.weibo.api.toolbox.service.spec.SpecProvider;
+import com.weibo.api.toolbox.service.spec.SysDataProvider;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,6 +61,7 @@ public class SpecEditorComposer extends GenericForwardComposer {
     CategoryProvider cp = (CategoryProvider) SpringUtil.getBean("categoryProvider");
     SpecProvider sp = (SpecProvider) SpringUtil.getBean("specProvider");
     IJpaDaoService daoService = (IJpaDaoService) SpringUtil.getBean("jpaDaoService");
+    SysDataProvider sdprovider = (SysDataProvider)SpringUtil.getBean("sysDataProvider");
     
     Tspec currentSpec;
     Listbox paramgrid;
@@ -205,6 +208,7 @@ public class SpecEditorComposer extends GenericForwardComposer {
         Trequestparam trequestparam = new Trequestparam(null, "参数名", 1, 1, 1, "输入参数描述", 1);
         trequestparam.setNumspecid(currentSpec);
         trequestparamSet.add(trequestparam);
+        addSysparams(trequestparamSet,currentSpec);
         refreshDataBinding();
     }
 
@@ -228,6 +232,7 @@ public class SpecEditorComposer extends GenericForwardComposer {
         Terrorcode terrorcode = new Terrorcode(null, "错误码", "http状态码", "错误消息", "错误描述", 1);
         terrorcode.setNumspecid(currentSpec);
         terrorcodeSet.add(terrorcode);
+        addSysErrors(terrorcodeSet,currentSpec);
         refreshDataBinding();
     }
 
@@ -450,5 +455,51 @@ public class SpecEditorComposer extends GenericForwardComposer {
 
     public List<Tdatastruct> getAllAvailDataStructs(){
         return sp.getAllDataStruct(null,null, true, -1, -1);
+    }
+
+    private void addSysparams(List<Trequestparam> trequestparamSet, Tspec currentSpec) {
+        Tspeccategory numcateid = currentSpec.getNumcateid();
+        List<Sysparam> sysParametersByCate = sdprovider.getSysParametersByCate(numcateid);
+        for (Sysparam syspar : sysParametersByCate){
+            Trequestparam reqparam = new Trequestparam();
+            reqparam.setNumspecid(currentSpec);
+            reqparam.setNumenable(1);
+            copySysparamToReq(syspar,reqparam);
+            trequestparamSet.add(reqparam);
+        }
+    }
+
+    private void copySysparamToReq(Sysparam syspar, Trequestparam reqparam) {
+        reqparam.setNumdatatype(syspar.getNumdatatype());
+        reqparam.setNumstyle(syspar.getNumstyle());
+        reqparam.setNumenumgroupid(syspar.getNumenumgroupid());
+        reqparam.setNumrepeating(syspar.getNumrepeating());
+        reqparam.setNumrequired(syspar.getNumrequired());
+        reqparam.setVc2paramname(syspar.getVc2paramname());
+        reqparam.setVc2desc(syspar.getVc2desc());
+        reqparam.setVc2defaultvalue(syspar.getVc2defaultvalue());
+        reqparam.setVc2demovalue(syspar.getVc2demovalue());
+        reqparam.setVc2range(syspar.getVc2range());
+    }
+
+    private void addSysErrors(List<Terrorcode> terrorcodeSet, Tspec currentSpec) {
+        Tspeccategory numcateid = currentSpec.getNumcateid();
+        List<Syserror> syserrorlst = sdprovider.getSyserrorByCate(numcateid);
+        for (Syserror syserr : syserrorlst){
+            Terrorcode errcode = new Terrorcode();
+            errcode.setNumspecid(currentSpec);
+            errcode.setNumenable(1);
+            copySysErrToSpecErr(syserr,errcode);
+            terrorcodeSet.add(errcode);
+        }
+    }
+
+    private void copySysErrToSpecErr(Syserror syserr, Terrorcode errcode) {
+        errcode.setVc2errorcode(syserr.getVc2errorcode());
+        errcode.setVc2httpcode(syserr.getVc2httpcode());
+        errcode.setVc2errmsg(syserr.getVc2errmsg());
+        errcode.setVc2cnmsg(syserr.getVc2cnmsg());
+        errcode.setVc2desc(syserr.getVc2desc());
+        //errcode.setVc2detail(syserr.getVc2detail());
     }
 }
