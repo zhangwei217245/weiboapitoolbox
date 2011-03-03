@@ -19,6 +19,7 @@ public class BaseArgument {
     private String specBase;
     private String schemaBase;
     private String allDocDir;
+    private boolean putSysDefineIntoSpec;
     
 
     public String getFileBase() {
@@ -67,6 +68,14 @@ public class BaseArgument {
 
     public void setAllDocDir(String allDocDir) {
         this.allDocDir = allDocDir;
+    }
+
+    public boolean isPutSysDefineIntoSpec() {
+        return putSysDefineIntoSpec;
+    }
+
+    public void setPutSysDefineIntoSpec(boolean putSysDefineIntoSpec) {
+        this.putSysDefineIntoSpec = putSysDefineIntoSpec;
     }
 
     public String getWadlBaseURI(){

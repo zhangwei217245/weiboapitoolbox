@@ -39,6 +39,7 @@
         <property name="schemaBase" value="schema"/>
         <property name="wikiBase" value="wiki"/>
         <property name="hostBase" value="http://127.0.0.1/WeiboToolBox"/>
+        <property name="putSysDefineIntoSpec" value="true"/>
     </bean>
     <bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
         <property name="classesToBeBound">
