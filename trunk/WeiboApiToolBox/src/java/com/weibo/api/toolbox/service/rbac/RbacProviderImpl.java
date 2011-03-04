@@ -10,6 +10,7 @@ import com.weibo.api.toolbox.persist.entity.Tcategory;
 import com.weibo.api.toolbox.persist.entity.Tgroup;
 import com.weibo.api.toolbox.persist.entity.Tmenuitem;
 import com.weibo.api.toolbox.persist.entity.Tuser;
+import com.weibo.api.toolbox.persist.qlgenerator.JPQLGenerator;
 import com.weibo.api.toolbox.persist.qlgenerator.QLGenerator;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,6 +32,13 @@ public class RbacProviderImpl implements RbacProvider {
     IJpaDaoService jpaDaoService;
     @Resource
     QLGenerator jpqlGenerator;
+
+
+    public List<Tcategory> getAllCateList(){
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.select("t").from("Tcategory t");
+        return jpaDaoService.findEntities(qlgen.toString(), null, true, -1, -1);
+    }
 
     public Tuser login(String userName, String passWord) {
         jpqlGenerator.init();
