@@ -5,6 +5,7 @@
 
 package com.weibo.api.spec.wadl;
 
+import com.weibo.api.spec.wadl.WadlBindingImpl.ErrorResponse;
 import com.weibo.api.spec.wadl.wadl20090202.Application;
 import com.weibo.api.spec.wadl.wadl20090202.Method;
 import com.weibo.api.spec.wadl.wadl20090202.Representation;
@@ -12,7 +13,6 @@ import com.weibo.api.spec.wadl.wadl20090202.Request;
 import com.weibo.api.spec.wadl.wadl20090202.Resource;
 import com.weibo.api.spec.wadl.wadl20090202.Resources;
 import com.weibo.api.spec.wadl.wadl20090202.Response;
-import com.weibo.api.toolbox.persist.entity.Terrorcode;
 import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import java.io.File;
@@ -37,7 +37,7 @@ public interface WadlBinding {
 
     Application bindApplication(List<Tspec> specList);
 
-    void bindErrorRepresentation(Response resp, Terrorcode errcode);
+    void bindErrorRepresentation(Response resp, ErrorResponse errresp);
 
     void bindErrorResponse(Method mtd, Tspec spec);
 
