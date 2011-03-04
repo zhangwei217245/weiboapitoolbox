@@ -50,9 +50,19 @@
                     <button id="btn_register" label="注册"/>
                 </hbox>
                 <label id="msg" style="color:red"/>
+                <div height="50px"/>
+                <div align="center" width="100%">
+                    <div width="300px" style="color:orange">
+                        提示：如果使用staff邮箱注册新用户，
+                        则可以使用staff邮箱地址和密码登录。
+                        否则使用用户名和注册时提交的密码作为登录凭据。
+                    </div>
+                </div>
             </div>
         </center>
         <east size="30%" border="0"></east>
-        <south size="20%" border="0"></south>
+        <south size="20%" border="0">
+            
+        </south>
     </borderlayout>
 </zk>

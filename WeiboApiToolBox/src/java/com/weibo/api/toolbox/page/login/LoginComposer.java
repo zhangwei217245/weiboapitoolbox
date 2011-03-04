@@ -48,7 +48,8 @@ public class LoginComposer extends GenericForwardComposer {
         String username = userName.getValue();
         String password = passWord.getValue();
         if (isNotEmpty(username) && isNotEmpty(password)) {
-            Tuser user = rbacProvider.login(username, MD5Util.md5Digest(password));
+            
+            Tuser user = rbacProvider.login(username, password);
             if (user != null) {
                 loadMenus(user);
                 execution.sendRedirect("/mainFrame.zul");

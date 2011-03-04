@@ -12,6 +12,8 @@ import com.weibo.api.toolbox.persist.entity.Tmenuitem;
 import com.weibo.api.toolbox.persist.entity.Tuser;
 import com.weibo.api.toolbox.persist.qlgenerator.JPQLGenerator;
 import com.weibo.api.toolbox.persist.qlgenerator.QLGenerator;
+import com.weibo.api.toolbox.util.LDAPUtil;
+import com.weibo.api.toolbox.util.MD5Util;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,18 +35,15 @@ public class RbacProviderImpl implements RbacProvider {
     @Resource
     QLGenerator jpqlGenerator;
 
-
-    public List<Tcategory> getAllCateList(){
+    public List<Tcategory> getAllCateList() {
         QLGenerator qlgen = new JPQLGenerator();
         qlgen.select("t").from("Tcategory t").orderBy("t.numindex", "ASC");
         return jpaDaoService.findEntities(qlgen.toString(), null, true, -1, -1);
     }
 
-    public List<Tmenuitem> getAllMenuByCate(Tcategory cate){
+    public List<Tmenuitem> getAllMenuByCate(Tcategory cate) {
         QLGenerator qlgen = new JPQLGenerator();
-        qlgen.select("t").from("Tmenuitem t")
-                .where(null, "t.numcateid = :numcateid")
-                .orderBy("t.numindex", "ASC");
+        qlgen.select("t").from("Tmenuitem t").where(null, "t.numcateid = :numcateid").orderBy("t.numindex", "ASC");
         Map param = new HashMap();
         param.put("numcateid", cate);
         return jpaDaoService.findEntities(qlgen.toString(), param, true, -1, -1);
@@ -53,14 +52,24 @@ public class RbacProviderImpl implements RbacProvider {
     public Tuser login(String userName, String passWord) {
         jpqlGenerator.init();
         Map<String, Object> param = new HashMap<String, Object>();
-        param.put("vc2password", passWord);
-        jpqlGenerator.select("t").from("Tuser t").where(null, "t.vc2password = :vc2password");
-        if (userName.contains("@")){
+        jpqlGenerator.select("t").from("Tuser t");
+        boolean ldapAuth = false;
+        if (userName.toLowerCase().contains("@staff.sina")) {
+            ldapAuth = new LDAPUtil(userName.substring(0, userName.indexOf('@')), passWord).checkAuth();
+        }
+        if (ldapAuth) {
             param.put("vc2email", userName);
             jpqlGenerator.where("AND", "t.vc2email = :vc2email");
-        }else{
-            param.put("vc2username", userName);
-            jpqlGenerator.where("AND", "t.vc2username = :vc2username");
+        } else {
+            jpqlGenerator.where(null, "t.vc2password = :vc2password");
+            param.put("vc2password", MD5Util.md5Digest(passWord));
+            if (userName.contains("@")) {
+                param.put("vc2email", userName);
+                jpqlGenerator.where("AND", "t.vc2email = :vc2email");
+            } else {
+                param.put("vc2username", userName);
+                jpqlGenerator.where("AND", "t.vc2username = :vc2username");
+            }
         }
         List userlst = jpaDaoService.findEntities(jpqlGenerator.toString(), param, true, -1, -1);
         if (isNotEmpty(userlst)) {
