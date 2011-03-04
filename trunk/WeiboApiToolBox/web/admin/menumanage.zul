@@ -26,7 +26,7 @@
             <groupbox id="group" mold="3d" width="600px">
                 <caption label="菜单"/>
                 <hbox>
-                    <tree id="menutree" width="300px" height="500px">
+                    <tree id="menutree" width="300px" height="500px" rows="10">
                         <treecols>
                             <treecol label="菜单"/>
                         </treecols>

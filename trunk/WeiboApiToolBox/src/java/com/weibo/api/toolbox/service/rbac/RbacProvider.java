@@ -20,6 +20,8 @@ public interface RbacProvider {
 
     List<Tcategory> getAllCateList();
 
+    List<Tmenuitem> getAllMenuByCate(Tcategory cate);
+
     Set<Tcategory> getAllEnableCategories(Collection<Tmenuitem> menulst);
 
     List<Tmenuitem> getAllEnableMenuItems();

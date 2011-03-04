@@ -36,8 +36,18 @@ public class RbacProviderImpl implements RbacProvider {
 
     public List<Tcategory> getAllCateList(){
         QLGenerator qlgen = new JPQLGenerator();
-        qlgen.select("t").from("Tcategory t");
+        qlgen.select("t").from("Tcategory t").orderBy("t.numindex", "ASC");
         return jpaDaoService.findEntities(qlgen.toString(), null, true, -1, -1);
+    }
+
+    public List<Tmenuitem> getAllMenuByCate(Tcategory cate){
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.select("t").from("Tmenuitem t")
+                .where(null, "t.numcateid = :numcateid")
+                .orderBy("t.numindex", "ASC");
+        Map param = new HashMap();
+        param.put("numcateid", cate);
+        return jpaDaoService.findEntities(qlgen.toString(), param, true, -1, -1);
     }
 
     public Tuser login(String userName, String passWord) {
