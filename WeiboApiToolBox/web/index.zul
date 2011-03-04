@@ -16,9 +16,9 @@
     
     <borderlayout id="login" sclass="${themeSClass}" apply="com.weibo.api.toolbox.page.login.LoginComposer">
         <north size="20%" border="0">
-            N
+            
         </north>
-        <west size="30%" border="0">W</west>
+        <west size="30%" border="0"></west>
         <center border="0" flex="true">
             <div>
                 <grid fixedLayout="true">
@@ -52,7 +52,7 @@
                 <label id="msg" style="color:red"/>
             </div>
         </center>
-        <east size="30%" border="0">E</east>
-        <south size="20%" border="0">S</south>
+        <east size="30%" border="0"></east>
+        <south size="20%" border="0"></south>
     </borderlayout>
 </zk>
