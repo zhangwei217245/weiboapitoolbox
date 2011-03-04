@@ -24,21 +24,13 @@
     <borderlayout id="menumana" sclass="${themeSClass}" apply="com.weibo.api.toolbox.page.admin.MenuManagerComposer">
         <north size="60%" zindex="1" border="none" flex="true">
             <groupbox id="group" mold="3d" width="600px">
-                <caption label="用户组"/>
+                <caption label="菜单"/>
                 <hbox>
-                    <listbox id="grouplistbox" width="500px" height="60%" rows="10"
-                    model="@{groupmana$composer.groupList,load-after='groupadd.onClick,groupdel.onClick,attrsave.onClick'}"
-                    selectedItem="@{groupmana$composer.currTgroup}"
-			oddRowSclass="non-odd" fixedLayout="true">
-                        <listhead >
-                            <listheader label="名称"/>
-                            <listheader label="描述"/>
-                        </listhead>
-                        <listitem self="@{each='group'}" value="@{group}">
-                            <listcell image="@{group.imgEnable}" label="@{group.vc2groupname}" />
-                            <listcell label="@{group.vc2groupdesc}" />
-                        </listitem>
-                    </listbox>
+                    <tree id="menutree" width="300px" height="500px">
+                        <treecols>
+                            <treecol label="菜单"/>
+                        </treecols>
+                    </tree>
                     <vbox>
                         <button id="groupadd" label="添加"/>
                         <button id="groupdel" label="删除"/>

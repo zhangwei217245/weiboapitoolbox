@@ -18,6 +18,8 @@ import java.util.Set;
  */
 public interface RbacProvider {
 
+    List<Tcategory> getAllCateList();
+
     Set<Tcategory> getAllEnableCategories(Collection<Tmenuitem> menulst);
 
     List<Tmenuitem> getAllEnableMenuItems();
