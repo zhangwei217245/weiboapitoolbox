@@ -8,6 +8,7 @@ import com.weibo.api.toolbox.persist.IJpaDaoService;
 import com.weibo.api.toolbox.persist.entity.Tenumgroup;
 import com.weibo.api.toolbox.persist.entity.Tenumvalues;
 import com.weibo.api.toolbox.service.spec.SpecProvider;
+import com.weibo.api.toolbox.util.ToolBoxUtil;
 import java.util.List;
 import org.zkoss.spring.SpringUtil;
 import org.zkoss.util.logging.Log;
@@ -86,9 +87,13 @@ public class EnumManageComposer extends GenericForwardComposer {
     public void onClick$enumvalueadd() throws InterruptedException {
         if (enumgrouplist.getSelectedItem() != null) {
             Tenumgroup group = (Tenumgroup) enumgrouplist.getSelectedItem().getValue();
-            selectedObj = new Tenumvalues(null, "value", "枚举值含义", 1);
-            ((Tenumvalues) selectedObj).setNumenumgroupid(group);
-            showSelObjInEditor();
+            if (group.getNumenumgroupid()!=null){
+                selectedObj = new Tenumvalues(null, "value", "枚举值含义", 1);
+                ((Tenumvalues) selectedObj).setNumenumgroupid(group);
+                showSelObjInEditor();
+            }else{
+                Messagebox.show("请选择一个已保存的枚举", "错误", Messagebox.OK, Messagebox.ERROR);
+            }
         }else{
             Messagebox.show("请选择一个枚举", "错误", Messagebox.OK, Messagebox.ERROR);
         }
@@ -135,12 +140,17 @@ public class EnumManageComposer extends GenericForwardComposer {
             selgroup.setVc2enumgroupname(name.getValue());
             selgroup.setVc2enumgroupdesc(intro.getValue());
             selgroup.setIsEnable(enable.isChecked());
+            if(selgroup.getNumenumgroupid()==null){
+                ToolBoxUtil.setCreateUserInfo(selgroup);
+            }
+            ToolBoxUtil.setUpdateUserInfo(selgroup);
             daoService.edit(selgroup);
         } else if (selectedObj.getClass().equals(Tenumvalues.class)) {
             Tenumvalues selvalue = (Tenumvalues) selectedObj;
             selvalue.setVc2enumvalue(name.getValue());
             selvalue.setVc2enumdesc(intro.getValue());
             selvalue.setIsEnable(enable.isChecked());
+            ToolBoxUtil.setUpdateUserInfo(selvalue.getNumenumgroupid());
             daoService.edit(selvalue);
         }
     }

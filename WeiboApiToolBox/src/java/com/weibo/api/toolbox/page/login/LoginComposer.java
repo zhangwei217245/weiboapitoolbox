@@ -11,7 +11,6 @@ import com.weibo.api.toolbox.persist.entity.Tcategory;
 import com.weibo.api.toolbox.persist.entity.Tmenuitem;
 import com.weibo.api.toolbox.persist.entity.Tuser;
 import com.weibo.api.toolbox.service.rbac.RbacProvider;
-import com.weibo.api.toolbox.util.MD5Util;
 import java.util.Set;
 import org.zkoss.spring.SpringUtil;
 import static com.weibo.api.toolbox.util.ToolBoxUtil.*;

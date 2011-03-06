@@ -88,8 +88,11 @@ public class SpecProviderImpl implements SpecProvider {
 
     public void saveEnumgroup(Tenumgroup enumgroup){
         if (enumgroup.getNumenumgroupid()==null){
+            ToolBoxUtil.setCreateUserInfo(enumgroup);
+            ToolBoxUtil.setUpdateUserInfo(enumgroup);
             jpaDaoService.create(enumgroup);
         } else {
+            ToolBoxUtil.setUpdateUserInfo(enumgroup);
             jpaDaoService.edit(enumgroup);
         }
     }
@@ -196,8 +199,11 @@ public class SpecProviderImpl implements SpecProvider {
     public void saveDataStruct(Tdatastruct struct) {
         fixMalFields(struct.getTstructfieldSet());
         if (struct.getNumdatastructid() == null) {
+            ToolBoxUtil.setCreateUserInfo(struct);
+            ToolBoxUtil.setUpdateUserInfo(struct);
             jpaDaoService.create(struct);
         } else {
+            ToolBoxUtil.setUpdateUserInfo(struct);
             jpaDaoService.edit(struct);
         }
     }

@@ -9,6 +9,7 @@ import com.weibo.api.toolbox.common.EventListenerAction;
 import com.weibo.api.toolbox.persist.IJpaDaoService;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.service.spec.CategoryProvider;
+import com.weibo.api.toolbox.util.ToolBoxUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -151,6 +152,7 @@ public class CategoryComposer extends GenericForwardComposer {
             if (selectedObj != null) {
                 if (selectedObj.getClass().getSimpleName().equalsIgnoreCase("Tspeccategory")) {
                     setValueForSpecCate((Tspeccategory) selectedObj);
+                    ToolBoxUtil.setUpdateUserInfo(selectedObj);
                     jpaDaoService.edit(selectedObj);
                     if (attrlayout.getTitle().contains("小分类")){
                         refreshCateList();
@@ -170,6 +172,9 @@ public class CategoryComposer extends GenericForwardComposer {
     }
 
     private void setValueForSpecCate(Tspeccategory cate) {
+        if(cate.getNumcateid()==null){
+            ToolBoxUtil.setCreateUserInfo(cate);
+        }
         cate.setVc2catename(name.getValue());
         cate.setNumenable(enable.isChecked() ? 1 : 0);
         cate.setVc2desc(intro.getValue());
@@ -186,6 +191,7 @@ public class CategoryComposer extends GenericForwardComposer {
         if (value != null) {
             try {
                 value.setNumenable(0);
+
                 jpaDaoService.edit(value);
                 refreshCateList();
                 Messagebox.show("操作成功", "信息", Messagebox.OK, Messagebox.INFORMATION);
@@ -200,6 +206,7 @@ public class CategoryComposer extends GenericForwardComposer {
         if (value != null) {
             try {
                 value.setNumenable(0);
+                ToolBoxUtil.setUpdateUserInfo(selectedObj);
                 jpaDaoService.edit(value);
                 refreshClassList();
                 Messagebox.show("操作成功", "信息", Messagebox.OK, Messagebox.INFORMATION);

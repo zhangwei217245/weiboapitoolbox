@@ -5,6 +5,7 @@
 package com.weibo.api.toolbox.persist.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -19,6 +20,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -47,7 +50,18 @@ public class Tdatastruct implements Serializable {
     private int numenable;
     @Column(name = "vc2version", length = 20)
     private String vc2version;
-    
+    @Column(name = "datcreated")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date datcreated;
+    @Column(name = "datupdated")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date datupdated;
+    @JoinColumn(name = "numupdateduser", referencedColumnName = "numuserid")
+    @ManyToOne
+    private Tuser numupdateduser;
+    @JoinColumn(name = "numcreateduser", referencedColumnName = "numuserid")
+    @ManyToOne
+    private Tuser numcreateduser;
     @OneToMany(mappedBy = "numinheritfrom")
     private Set<Tdatastruct> datastructExtendedSet;
     @JoinColumn(name = "numinheritfrom", referencedColumnName = "numdatastructid")
@@ -114,6 +128,38 @@ public class Tdatastruct implements Serializable {
 
     public void setVc2version(String vc2version) {
         this.vc2version = vc2version;
+    }
+
+    public Date getDatcreated() {
+        return datcreated;
+    }
+
+    public void setDatcreated(Date datcreated) {
+        this.datcreated = datcreated;
+    }
+
+    public Date getDatupdated() {
+        return datupdated;
+    }
+
+    public void setDatupdated(Date datupdated) {
+        this.datupdated = datupdated;
+    }
+
+    public Tuser getNumcreateduser() {
+        return numcreateduser;
+    }
+
+    public void setNumcreateduser(Tuser numcreateduser) {
+        this.numcreateduser = numcreateduser;
+    }
+
+    public Tuser getNumupdateduser() {
+        return numupdateduser;
+    }
+
+    public void setNumupdateduser(Tuser numupdateduser) {
+        this.numupdateduser = numupdateduser;
     }
 
     public Set<Tresponse> getTresponseSet() {

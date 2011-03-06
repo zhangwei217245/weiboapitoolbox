@@ -91,6 +91,7 @@ public class SpecEditorComposer extends GenericForwardComposer {
             }
             currentSpec.getTspecSetOnWho().add(who);
             who.getTspecSetOnMe().add(currentSpec);
+            ToolBoxUtil.setUpdateUserInfo(who);
             daoService.edit(who);
             refreshDataBinding();
         }else{
@@ -112,6 +113,7 @@ public class SpecEditorComposer extends GenericForwardComposer {
             }
             currentSpec.getTspecSetOnMe().add(who);
             who.getTspecSetOnWho().add(currentSpec);
+            ToolBoxUtil.setUpdateUserInfo(who);
             daoService.edit(who);
             refreshDataBinding();
         }else{
@@ -125,8 +127,9 @@ public class SpecEditorComposer extends GenericForwardComposer {
         if (selItem!=null){
             Tspec who = (Tspec)selItem.getValue();
             who.getTspecSetOnWho().remove(currentSpec);
-            daoService.edit(who);
             currentSpec.getTspecSetOnMe().remove(who);
+            ToolBoxUtil.setUpdateUserInfo(who);
+            daoService.edit(who);
             refreshDataBinding();
         }
     }
@@ -134,9 +137,10 @@ public class SpecEditorComposer extends GenericForwardComposer {
         Listitem selItem = list_dependsOnWho.getSelectedItem();
         if (selItem!=null){
             Tspec who = (Tspec)selItem.getValue();
-            who.getTspecSetOnMe().remove(currentSpec);
-            daoService.edit(who);
             currentSpec.getTspecSetOnWho().remove(who);
+            who.getTspecSetOnMe().remove(currentSpec);
+            ToolBoxUtil.setUpdateUserInfo(who);
+            daoService.edit(who);
             refreshDataBinding();
         }
     }
