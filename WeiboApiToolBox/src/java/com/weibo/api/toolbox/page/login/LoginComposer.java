@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import org.zkoss.lang.Strings;
 import org.zkoss.util.logging.Log;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
@@ -71,14 +72,17 @@ public class LoginComposer extends GenericForwardComposer {
         Set<Tmenuitem> menuItems = rbacProvider.getUsersEnableMenuItems(user);
         Set<Tcategory> cates = rbacProvider.getAllEnableCategories(menuItems);
         for (Tcategory cate : cates) {
-            Category category = new Category("cg" + cate.getNumindex(), "/img/Centigrade-Widget-Icons/EnterpriseAndIntegration-48x48.png", cate.getVc2catedesc(), cate.getVc2catehref());
+            Category category = new Category("cg" + cate.getNumindex(),
+                    Strings.isEmpty(cate.getVc2cateimg())?
+                        "/img/Centigrade-Widget-Icons/EnterpriseAndIntegration-48x48.png":
+                        cate.getVc2cateimg(), cate.getVc2catedesc(), cate.getVc2catehref());
             _cateMap.put("cg" + cate.getNumindex(), category);
         }
         for (Tmenuitem menu : menuItems) {
             String cateid = "cg" + menu.getNumcateid().getNumindex();
             Category cate = (Category) _cateMap.get(cateid);
             DemoItem item = new DemoItem(cateid + "m" + menu.getNumindex(), cateid,
-                    menu.getVc2itemurl(), "/img/smallicons/weiboicon.png",
+                    menu.getVc2itemurl(), Strings.isEmpty(menu.getVc2itemimg())?"/img/smallicons/weiboicon.png":menu.getVc2itemimg(),
                     menu.getVc2itemdesc());
             cate.addItem(item);
             Collections.sort(cate.getItems(), new Comparator<DemoItem>() {
