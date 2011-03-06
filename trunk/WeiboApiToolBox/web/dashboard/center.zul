@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <zk xmlns="http://www.zkoss.org/2005/zul">
+    <grid>
+        <rows>
+            <row>
+                
+                <listbox id="updatedSpecList">
 
+                </listbox>
+                
+
+                <listbox id="updatedCateList">
+
+                </listbox>
+
+            </row>
+            <row>
+
+                <listbox id="updatedSysparamList">
+
+                </listbox>
+
+                <listbox id="updatedSyserrorList">
+
+                </listbox>
+
+            </row>
+        </rows>
+    </grid>
 </zk>
