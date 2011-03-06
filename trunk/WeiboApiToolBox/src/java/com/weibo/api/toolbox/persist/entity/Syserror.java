@@ -1,6 +1,7 @@
 package com.weibo.api.toolbox.persist.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,9 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -45,6 +46,18 @@ public class Syserror implements Serializable {
     @Basic(optional = false)
     @Column(name = "numenable", nullable = false)
     private int numenable;
+    @Column(name = "datcreated")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date datcreated;
+    @Column(name = "datupdated")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date datupdated;
+    @JoinColumn(name = "numupdateduser", referencedColumnName = "numuserid")
+    @ManyToOne
+    private Tuser numupdateduser;
+    @JoinColumn(name = "numcreateduser", referencedColumnName = "numuserid")
+    @ManyToOne
+    private Tuser numcreateduser;
     @JoinColumn(name = "numcateid", referencedColumnName = "numcateid", nullable = false)
     @ManyToOne(optional = false)
     private Tspeccategory numcateid;
@@ -135,6 +148,38 @@ public class Syserror implements Serializable {
 
     public void setNumcateid(Tspeccategory numcateid) {
         this.numcateid = numcateid;
+    }
+
+    public Date getDatcreated() {
+        return datcreated;
+    }
+
+    public void setDatcreated(Date datcreated) {
+        this.datcreated = datcreated;
+    }
+
+    public Date getDatupdated() {
+        return datupdated;
+    }
+
+    public void setDatupdated(Date datupdated) {
+        this.datupdated = datupdated;
+    }
+
+    public Tuser getNumcreateduser() {
+        return numcreateduser;
+    }
+
+    public void setNumcreateduser(Tuser numcreateduser) {
+        this.numcreateduser = numcreateduser;
+    }
+
+    public Tuser getNumupdateduser() {
+        return numupdateduser;
+    }
+
+    public void setNumupdateduser(Tuser numupdateduser) {
+        this.numupdateduser = numupdateduser;
     }
 
     @Override

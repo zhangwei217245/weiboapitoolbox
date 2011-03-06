@@ -3,7 +3,9 @@
 <?link rel="stylesheet" type="text/css" href="/macros/userguide.css.dsp?v=${desktop.webApp.build}"?>
 <?script type="text/javascript" src="/macros/zkdemo.js.dsp?v=${desktop.webApp.build}"?>
 <?script type="text/javascript" content="jq.IE6_ALPHAFIX=/24x24.png|32x32.png|48x48.png|128x128.png|ButtonBlue.png|ButtonGray.png|small.png|small-sel.png|normal.png|normal-sel.png|large.png|large-sel.png/;"?>
-
+<?xel-method prefix="c" name="hasPermission"
+class="com.weibo.api.toolbox.util.PermissionControl"
+signature="com.weibo.api.toolbox.util.PermissionControl  hasPermission(java.lang.String)"?>
 <zk xmlns="http://www.zkoss.org/2005/zul"  xmlns:c="client">
     <style>
     div.minimize {
@@ -48,7 +50,7 @@
 ]]>
     </zscript>
     <menupopup id="specCatePopup">
-        <menuitem id="ctxm_newspec" label="新建SPEC" image="/img/smallicons/action_add.gif"/>
+        <menuitem id="ctxm_newspec" if="${c:hasPermission('ctxm_newspec')}" label="新建SPEC" image="/img/smallicons/action_add.gif"/>
         <menuseparator/>
         <menuitem id="ctxm_genwadllist" label="生成WADL归档" image="/img/smallicons/folder_files.gif"/>
         <menuitem id="ctxm_genschemalist" label="生成Schema归档" image="/img/smallicons/folder_files.gif"/>

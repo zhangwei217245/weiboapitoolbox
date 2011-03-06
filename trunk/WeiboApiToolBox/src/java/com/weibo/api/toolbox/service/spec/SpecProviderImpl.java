@@ -134,8 +134,11 @@ public class SpecProviderImpl implements SpecProvider {
         fixMalParams(spec.getTrequestparamSet());
         fixMalResponse(spec.getTresponseSet());
         if (spec.getNumspecid() == null) {
+            ToolBoxUtil.setCreateUserInfo(spec);
+            ToolBoxUtil.setUpdateUserInfo(spec);
             jpaDaoService.create(spec);
         } else {
+            ToolBoxUtil.setUpdateUserInfo(spec);
             jpaDaoService.edit(spec);
         }
     }
