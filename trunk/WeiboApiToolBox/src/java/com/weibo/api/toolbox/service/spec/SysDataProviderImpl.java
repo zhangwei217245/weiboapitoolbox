@@ -9,6 +9,7 @@ import com.weibo.api.toolbox.persist.entity.Tenumvalues;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.persist.qlgenerator.JPQLGenerator;
 import com.weibo.api.toolbox.persist.qlgenerator.QLGenerator;
+import com.weibo.api.toolbox.util.ToolBoxUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,8 +79,11 @@ public class SysDataProviderImpl implements SysDataProvider {
             sysparam.setNumenumgroupid(null);
         }
         if (sysparam.getNumparamid()==null){
+            ToolBoxUtil.setCreateUserInfo(sysparam);
+            ToolBoxUtil.setUpdateUserInfo(sysparam);
             jpaDaoService.create(sysparam);
         }else{
+            ToolBoxUtil.setUpdateUserInfo(sysparam);
             jpaDaoService.edit(sysparam);
         }
     }
@@ -90,8 +94,11 @@ public class SysDataProviderImpl implements SysDataProvider {
 
     public void saveSysError(Syserror syserr){
         if (syserr.getNumerrorid() == null){
+            ToolBoxUtil.setCreateUserInfo(syserr);
+            ToolBoxUtil.setUpdateUserInfo(syserr);
             jpaDaoService.create(syserr);
         }else{
+            ToolBoxUtil.setUpdateUserInfo(syserr);
             jpaDaoService.edit(syserr);
         }
     }
