@@ -1,6 +1,7 @@
 package com.weibo.api.toolbox.page.dashboard;
 
 import com.weibo.api.toolbox.persist.entity.Tspec;
+import com.weibo.api.toolbox.persist.entity.Tuser;
 import com.weibo.api.toolbox.service.dashboard.DashBoardService;
 import java.util.HashMap;
 import java.util.List;
@@ -72,6 +73,22 @@ public class SpecListComposer extends GenericForwardComposer{
         }
     }
 
+    public void onClick$slp_viewcreate(){
+        if (updatedSpecList.getSelectedCount() > 0) {
+            Tspec currentSpec = (Tspec) updatedSpecList.getSelectedItem().getValue();
+            Map<String, Tuser> argmap = new HashMap<String, Tuser>();
+            argmap.put("viewingUser", currentSpec.getNumcreateduser());
+            showUserWindow(argmap);
+        }
+    }
+    public void onClick$slp_viewupdate(){
+        if (updatedSpecList.getSelectedCount() > 0) {
+            Tspec currentSpec = (Tspec) updatedSpecList.getSelectedItem().getValue();
+            Map<String, Tuser> argmap = new HashMap<String, Tuser>();
+            argmap.put("viewingUser", currentSpec.getNumupdateduser());
+            showUserWindow(argmap);
+        }
+    }
 
     @Override
     public void doAfterCompose(Component comp) throws Exception {
@@ -114,6 +131,17 @@ public class SpecListComposer extends GenericForwardComposer{
     private void showEditorWindow(Map<String, Tspec> argmap) {
         try {
             Window speceditor = (Window) Executions.createComponents("/dashboard/specviewer.zul", null, argmap);
+            speceditor.doModal();
+        } catch (InterruptedException ex) {
+            log.warning("InterruptedException:", ex);
+        } catch (SuspendNotAllowedException ex) {
+            log.warning("SuspendNotAllowedException:", ex);
+        }
+    }
+
+    private void showUserWindow(Map<String, Tuser> argmap) {
+        try {
+            Window speceditor = (Window) Executions.createComponents("/dashboard/userviewer.zul", null, argmap);
             speceditor.doModal();
         } catch (InterruptedException ex) {
             log.warning("InterruptedException:", ex);
