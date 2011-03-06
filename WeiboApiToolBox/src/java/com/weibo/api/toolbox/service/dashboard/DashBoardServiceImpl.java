@@ -27,13 +27,13 @@ public class DashBoardServiceImpl implements DashBoardService {
     IJpaDaoService jpaDaoService;
 
 
-    public List<Tspec> getSpecByCondition(String id,String mainres,String subres,String sortCol,String sortDirection,int pagesize,int startpos){
+    public List<Tspec> getSpecByCondition(Integer id,String mainres,String subres,String sortCol,String sortDirection,int pagesize,int startpos){
         QLGenerator qlgen = new JPQLGenerator();
         qlgen.select("t").from("Tspec t").orderBy("t.datupdated", "desc");
         Map param = new HashMap();
-        if (ToolBoxUtil.isNotEmpty(id)){
+        if (id!=null){
             qlgen.where(null, "t.numspecid = :numspecid");
-            param.put("numspecid", Integer.valueOf(id));
+            param.put("numspecid", id);
         }
         if(ToolBoxUtil.isNotEmpty(mainres)){
             qlgen.where(null, "t.vc2mainresource LIKE :vc2mainresource");
@@ -49,13 +49,13 @@ public class DashBoardServiceImpl implements DashBoardService {
         return jpaDaoService.findEntities(qlgen.toString(), param, false, startpos, pagesize);
     }
 
-    public int getSpecCountByCondition(String id,String mainres,String subres){
+    public int getSpecCountByCondition(Integer id,String mainres,String subres){
         QLGenerator qlgen = new JPQLGenerator();
         qlgen.select("count(t)").from("Tspec t");
         Map param = new HashMap();
-        if (ToolBoxUtil.isNotEmpty(id)){
+        if (id!=null){
             qlgen.where(null, "t.numspecid = :numspecid");
-            param.put("numspecid", Integer.parseInt(id));
+            param.put("numspecid", id);
         }
         if(ToolBoxUtil.isNotEmpty(mainres)){
             qlgen.where(null, "t.vc2mainresource LIKE :vc2mainresource");

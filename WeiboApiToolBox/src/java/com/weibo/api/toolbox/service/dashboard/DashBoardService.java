@@ -14,8 +14,8 @@ import java.util.List;
  */
 public interface DashBoardService {
 
-    List<Tspec> getSpecByCondition(String id, String mainres, String subres, String sortCol, String sortDirection, int pagesize, int startpos);
+    List<Tspec> getSpecByCondition(Integer id, String mainres, String subres, String sortCol, String sortDirection, int pagesize, int startpos);
 
-    int getSpecCountByCondition(String id, String mainres, String subres);
+    int getSpecCountByCondition(Integer id, String mainres, String subres);
 
 }

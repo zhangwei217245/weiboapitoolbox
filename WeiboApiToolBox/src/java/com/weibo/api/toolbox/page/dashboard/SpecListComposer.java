@@ -2,14 +2,22 @@ package com.weibo.api.toolbox.page.dashboard;
 
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.service.dashboard.DashBoardService;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.zkoss.spring.SpringUtil;
+import org.zkoss.util.logging.Log;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zkplus.databind.AnnotateDataBinder;
+import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Paging;
 import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Window;
 
 /**
  *
@@ -17,12 +25,14 @@ import org.zkoss.zul.Textbox;
  */
 public class SpecListComposer extends GenericForwardComposer{
 
+    private static final Log log = Log.lookup(SpecListComposer.class);
     DashBoardService dbs = (DashBoardService) SpringUtil.getBean("dashBoardService");
     List<Tspec> specList;
 
     Listbox updatedSpecList;
+    Listheader speclh_update;
     Paging specPaging;
-    Textbox idfilter;
+    Intbox idfilter;
     Textbox mainresfilter;
     Textbox subresfilter;
 
@@ -53,7 +63,16 @@ public class SpecListComposer extends GenericForwardComposer{
     public void onOK$subresfilter(){
         onPaging$specPaging();
     }
-    
+    public void onClick$slp_viewspec(){
+        if (updatedSpecList.getSelectedCount() > 0) {
+            Tspec currentSpec = (Tspec) updatedSpecList.getSelectedItem().getValue();
+            Map<String, Tspec> argmap = new HashMap<String, Tspec>();
+            argmap.put("editingSpec", currentSpec);
+            showEditorWindow(argmap);
+        }
+    }
+
+
     @Override
     public void doAfterCompose(Component comp) throws Exception {
         super.doAfterCompose(comp);
@@ -65,7 +84,7 @@ public class SpecListComposer extends GenericForwardComposer{
     }
 
     private List<Tspec> getData() {
-        String id = idfilter==null?null:idfilter.getValue();
+        Integer id = idfilter==null?null:idfilter.getValue();
         String mainres = mainresfilter==null?null:mainresfilter.getValue();
         String subres = subresfilter==null?null:subresfilter.getValue();
         int totalcount = dbs.getSpecCountByCondition(id, mainres, subres);
@@ -79,23 +98,8 @@ public class SpecListComposer extends GenericForwardComposer{
     }
 
 
-    public Textbox getIdfilter() {
-        return idfilter;
-    }
-
-    public void setIdfilter(Textbox idfilter) {
-        this.idfilter = idfilter;
-    }
-
-    public Textbox getMainresfilter() {
-        return mainresfilter;
-    }
-
-    public void setMainresfilter(Textbox mainresfilter) {
-        this.mainresfilter = mainresfilter;
-    }
-
     public List<Tspec> getSpecList() {
+        specList = getData();
         return specList;
     }
 
@@ -103,28 +107,19 @@ public class SpecListComposer extends GenericForwardComposer{
         this.specList = specList;
     }
 
-    public Paging getSpecPaging() {
-        return specPaging;
-    }
-
-    public void setSpecPaging(Paging specPaging) {
-        this.specPaging = specPaging;
-    }
-
-    public Textbox getSubresfilter() {
-        return subresfilter;
-    }
-
-    public void setSubresfilter(Textbox subresfilter) {
-        this.subresfilter = subresfilter;
-    }
-
-    public Listbox getUpdatedSpecList() {
-        return updatedSpecList;
-    }
-
     public void setUpdatedSpecList(Listbox updatedSpecList) {
         this.updatedSpecList = updatedSpecList;
+    }
+
+    private void showEditorWindow(Map<String, Tspec> argmap) {
+        try {
+            Window speceditor = (Window) Executions.createComponents("/dashboard/specviewer.zul", null, argmap);
+            speceditor.doModal();
+        } catch (InterruptedException ex) {
+            log.warning("InterruptedException:", ex);
+        } catch (SuspendNotAllowedException ex) {
+            log.warning("SuspendNotAllowedException:", ex);
+        }
     }
 
 }
