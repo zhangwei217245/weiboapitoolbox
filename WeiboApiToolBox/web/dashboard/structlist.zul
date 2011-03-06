@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:c="client">
+    <window title="数据结构列表" width="100%" >
+        <listbox id="updatedStructList" height="600px" width="100%">
+
+        </listbox>
+        <paging id="structPaging" pageSize="10"></paging>
+    </window>
+</zk>

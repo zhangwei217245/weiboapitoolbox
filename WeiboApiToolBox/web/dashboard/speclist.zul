@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:c="client">
+    <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./db_speclistWin" ?>
+    <window id="db_speclistWin" title="最近更新的Spec列表" width="100%" apply="com.weibo.api.toolbox.page.dashboard.SpecListComposer">
+        <menupopup id="specListPopup">
+            <menuitem id="slp_viewspec" label="查看SPEC" image="/img/smallicons/file.gif"/>
+            <menuitem id="slp_viewcreate" label="查看创建者信息" image="/img/smallicons/file.gif"/>
+            <menuitem id="slp_viewupdate" label="查看更新者信息" image="/img/smallicons/file.gif"/>
+        </menupopup>
+        <listbox id="updatedSpecList" mold="paging"
+                    model="@{db_speclistWin$composer.specList}"
+                    paginal="${specPaging}" height="600px" width="100%" pageSize="10" pagingPosition="bottom">
+            <auxhead>
+                <auxheader colspan="4">
+                                编号
+                    <image src="/img/smallicons/funnel.png"/>
+                    <textbox id="idfilter" c:onClick="this.select()" width="100px"/>
+                                一级资源
+                    <image src="/img/smallicons/funnel.png"/>
+                    <textbox id="mainresfilter" c:onClick="this.select()" width="100px"/>
+                                二级资源
+                    <image src="/img/smallicons/funnel.png"/>
+                    <textbox id="subresfilter" c:onClick="this.select()" width="100px"/>
+                    <a id="link_specrefresh" label="刷新"/>
+                </auxheader>
+            </auxhead>
+            <listhead sizable="true">
+                <listheader >编号</listheader>
+                <listheader >路径</listheader>
+                <listheader >创建时间：创建者</listheader>
+                <listheader >更新时间：更新者</listheader>
+            </listhead>
+            <listitem self="@{each='eachspec'}" value="@{eachspec}" context="specListPopup">
+                <listcell label="@{eachspec.numspecid}"/>
+                <listcell label="@{eachspec,converter='com.weibo.api.toolbox.page.spec.ResourceNameConvertor'}"/>
+                <listcell label="@{eachspec.createdInfo}"/>
+                <listcell label="@{eachspec.updateInfo}"/>
+            </listitem>
+        </listbox>
+        <paging id="specPaging" pageSize="10"></paging>
+    </window>
+</zk>

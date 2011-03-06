@@ -12,6 +12,7 @@ import com.weibo.api.toolbox.common.enumerations.AuthType;
 import com.weibo.api.toolbox.common.enumerations.HttpMethod;
 import com.weibo.api.toolbox.common.enumerations.RateLimit;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -413,6 +414,12 @@ public class Tspec implements Serializable {
         this.setNumratelimittype(enm.getId());
     }
 
+    public String getCreatedInfo(){
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(datcreated) + " by " + numcreateduser.getVc2realname();
+    }
+    public String getUpdateInfo(){
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(datupdated) + " by " + numupdateduser.getVc2realname();
+    }
 
     @Override
     public int hashCode() {
