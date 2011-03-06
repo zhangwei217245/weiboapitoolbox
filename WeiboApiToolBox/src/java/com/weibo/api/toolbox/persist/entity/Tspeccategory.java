@@ -1,11 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.weibo.api.toolbox.persist.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -17,10 +13,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -47,6 +43,18 @@ public class Tspeccategory implements Serializable {
     @Basic(optional = false)
     @Column(name = "vc2desc", nullable = false, length = 2000)
     private String vc2desc;
+    @Column(name = "datcreated")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date datcreated;
+    @Column(name = "datupdated")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date datupdated;
+    @JoinColumn(name = "numupdateduser", referencedColumnName = "numuserid")
+    @ManyToOne
+    private Tuser numupdateduser;
+    @JoinColumn(name = "numcreateduser", referencedColumnName = "numuserid")
+    @ManyToOne
+    private Tuser numcreateduser;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "numcateid")
     private Set<Sysparam> sysparamSet;
     @OneToMany(mappedBy = "numparentcateid" , fetch=FetchType.EAGER)
@@ -152,6 +160,38 @@ public class Tspeccategory implements Serializable {
 
     public void setSyserrorSet(Set<Syserror> syserrorSet) {
         this.syserrorSet = syserrorSet;
+    }
+
+    public Date getDatcreated() {
+        return datcreated;
+    }
+
+    public void setDatcreated(Date datcreated) {
+        this.datcreated = datcreated;
+    }
+
+    public Date getDatupdated() {
+        return datupdated;
+    }
+
+    public void setDatupdated(Date datupdated) {
+        this.datupdated = datupdated;
+    }
+
+    public Tuser getNumcreateduser() {
+        return numcreateduser;
+    }
+
+    public void setNumcreateduser(Tuser numcreateduser) {
+        this.numcreateduser = numcreateduser;
+    }
+
+    public Tuser getNumupdateduser() {
+        return numupdateduser;
+    }
+
+    public void setNumupdateduser(Tuser numupdateduser) {
+        this.numupdateduser = numupdateduser;
     }
 
     @Override

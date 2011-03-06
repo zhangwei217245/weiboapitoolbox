@@ -9,10 +9,10 @@ import com.weibo.api.toolbox.common.enumerations.AcceptType;
 import com.weibo.api.toolbox.common.enumerations.ApiStatus;
 import com.weibo.api.toolbox.common.enumerations.ApiType;
 import com.weibo.api.toolbox.common.enumerations.AuthType;
-import com.weibo.api.toolbox.common.enumerations.ContentType;
 import com.weibo.api.toolbox.common.enumerations.HttpMethod;
 import com.weibo.api.toolbox.common.enumerations.RateLimit;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -27,10 +27,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -88,6 +88,18 @@ public class Tspec implements Serializable {
     @Basic(optional = false)
     @Column(name = "vc2specname", nullable = false, length = 200)
     private String vc2specname;
+    @Column(name = "datcreated")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date datcreated;
+    @Column(name = "datupdated")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date datupdated;
+    @JoinColumn(name = "numupdateduser", referencedColumnName = "numuserid")
+    @ManyToOne
+    private Tuser numupdateduser;
+    @JoinColumn(name = "numcreateduser", referencedColumnName = "numuserid")
+    @ManyToOne
+    private Tuser numcreateduser;
     @OneToMany(mappedBy = "numspecid",cascade={CascadeType.ALL},fetch=FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     private List<Trequestparam> trequestparamSet;
@@ -261,6 +273,38 @@ public class Tspec implements Serializable {
 
     public void setVc2specname(String vc2specname) {
         this.vc2specname = vc2specname;
+    }
+
+    public Date getDatcreated() {
+        return datcreated;
+    }
+
+    public void setDatcreated(Date datcreated) {
+        this.datcreated = datcreated;
+    }
+
+    public Date getDatupdated() {
+        return datupdated;
+    }
+
+    public void setDatupdated(Date datupdated) {
+        this.datupdated = datupdated;
+    }
+
+    public Tuser getNumcreateduser() {
+        return numcreateduser;
+    }
+
+    public void setNumcreateduser(Tuser numcreateduser) {
+        this.numcreateduser = numcreateduser;
+    }
+
+    public Tuser getNumupdateduser() {
+        return numupdateduser;
+    }
+
+    public void setNumupdateduser(Tuser numupdateduser) {
+        this.numupdateduser = numupdateduser;
     }
 
     public List<Trequestparam> getTrequestparamSet() {
