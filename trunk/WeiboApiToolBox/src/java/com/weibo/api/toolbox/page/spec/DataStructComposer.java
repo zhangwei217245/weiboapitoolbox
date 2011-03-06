@@ -31,7 +31,7 @@ import org.zkoss.zul.Textbox;
  */
 public class DataStructComposer extends GenericForwardComposer {
 
-    private static final Log log = Log.lookup(SpecManagerComposer.class);
+    private static final Log log = Log.lookup(DataStructComposer.class);
     private static final long serialVersionUID = -1610058058620582667L;
     CategoryProvider cp = (CategoryProvider) SpringUtil.getBean("categoryProvider");
     SpecProvider sp = (SpecProvider) SpringUtil.getBean("specProvider");

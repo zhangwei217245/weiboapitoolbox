@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<zk xmlns="http://www.zkoss.org/2005/zul">
-    <grid>
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:c="client">
+    
+    <grid id="dashboardgrid">
         <rows>
             <row>
-                
-                <listbox id="updatedSpecList">
-
-                </listbox>
-                
+                <include src="dashboard/speclist.zul"/>
+                <include src="dashboard/structlist.zul"/>
+            </row>
+<!--            <row>
 
                 <listbox id="updatedCateList">
+
+                </listbox>
+
+                <listbox id="updatedEnumList">
 
                 </listbox>
 
@@ -25,7 +29,7 @@
 
                 </listbox>
 
-            </row>
+            </row>-->
         </rows>
     </grid>
 </zk>
