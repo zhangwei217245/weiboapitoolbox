@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./userInfogrid" ?>
+    <window id="userviewer" border="normal" width="760px" title="User Viewer"
+    xmlns:c="client" closable="true" maximizable="true" sizable="true"
+    action="show:slideDown({duration:300});hide:slideUp({duration:300})">
+        <grid id="userInfogrid" mold="default" apply="com.weibo.api.toolbox.page.dashboard.UserViewComposer">
+            <columns>
+                <column label="用户信息"/>
+                <column label=""/>
+            </columns>
+            <rows height="100%">
+                <row height="20%">
+						Email :
+                    <label value="@{userInfogrid$composer.currUser.vc2email}"></label>
+                </row>
+                <row height="20%">
+						用户名 :
+                    <label value="@{userInfogrid$composer.currUser.vc2username}"></label>
+                </row>
+
+                <row height="20%">
+						真实姓名 :
+                    <textbox id="realnametb" inplace="true" width="200px" value="@{userInfogrid$composer.currUser.vc2realname}"/>
+                </row>
+                <row height="20%">
+						手机 :
+                    <textbox id="mobiletb" width="200px" value="@{userInfogrid$composer.currUser.vc2phone}" />
+                </row>
+                <row height="20%">
+						部门 :
+                    <textbox id="departtb" inplace="true" width="200px" value="@{userInfogrid$composer.currUser.vc2department}"/>
+                </row>
+            </rows>
+            
+        </grid>
+    </window>
+</zk>

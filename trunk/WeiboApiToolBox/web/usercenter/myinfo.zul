@@ -15,7 +15,7 @@
 <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./userInfogrid" ?>
     <grid id="userInfogrid" mold="default" apply="com.weibo.api.toolbox.page.usercenter.MyInfoComposer">
         <columns>
-            <column label="用户注册"/>
+            <column label="用户信息"/>
             <column label=""/>
         </columns>
         <rows height="100%">
