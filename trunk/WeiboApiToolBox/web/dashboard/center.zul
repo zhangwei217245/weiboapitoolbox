@@ -6,30 +6,8 @@
         <rows>
             <row>
                 <include src="dashboard/speclist.zul"/>
-                <include src="dashboard/structlist.zul"/>
+<!--                <include src="dashboard/structlist.zul"/>-->
             </row>
-<!--            <row>
-
-                <listbox id="updatedCateList">
-
-                </listbox>
-
-                <listbox id="updatedEnumList">
-
-                </listbox>
-
-            </row>
-            <row>
-
-                <listbox id="updatedSysparamList">
-
-                </listbox>
-
-                <listbox id="updatedSyserrorList">
-
-                </listbox>
-
-            </row>-->
         </rows>
     </grid>
 </zk>
