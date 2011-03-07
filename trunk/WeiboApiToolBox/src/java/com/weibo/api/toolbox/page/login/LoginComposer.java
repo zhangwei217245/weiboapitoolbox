@@ -38,7 +38,7 @@ public class LoginComposer extends GenericForwardComposer {
     private Textbox passWord;
     private Label msg;
     private RbacProvider rbacProvider = (RbacProvider) SpringUtil.getBean("rbacProvider");
-    private static Map _cateMap = new LinkedHashMap();
+    private Map _cateMap = new LinkedHashMap();
 
     public void onOK$passWord(){
         onClick$btn_login();
@@ -66,6 +66,7 @@ public class LoginComposer extends GenericForwardComposer {
     }
 
     private void loadMenus(Tuser user) {
+        _cateMap.clear();
         HttpServletRequest request = (HttpServletRequest) execution.getNativeRequest();
         request.getSession(true).setAttribute("user", user);
         Set<Tmenuitem> menuItems = rbacProvider.getUsersEnableMenuItems(user);
