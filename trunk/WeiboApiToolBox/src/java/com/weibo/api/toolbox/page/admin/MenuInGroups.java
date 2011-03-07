@@ -96,6 +96,7 @@ public class MenuInGroups extends GenericForwardComposer{
             if (data.getClass().equals(Tcategory.class)){
                 name = ((Tcategory)data).getVc2catedesc();
                 img = ((Tcategory)data).getImgEnable();
+                trtm.setCheckable(false);
             }else if (data.getClass().equals(Tmenuitem.class)){
                 name = ((Tmenuitem)data).getVc2itemdesc();
                 img = ((Tmenuitem)data).getImgEnable();
