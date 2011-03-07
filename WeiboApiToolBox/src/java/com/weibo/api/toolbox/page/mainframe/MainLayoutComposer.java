@@ -15,18 +15,17 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.ComponentNotFoundException;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.BookmarkEvent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.ForwardEvent;
 import org.zkoss.zk.ui.event.InputEvent;
 import org.zkoss.zk.ui.event.KeyEvent;
-import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Div;
-import org.zkoss.zul.Iframe;
 import org.zkoss.zul.Include;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModel;
@@ -44,6 +43,7 @@ import org.zkoss.zul.Textbox;
 public class MainLayoutComposer extends GenericForwardComposer implements
         MainLayoutAPI {
 
+    private static final long serialVersionUID = -332197563430452758L;
     private static final Log log = Log.lookup(MainLayoutComposer.class);
     Textbox searchBox;
     Listbox itemList;
@@ -126,7 +126,10 @@ public class MainLayoutComposer extends GenericForwardComposer implements
     public void onClick$btn_logout(Event event) {
         final Execution exec = Executions.getCurrent();
         HttpServletRequest request = (HttpServletRequest) exec.getNativeRequest();
+        request.getSession().setAttribute("cateMap", null);
+        request.getSession().setAttribute("user", null);
         request.getSession().invalidate();
+        Sessions.getCurrent().invalidate();
         exec.sendRedirect("/index.zul");
     }
 
