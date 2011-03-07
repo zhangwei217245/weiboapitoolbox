@@ -26,7 +26,6 @@ import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.Tree;
 import org.zkoss.zul.Treecell;
 import org.zkoss.zul.Treeitem;
-import org.zkoss.zul.Treeitem;
 import org.zkoss.zul.TreeitemRenderer;
 import org.zkoss.zul.Treerow;
 
