@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:c="client">
+    <window id="menuInGroup" border="normal" width="760px" title="Menus in Group"
+    closable="true" maximizable="true"  sizable="true"
+    apply="com.weibo.api.toolbox.page.admin.MenuInGroups"
+    action="show:slideDown({duration:300});hide:slideUp({duration:300})">
+        <tree id="menutree" width="300px" height="500px" rows="10" multiple="true" checkmark="true">
+            <treecols>
+                <treecol label="菜单"/>
+            </treecols>
+        </tree>
+
+        <button id="btn_save" label="保存"/>
+        <button id="btn_cancel" label="取消"/>
+    </window>
+</zk>

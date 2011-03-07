@@ -20,6 +20,9 @@
 	String themeSClass = isBreeze? "breeze" : isSilvergray? "silvergray" : "blue";
     ]]>
     </zscript>
+    <menupopup id="groupListPopup">
+        <menuitem id="glp_selectMenu" label="选择菜单" image="/img/smallicons/file.gif"/>
+    </menupopup>
     <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./groupmana" ?>
     <borderlayout id="groupmana" sclass="${themeSClass}" apply="com.weibo.api.toolbox.page.admin.GroupManagerComposer">
         <north size="60%" zindex="1" border="none" flex="true">
@@ -34,7 +37,7 @@
                             <listheader label="名称"/>
                             <listheader label="描述"/>
                         </listhead>
-                        <listitem self="@{each='group'}" value="@{group}">
+                        <listitem self="@{each='group'}" value="@{group}" context="groupListPopup">
                             <listcell image="@{group.imgEnable}" label="@{group.vc2groupname}" />
                             <listcell label="@{group.vc2groupdesc}" />
                         </listitem>
