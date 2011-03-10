@@ -20,6 +20,7 @@
 	String themeSClass = isBreeze? "breeze" : isSilvergray? "silvergray" : "blue";
     ]]>
     </zscript>
+    
     <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./menumana" ?>
     <borderlayout id="menumana" sclass="${themeSClass}" apply="com.weibo.api.toolbox.page.admin.MenuManagerComposer">
         <north size="60%" zindex="1" border="none" flex="true">
@@ -31,10 +32,6 @@
                             <treecol label="菜单"/>
                         </treecols>
                     </tree>
-                    <vbox>
-                        <button id="groupadd" label="添加"/>
-                        <button id="groupdel" label="删除"/>
-                    </vbox>
                 </hbox>
             </groupbox>
         </north>
