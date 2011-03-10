@@ -87,7 +87,7 @@
                             </row>
                             <row>
                                 启用:
-                                <checkbox id="enable" checked="true"/>
+                                <checkbox id="enable" checked="false"/>
                             </row>
                             <row>
 						描述 :
