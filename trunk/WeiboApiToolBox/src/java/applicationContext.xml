@@ -52,12 +52,15 @@
                 <entry>
                     <key>
                         <util:constant static-field="javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT" />
-                   </key>
-                  <value type="java.lang.Boolean">true</value>
+                    </key>
+                    <value type="java.lang.Boolean">true</value>
                 </entry>
             </map>
         </property>
 <!--        <property name="schema" value="classpath:com/weibo/api/spec/wadl/wadl20090202.xsd"/>-->
+    </bean>
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/com/weibo/api/spec/wiki/template"/>
     </bean>
     <bean id="wadlbinder" class="com.weibo.api.spec.wadl.WadlBindingImpl" scope="prototype"/>
     <bean id="jsonSchemaCreator" class="com.weibo.api.spec.jsonschema.JsonSchemaCreatorImpl" scope="prototype"/>
