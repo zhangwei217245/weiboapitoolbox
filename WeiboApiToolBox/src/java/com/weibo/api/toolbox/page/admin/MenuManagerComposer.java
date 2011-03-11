@@ -201,7 +201,7 @@ public class MenuManagerComposer extends GenericForwardComposer {
 
     public void onClick$mtp_createSub() {
         Tcategory paraCate = (Tcategory) selobj;
-        selobj = new Tmenuitem(null, "cate.menu", "新子菜单", "/new.zul", 1, 1);
+        selobj = new Tmenuitem(null, "cate.menu", "/new.zul","新子菜单", 1, 1);
         ((Tmenuitem) selobj).setVc2itemimg("");
         ((Tmenuitem) selobj).setNumcateid(paraCate);
         ((Tmenuitem) selobj).setNumindex(rbacProvider.getNextIndexForMenu(paraCate));
@@ -223,6 +223,8 @@ public class MenuManagerComposer extends GenericForwardComposer {
             getValuesForMenu((Tmenuitem) selobj);
         }
         daoService.edit(selobj);
+        Messagebox.show("保存成功", "提示", Messagebox.OK, Messagebox.INFORMATION);
+        refreshDataBinding();
     }
 
     /**
