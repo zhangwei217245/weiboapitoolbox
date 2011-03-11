@@ -32,4 +32,15 @@ public interface RbacProvider {
 
     Tuser login(String userName, String passWord);
 
+    void updateMenuIndex(Tmenuitem menu, int oldindex,int newindex);
+
+    void changeMenuCate(Tcategory cate,Tmenuitem menu);
+
+    int getNextIndexForCate();
+
+    int getNextIndexForMenu(Tcategory cate);
+
+    boolean checkDuplicatedIndexForCate(Tcategory cate,int index);
+
+    boolean checkDuplicatedIndexForMenu(Tmenuitem menu,int index);
 }

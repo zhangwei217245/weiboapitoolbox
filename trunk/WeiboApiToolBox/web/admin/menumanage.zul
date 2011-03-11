@@ -18,49 +18,54 @@
 	boolean isSilvergray = Themes.isSilvergray(execution) &&
 		Themes.hasSilvergrayLib();
 	String themeSClass = isBreeze? "breeze" : isSilvergray? "silvergray" : "blue";
+        
+
     ]]>
     </zscript>
-    
+    <menupopup id="menuTreePopup">
+        <menuitem id="mtp_createTop" label="创建父菜单" image="/img/smallicons/folder.gif"/>
+        <menuitem id="mtp_createSub" label="创建子菜单" image="/img/smallicons/file.gif"/>
+    </menupopup>
     <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./menumana" ?>
     <borderlayout id="menumana" sclass="${themeSClass}" apply="com.weibo.api.toolbox.page.admin.MenuManagerComposer">
-        <north size="60%" zindex="1" border="none" flex="true">
-            <groupbox id="group" mold="3d" width="600px">
-                <caption label="菜单"/>
+        <west zindex="1" border="none" flex="true">
+            <groupbox id="group" mold="3d">
+                <caption label="菜单管理"/>
                 <hbox>
-                    <tree id="menutree" width="300px" height="500px" rows="10">
+                    <tree id="menutree" width="300px">
                         <treecols>
                             <treecol label="菜单"/>
                         </treecols>
                     </tree>
                 </hbox>
             </groupbox>
-        </north>
-        <south id="attrlayout" size="40%" zindex="5" minsize="250" maxsize="500"
-        title="编辑用户组" border="none" flex="true" collapsible="true" splittable="true">
-            <panel>
-                <panelchildren>
-                    <grid>
-
-                        <rows>
-                            <row>
-						名称 :
-                                <textbox id="name" width="90%" value="@{groupmana$composer.currTgroup.vc2groupname}" constraint="/.{1,100}/: 请输入用户组名称，长度1～100个字符。" />
-                            </row>
-                            <row>
-                                启用:
-                                <checkbox id="enable" checked="@{groupmana$composer.currTgroup.isEnable}" />
-                            </row>
-                            <row>
-						描述 :
-                                <textbox id="intro" width="90%" rows="3" value="@{groupmana$composer.currTgroup.vc2groupdesc}" constraint="/.{1,100}/: 请输入用户组名称，长度1～100个字符。" />
-                                <hbox pack="center" width="100%">
-                                    <button id="attrsave" label="保存" />
-                                </hbox>
-                            </row>
-                        </rows>
-                    </grid>
-                </panelchildren>
-            </panel>
-        </south>
+        </west>
+        <center>
+            <grid>
+                <rows>
+                    <row>
+                        菜单代码
+                        <textbox id="menu_name"/>
+                        菜单名称
+                        <textbox id="menu_desc"/>
+                    </row>
+                    <row>
+                        菜单链接
+                        <textbox id="menu_href"/>
+                        菜单图片
+                        <textbox id="menu_img"/>
+                    </row>
+                    <row>
+                        菜单排序
+                        <spinner id="menu_index"/>
+                        菜单启用状态
+                        <checkbox id="menu_enable" checked="false"/>
+                    </row>
+                    <row spans="4">
+                        <button id="menusave" label="保存菜单"/>
+                    </row>
+                </rows>
+            </grid>
+        </center>
     </borderlayout>
 </zk>
