@@ -123,4 +123,95 @@ public class RbacProviderImpl implements RbacProvider {
         }
         return userMenus;
     }
+
+    public void updateMenuIndex(Tmenuitem menu, int oldindex,int newindex){
+        String ql = null;
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.update(menu.getClass().getName() + " t").where(null, "t.numcateid = :numcateid");
+        if (oldindex > newindex) {
+            qlgen.set("t.numindex = t.numindex+1");
+            qlgen.where(null, "t.numindex >= :newindex");
+            qlgen.where(null, "t.numindex <= :oldindex");
+            ql = qlgen.toString();
+        } else if (oldindex < newindex) {
+            qlgen.set("t.numindex = t.numindex-1");
+            qlgen.where(null, "t.numindex <= :newindex");
+            qlgen.where(null, "t.numindex >= :oldindex");
+            ql = qlgen.toString();
+        }
+        Map params = new HashMap();
+        params.put("newindex", newindex);
+        params.put("oldindex", oldindex);
+        params.put("numcateid", menu.getNumcateid());
+        if (ql != null) {
+            jpaDaoService.executeUpdate(ql, params);
+        }
+        menu.setNumindex(newindex);
+        jpaDaoService.edit(menu);
+    }
+
+    public void changeMenuCate(Tcategory cate,Tmenuitem menu){
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.update(menu.getClass().getName()+" t").set("t.numindex = t.numindex-1");
+        qlgen.where(null, "t.numcateid = :numcateid");
+        qlgen.where(null, "t.numindex >= :numindex");
+        Map param = new HashMap();
+        param.put("numcateid", menu.getNumcateid());
+        param.put("numindex", menu.getNumindex());
+        jpaDaoService.executeUpdate(qlgen.toString(), param);
+        qlgen.init();
+
+        qlgen.select("count(t.numindex)+1").from("Tmenuitem t");
+        qlgen.where(null, "t.numcateid = :numcateid");
+        param = new HashMap();
+        param.put("numcateid", cate);
+        int maxidx = jpaDaoService.getEntityCount(qlgen.toString(), param).intValue();
+        menu.setNumindex(maxidx);
+        menu.setNumcateid(cate);
+        jpaDaoService.edit(menu);
+    }
+
+    public int getNextIndexForCate(){
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.select("count(t)+1").from("Tcategory t");
+        return jpaDaoService.getEntityCount(qlgen.toString(), null).intValue();
+    }
+
+    public int getNextIndexForMenu(Tcategory cate){
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.select("count(t)+1").from("Tmenuitem t");
+        qlgen.where(null, "t.numcateid = :numcateid");
+        Map param = new HashMap();
+        param.put("numcateid", cate);
+        return jpaDaoService.getEntityCount(qlgen.toString(), param).intValue();
+    }
+
+    public boolean checkDuplicatedIndexForCate(Tcategory cate,int index){
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.select("count(t)").from("Tcategory t");
+
+        qlgen.where(null, "t.numindex = :numindex");
+        Map param = new HashMap();
+        param.put("numindex", index);
+        if (cate.getNumcateid()!=null){
+            qlgen.where(null, "t.numcateid <> :numcateid");
+            param.put("numcateid", cate.getNumcateid());
+        }
+        return jpaDaoService.getEntityCount(qlgen.toString(), param).intValue()>0;
+    }
+    
+    public boolean checkDuplicatedIndexForMenu(Tmenuitem menu,int index){
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.select("count(t)").from("Tmenuitem t");
+        qlgen.where(null, "t.numindex = :numindex");
+        qlgen.where(null, "t.numcateid = :numcateid");
+        Map param = new HashMap();
+        param.put("numindex", index);
+        param.put("numcateid", menu.getNumcateid());
+        if (menu.getNumitemid()!=null){
+            qlgen.where(null, "t.numitemid <> :numitemid");
+            param.put("numitemid", menu.getNumitemid());
+        }
+        return jpaDaoService.getEntityCount(qlgen.toString(), param).intValue()>0;
+    }
 }
