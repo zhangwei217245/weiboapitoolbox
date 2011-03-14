@@ -127,5 +127,6 @@ public class LoginComposer extends GenericForwardComposer {
     @Override
     public void doAfterCompose(Component comp) throws Exception {
         super.doAfterCompose(comp);
+        userName.setValue("@staff.sina.com.cn");
     }
 }
