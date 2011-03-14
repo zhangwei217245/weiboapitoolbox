@@ -4,7 +4,7 @@
 <?link rel="stylesheet" type="text/css" href="/macros/userguide.css.dsp?v=${desktop.webApp.build}"?>
 <?script type="text/javascript" src="/macros/zkdemo.js.dsp?v=${desktop.webApp.build}"?>
 <?script type="text/javascript" content="jq.IE6_ALPHAFIX=/24x24.png|32x32.png|48x48.png|128x128.png|ButtonBlue.png|ButtonGray.png|small.png|small-sel.png|normal.png|normal-sel.png|large.png|large-sel.png/;"?>
-<zk xmlns="http://www.zkoss.org/2005/zul">
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:c="client">
     <zscript><![CDATA[
 	boolean isBreeze = com.weibo.api.toolbox.common.Themes.isBreeze(execution) &&
 		com.weibo.api.toolbox.common.Themes.hasBreezeLib();
@@ -32,7 +32,7 @@
                                 <label value="用户名/E-mail"/>
                             </div>
                             <div align="left">
-                                <textbox id="userName"/>
+                                <textbox id="userName" c:onClick="this.select()"/>
                             </div>
                         </row>
                         <row height="50%">
