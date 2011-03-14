@@ -60,6 +60,8 @@ signature="com.weibo.api.toolbox.util.PermissionControl  hasPermission(java.lang
         <menuseparator/>
         <menuitem id="ctxm_genwadl" label="查看WADL归档" image="/img/smallicons/file.gif"/>
         <menuitem id="ctxm_genschema" label="查看schema归档" image="/img/smallicons/file.gif"/>
+        <menuseparator/>
+        <menuitem id="ctxm_genwiki" label="查看wiki归档" image="/img/smallicons/file.gif"/>
     </menupopup>
     <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./specmanage" ?>
         <borderlayout id="specmanage"  apply="com.weibo.api.toolbox.page.spec.SpecManagerComposer">

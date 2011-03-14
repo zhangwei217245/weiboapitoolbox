@@ -1,6 +1,6 @@
 package com.weibo.api.toolbox.page.spec;
 
-import com.google.common.collect.Collections2;
+import com.weibo.api.spec.wiki.WikiGenerator;
 import com.weibo.api.toolbox.common.enumerations.AcceptType;
 import com.weibo.api.toolbox.common.enumerations.ApiStatus;
 import com.weibo.api.toolbox.common.enumerations.ApiType;
@@ -27,7 +27,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.lang.Strings;
 import org.zkoss.spring.SpringUtil;
-import org.zkoss.util.CollectionsX;
 import org.zkoss.util.logging.Log;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
@@ -61,6 +60,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
     SpecProvider sp = (SpecProvider) SpringUtil.getBean("specProvider");
     IJpaDaoService daoService = (IJpaDaoService) SpringUtil.getBean("jpaDaoService");
     SpecDocService docService = (SpecDocService) SpringUtil.getBean("specDocService");
+    WikiGenerator wikiGenerator = (WikiGenerator) SpringUtil.getBean("wikigenerator");
     private Tree catetree;
     private Listbox specList;
     private SpecCategoryTreeModel specTreeModel;
@@ -171,6 +171,21 @@ public class SpecManagerComposer extends GenericForwardComposer {
         }
     }
 
+    public void onClick$ctxm_genwiki() throws InterruptedException {
+        if (specList.getSelectedCount() > 0) {
+            currentSpec = (Tspec) specList.getSelectedItem().getValue();
+            String wikipath = wikiGenerator.renderWikiForEachSpec(currentSpec);
+            if (Strings.isEmpty(wikipath)){
+                Messagebox.show("生成WIKI失败，请检查SPEC内容！", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
+                return;
+            }
+            Map windowparam = new HashMap();
+            windowparam.put(SpecDocViewer.ARG_DOCPATH, wikipath);
+            windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.WIKI.lowerName());
+            showDocViewer(windowparam);
+        }
+    }
+    
     public void onClick$ctxm_editspec() {
         if (specList.getSelectedCount() > 0) {
             currentSpec = (Tspec) specList.getSelectedItem().getValue();

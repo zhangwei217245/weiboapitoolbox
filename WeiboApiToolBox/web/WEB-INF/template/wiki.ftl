@@ -1,8 +1,9 @@
-== {{{uri}}} ==
-{{{desc}}}
 
+== ${spec.resourcePath} ==
+${spec.vc2shortdesc}
+${spec.vc2maindesc}
 == URL ==
-<span style="text-transform:lowercase;font-weight:600">http://api.t.sina.com.cn/{{{uri}}}.(json|xml)</span>
+<span style="text-transform:lowercase;font-weight:600">${spec.numbaseurlid.vc2baseurl}/${spec.resourcePath}.(json|xml)</span>
 == 支持格式 ==
 <span style="text-transform:uppercase;font-weight:600">{{{format}}}</span>
 == HTTP请求方式 ==
