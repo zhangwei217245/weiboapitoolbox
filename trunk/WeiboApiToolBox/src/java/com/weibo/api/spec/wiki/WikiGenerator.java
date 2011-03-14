@@ -5,6 +5,7 @@
 
 package com.weibo.api.spec.wiki;
 
+import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 
 /**
@@ -15,4 +16,6 @@ public interface WikiGenerator {
 
     void generateMenuByParentCate(Tspeccategory pcate);
     void generateSpecWikiByCate(Tspeccategory cate);
+    String renderWikiForEachSpec(Tspec spec);
+    String getWikiOutPath(Tspec spec);
 }

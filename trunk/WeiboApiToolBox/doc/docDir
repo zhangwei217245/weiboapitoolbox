@@ -12,7 +12,8 @@
 
 
 --wiki
----{public type}
-----{api status}
------{spec_cate}
-------{version}
+---{version}
+----{spec_cate}
+-----{public type}
+------{api status}
+-------{specid}.wiki

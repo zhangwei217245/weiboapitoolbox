@@ -59,11 +59,19 @@
         </property>
 <!--        <property name="schema" value="classpath:com/weibo/api/spec/wadl/wadl20090202.xsd"/>-->
     </bean>
-    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer" scope="prototype">
         <property name="templateLoaderPath" value="/com/weibo/api/spec/wiki/template"/>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_update_delay">3600</prop>
+                <prop key="default_encoding">UTF-8</prop>
+                <prop key="locale">zh_CN</prop>
+            </props>
+        </property>
     </bean>
     <bean id="wadlbinder" class="com.weibo.api.spec.wadl.WadlBindingImpl" scope="prototype"/>
     <bean id="jsonSchemaCreator" class="com.weibo.api.spec.jsonschema.JsonSchemaCreatorImpl" scope="prototype"/>
+    <bean id="wikigenerator" class="com.weibo.api.spec.wiki.WikiGeneratorImpl" scope="prototype"/>
     <tx:annotation-driven transaction-manager="txManager"/>
     <!-- Enables ZK custom scopes for Spring Beans -->
     <zksp:zk-config/>

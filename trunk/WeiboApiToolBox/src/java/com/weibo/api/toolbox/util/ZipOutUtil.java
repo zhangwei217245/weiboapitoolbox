@@ -6,8 +6,6 @@ package com.weibo.api.toolbox.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.zip.ZipEntry;
-//import java.util.zip.ZipOutputStream;
 import org.apache.tools.zip.ZipOutputStream;
 
 /**
