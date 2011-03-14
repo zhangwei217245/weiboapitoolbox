@@ -5,9 +5,9 @@ ${spec.vc2maindesc}
 == URL ==
 <span style="text-transform:lowercase;font-weight:600">${spec.numbaseurlid.vc2baseurl}/${spec.resourcePath}.(json|xml)</span>
 == 支持格式 ==
-<span style="text-transform:uppercase;font-weight:600">{{{format}}}</span>
+<span style="text-transform:uppercase;font-weight:600">${format}</span>
 == HTTP请求方式 ==
-<span style="text-transform:uppercase;font-weight:600">{{{httpMethod}}}</span>
+<span style="text-transform:uppercase;font-weight:600">${httpMethod}</span>
 == 是否需要登录 ==
 <span style="text-transform:lowercase;font-weight:600">{{{needAuth}}}</span><br/>
 关于授权机制，参见[[授权机制说明|授权机制声明]]

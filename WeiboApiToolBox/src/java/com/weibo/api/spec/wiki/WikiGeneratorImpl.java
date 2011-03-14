@@ -1,7 +1,9 @@
 package com.weibo.api.spec.wiki;
 
 import com.weibo.api.spec.basic.BaseArgument;
+import com.weibo.api.toolbox.common.enumerations.HttpMethod;
 import com.weibo.api.toolbox.persist.IJpaDaoService;
+import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.persist.qlgenerator.JPQLGenerator;
@@ -78,6 +80,8 @@ public class WikiGeneratorImpl implements WikiGenerator{
             tempdir = Executions.getCurrent().getDesktop().getWebApp().getRealPath(tempdir);
             cfg.setDirectoryForTemplateLoading(new File(tempdir));
             Template template = cfg.getTemplate("wiki.ftl");
+            processFormat(param,spec);
+            processMethod(param,spec);
             freeMarkerUtil.processTemplateIntoFile(template, param, outpath, false);
             return outpath;
         } catch (IOException ex) {
@@ -86,6 +90,27 @@ public class WikiGeneratorImpl implements WikiGenerator{
             Logger.getLogger(WikiGeneratorImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    private void processFormat(Map param, Tspec spec) {
+        List<Tresponse> tresponseSet = spec.getTresponseSet();
+        StringBuilder sb = new StringBuilder();
+        if (ToolBoxUtil.isNotEmpty(tresponseSet)){
+            for (Tresponse tres : tresponseSet) {
+                String name = tres.getEnumContentType().getName();
+                sb.append(name).append(",");
+            }
+        }
+        param.put("format", sb.substring(0, sb.length()-1));
+    }
+
+    private void processMethod(Map param, Tspec spec) {
+        HttpMethod[] enumHttpMethod = spec.getEnumHttpMethod();
+        StringBuilder sb = new StringBuilder();
+        for (HttpMethod httpMethod : enumHttpMethod) {
+            sb.append(httpMethod.getName()).append(",");
+        }
+        param.put("httpMethod", sb.substring(0, sb.length()-1));
     }
 
     public String getWikiOutPath(Tspec spec){
@@ -100,6 +125,7 @@ public class WikiGeneratorImpl implements WikiGenerator{
     public void generateMenuByParentCate(Tspeccategory pcate) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
 
 
 }
