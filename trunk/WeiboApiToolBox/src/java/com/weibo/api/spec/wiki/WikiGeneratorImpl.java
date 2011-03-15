@@ -11,6 +11,7 @@ import com.weibo.api.toolbox.common.range.LongRange;
 import com.weibo.api.toolbox.common.range.RangeFactory;
 import com.weibo.api.toolbox.persist.IJpaDaoService;
 import com.weibo.api.toolbox.persist.entity.Sysparam;
+import com.weibo.api.toolbox.persist.entity.Tdatastruct;
 import com.weibo.api.toolbox.persist.entity.Trequestparam;
 import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
@@ -27,7 +28,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -47,6 +47,46 @@ public class WikiGeneratorImpl implements WikiGenerator {
     @Resource
     BaseArgument baseArgument;
 
+    public String generateMenuByParentCate() {
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.select("pcate").from("Tspeccategory pcate").where(null, "pcate.numenable=1");
+        qlgen.where(null, "pcate.numparentcateid.numcateid=1");
+        List<Tspeccategory> pcates = jpaDaoService.findEntities(qlgen.toString(), null, true, -1, -1);
+        Map dataMap = new HashMap();
+        Map pm = new HashMap();
+        for (Tspeccategory pcate : pcates) {
+            qlgen.init();
+            qlgen.select("subcate").from("Tspeccategory subcate").where(null, "subcate.numenable=1");
+            qlgen.where(null, "subcate.numparentcateid = :pcate");
+            pm.put("pcate", pcate);
+            List<Tspeccategory> subcates = jpaDaoService.findEntities(qlgen.toString(), pm, true, -1, -1);
+            Map subDataMap = new HashMap();
+            Map par = new HashMap();
+            for (Tspeccategory subcate : subcates) {
+                qlgen.init();
+                qlgen.select("spec").from("Tspec spec").where(null, "spec.numenable=1");
+                qlgen.where(null, "subcate.numcateid = :numcateid");
+                par.put("numcateid", subcate);
+                List<Tspec> speclist = jpaDaoService.findEntities(qlgen.toString(), par, true, -1, -1);
+                subDataMap.put(subcate, speclist);
+            }
+            dataMap.put(pcate, subDataMap);
+        }
+        try {
+            String outpath = baseArgument.getWikiFileBaseDir()+"/"+"catalog.wiki";
+            Template template = getFreeMarkerTemplate("specWikiCatalog.ftl");
+            Map tplData = new HashMap();
+            tplData.put("dataMap", dataMap);
+            freeMarkerUtil.processTemplateIntoFile(template, tplData, outpath, false);
+            return outpath;
+        } catch (TemplateException ex) {
+            Logger.getLogger(WikiGeneratorImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(WikiGeneratorImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     public void generateSpecWikiByCate(Tspeccategory cate) {
 
         if (cate.getNumparentcateid().getNumcateid() == 1) {
@@ -83,11 +123,7 @@ public class WikiGeneratorImpl implements WikiGenerator {
             Map param = new HashMap();
             param.put("spec", spec);
             String outpath = getWikiOutPath(spec);
-            Configuration cfg = new Configuration();
-            String tempdir = "/WEB-INF/template";
-            tempdir = Executions.getCurrent().getDesktop().getWebApp().getRealPath(tempdir);
-            cfg.setDirectoryForTemplateLoading(new File(tempdir));
-            Template template = cfg.getTemplate("wiki.ftl");
+            Template template = getFreeMarkerTemplate("specWiki.ftl");
             processFormat(param, spec);
             processMethod(param, spec);
             processSysparam(param, spec);
@@ -149,7 +185,7 @@ public class WikiGeneratorImpl implements WikiGenerator {
     private void processCurlDemo(Map param, Tspec spec) {
         HttpMethod[] enumHttpMethod = spec.getEnumHttpMethod();
         StringBuilder qpsb = new StringBuilder();
-        getQueryParamString(qpsb,param,spec);
+        getQueryParamString(qpsb, param, spec);
         for (HttpMethod httpMethod : enumHttpMethod) {
             StringBuilder sb = new StringBuilder();
             StringBuilder ppsb = new StringBuilder();
@@ -158,7 +194,7 @@ public class WikiGeneratorImpl implements WikiGenerator {
                     sb.append("\"");
                     sb.append(spec.getNumbaseurlid().getVc2baseurl());
                     sb.append("/").append(spec.getResourcePath());
-                    sb.append("?").append(qpsb.deleteCharAt(qpsb.length()-1));
+                    sb.append("?").append(qpsb.deleteCharAt(qpsb.length() - 1));
                     sb.append("\"");
                     param.put("CURL_GET", sb.toString());
                     break;
@@ -180,7 +216,7 @@ public class WikiGeneratorImpl implements WikiGenerator {
                     sb.append("-X PUT \"");
                     sb.append(spec.getNumbaseurlid().getVc2baseurl());
                     sb.append("/").append(spec.getResourcePath());
-                    sb.append("?").append(qpsb.deleteCharAt(qpsb.length()-1));
+                    sb.append("?").append(qpsb.deleteCharAt(qpsb.length() - 1));
                     sb.append("\"");
                     param.put("CURL_PUT", sb.toString());
                     break;
@@ -188,7 +224,7 @@ public class WikiGeneratorImpl implements WikiGenerator {
                     sb.append("-X DELETE \"");
                     sb.append(spec.getNumbaseurlid().getVc2baseurl());
                     sb.append("/").append(spec.getResourcePath());
-                    sb.append("?").append(qpsb.deleteCharAt(qpsb.length()-1));
+                    sb.append("?").append(qpsb.deleteCharAt(qpsb.length() - 1));
                     sb.append("\"");
                     param.put("CURL_DELETE", sb.toString());
                     break;
@@ -196,7 +232,7 @@ public class WikiGeneratorImpl implements WikiGenerator {
                     sb.append("\"");
                     sb.append(spec.getNumbaseurlid().getVc2baseurl());
                     sb.append("/").append(spec.getResourcePath());
-                    sb.append("?").append(qpsb.deleteCharAt(qpsb.length()-1));
+                    sb.append("?").append(qpsb.deleteCharAt(qpsb.length() - 1));
                     sb.append("\"");
                     param.put("CURL_GET", sb.toString());
             }
@@ -209,9 +245,9 @@ public class WikiGeneratorImpl implements WikiGenerator {
             if (spar.getIsRequired()) {
                 qpsb.append(spar.getVc2paramname()).append("=");
                 String value = Strings.isEmpty(spar.getVc2demovalue())
-                        ?resolveDemoParamValue(spar.getEnumDataTypes(), spar.getVc2range())
-                        :spar.getVc2demovalue();
-                if(spar.getEnumDataTypes().equals(DataTypes.BINARY)){
+                        ? resolveDemoParamValue(spar.getEnumDataTypes(), spar.getVc2range())
+                        : spar.getVc2demovalue();
+                if (spar.getEnumDataTypes().equals(DataTypes.BINARY)) {
                     qpsb.append("@");
                 }
                 qpsb.append(value).append("&");
@@ -222,9 +258,9 @@ public class WikiGeneratorImpl implements WikiGenerator {
             if (reqpar.getIsRequired()) {
                 qpsb.append(reqpar.getVc2paramname()).append("=");
                 String value = Strings.isEmpty(reqpar.getVc2demovalue())
-                        ?resolveDemoParamValue(reqpar.getEnumDataTypes(), reqpar.getVc2range())
-                        :reqpar.getVc2demovalue();
-                if(reqpar.getEnumDataTypes().equals(DataTypes.BINARY)){
+                        ? resolveDemoParamValue(reqpar.getEnumDataTypes(), reqpar.getVc2range())
+                        : reqpar.getVc2demovalue();
+                if (reqpar.getEnumDataTypes().equals(DataTypes.BINARY)) {
                     qpsb.append("@");
                 }
                 qpsb.append(value).append("&");
@@ -237,7 +273,7 @@ public class WikiGeneratorImpl implements WikiGenerator {
         if (!type.equals(DataTypes.BINARY)) {
             if (range != null && range.length() > 0) {
                 try {
-                    result = RangeFactory.getRangeInstance(type,range).getBaseSample();
+                    result = RangeFactory.getRangeInstance(type, range).getBaseSample();
                 } catch (Exception e) {
                     result = resolveValueByType(type);
                 }
@@ -283,9 +319,36 @@ public class WikiGeneratorImpl implements WikiGenerator {
                 + "/" + spec.getNumspecid() + "_" + spec.getResourcePath() + ".wiki";
     }
 
-    public void generateMenuByParentCate(Tspeccategory pcate) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void generateDsWiki(Tdatastruct ds) {
+    }
+
+    public String generateDsMenu() {
+        try {
+            QLGenerator qlgen = new JPQLGenerator();
+            qlgen.select("ds").from("Tdatastruct ds").where(null, "ds.numenable=1");
+            List<Tdatastruct> structs = jpaDaoService.findEntities(qlgen.toString(), null, true, -1, -1);
+            String outpath = baseArgument.getDSWikiFileBaseDir() + "/" + "ds_catalog.wiki";
+            Template template = getFreeMarkerTemplate("dsWikiCatalog.ftl");
+            Map param = new HashMap();
+            param.put("dsList", structs);
+            freeMarkerUtil.processTemplateIntoFile(template, param, outpath, false);
+            return outpath;
+        } catch (TemplateException ex) {
+            Logger.getLogger(WikiGeneratorImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(WikiGeneratorImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     
+
+    private Template getFreeMarkerTemplate(String templateName) throws IOException{
+        Configuration cfg = new Configuration();
+        String tempdir = "/WEB-INF/template";
+        tempdir = Executions.getCurrent().getDesktop().getWebApp().getRealPath(tempdir);
+        cfg.setDirectoryForTemplateLoading(new File(tempdir));
+        Template template = cfg.getTemplate(templateName);
+        return template;
+    }
 }
