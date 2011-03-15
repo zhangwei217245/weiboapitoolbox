@@ -14,7 +14,7 @@ import com.weibo.api.toolbox.persist.entity.Tspeccategory;
  */
 public interface WikiGenerator {
 
-    void generateMenuByParentCate(Tspeccategory pcate);
+    String generateMenuByParentCate();
     void generateSpecWikiByCate(Tspeccategory cate);
     String renderWikiForEachSpec(Tspec spec);
     String getWikiOutPath(Tspec spec);

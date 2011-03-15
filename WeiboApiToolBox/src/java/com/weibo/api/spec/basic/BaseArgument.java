@@ -19,6 +19,7 @@ public class BaseArgument {
     private String specBase;
     private String schemaBase;
     private String allDocDir;
+    private String dsWikiBase;
     private boolean putSysDefineIntoSpec;
     
 
@@ -70,6 +71,14 @@ public class BaseArgument {
         this.allDocDir = allDocDir;
     }
 
+    public String getDsWikiBase() {
+        return dsWikiBase;
+    }
+
+    public void setDsWikiBase(String dsWikiBase) {
+        this.dsWikiBase = dsWikiBase;
+    }
+
     public boolean isPutSysDefineIntoSpec() {
         return putSysDefineIntoSpec;
     }
@@ -107,6 +116,17 @@ public class BaseArgument {
     public String getWikiFileBaseDir(){
         return getDocBase()
                 +"/"+getWikiBase();
+    }
+
+    public String getDSWikiBaseURI(){
+        return getHostBase()
+                +"/"+getAllDocDir()
+                +"/"+getDsWikiBase();
+    }
+
+    public String getDSWikiFileBaseDir(){
+        return getDocBase()
+                +"/"+getDsWikiBase();
     }
 
     public String getDocBase(){
