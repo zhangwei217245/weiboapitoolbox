@@ -101,7 +101,7 @@ ${spec.vc2maindesc?default("")}
 |style="text-align:left;padding-left:5px;border:1px solid #cccccc"|${serr.vc2desc?default("")}
 </#list>
 </#if>
-<#if (spec.trequestparamSet?exists)&&(spec.trequestparamSet?size > 0)>
+<#if (spec.terrorcodeSet?exists)&&(spec.terrorcodeSet?size > 0)>
 |-
 |colspan="5" style="text-align:center;background-color:#eeeeee;font-weight:bold;border:1px solid #cccccc"|应用级错误码
 <#list spec.terrorcodeSet as specerr>
