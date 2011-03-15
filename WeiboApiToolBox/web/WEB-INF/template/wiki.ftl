@@ -1,4 +1,3 @@
-
 == ${spec.resourcePath} ==
 ${spec.vc2shortdesc}
 ${spec.vc2maindesc}
