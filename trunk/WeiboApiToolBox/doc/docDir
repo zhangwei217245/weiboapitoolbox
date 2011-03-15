@@ -17,3 +17,6 @@
 -----{public type}
 ------{api status}
 -------{specid}.wiki
+
+--dswiki
+---DataStruct:{version}.{structName}
