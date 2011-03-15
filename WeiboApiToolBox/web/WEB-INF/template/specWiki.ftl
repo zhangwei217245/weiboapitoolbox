@@ -1,6 +1,6 @@
 == ${spec.resourcePath} ==
-${spec.vc2shortdesc}
-${spec.vc2maindesc}
+${spec.vc2shortdesc?default("")}
+${spec.vc2maindesc?default("")}
 == URL ==
 <span style="text-transform:lowercase;font-weight:600">${spec.numbaseurlid.vc2baseurl}/${spec.resourcePath}</span>
 == 支持格式 ==
@@ -28,7 +28,7 @@ ${spec.vc2maindesc}
 |style="text-align:center;font-weight:bolder;border:1px solid #cccccc"|${spar.vc2paramname}
 |style="text-align:center;text-transform:lowercase;border:1px solid #cccccc"|${spar.getIsRequired()?string}
 |style="text-align:left;padding-left:5px;border:1px solid #cccccc"|${spar.enumDataTypes.getName()}<#if (spar.vc2range?exists)&&(spar.vc2range?length > 0)>:${spar.vc2range}</#if>
-|style="text-align:left;padding-left:5px;border:1px solid #cccccc"|${spar.vc2desc}
+|style="text-align:left;padding-left:5px;border:1px solid #cccccc"|${spar.vc2desc?default("")}
 </#list>
 </#if>
 <#if (spec.trequestparamSet?exists)&&(spec.trequestparamSet?size > 0)>
@@ -39,7 +39,7 @@ ${spec.vc2maindesc}
 |style="text-align:center;font-weight:bolder;border:1px solid #cccccc"|${specparam.vc2paramname}
 |style="text-align:center;text-transform:lowercase;border:1px solid #cccccc"|${specparam.getIsRequired()?string}
 |style="text-align:left;padding-left:5px;border:1px solid #cccccc"|${specparam.enumDataTypes.getName()}<#if (specparam.vc2range?exists)&&(specparam.vc2range?length > 0)>:${specparam.vc2range}</#if>
-|style="text-align:left;padding-left:5px;border:1px solid #cccccc"|${specparam.vc2desc}
+|style="text-align:left;padding-left:5px;border:1px solid #cccccc"|${specparam.vc2desc?default("")}
 </#list>
 </#if>
 |}
@@ -77,6 +77,40 @@ ${spec.vc2maindesc}
 |style="text-align:center;font-weight:bolder;border:1px solid #cccccc"|${resp.vc2responsename}
 |style="text-align:center;text-transform:lowercase;border:1px solid #cccccc"|${resp.getIsRequired()?string}
 |style="text-align:left;padding-left:5px;border:1px solid #cccccc"|<#if resp.enumDataTypes.isStruct()>[[DataStruct:${resp.numdatastructid.vc2version}.${resp.numdatastructid.vc2structname?cap_first}|${resp.numdatastructid.vc2structname}]]<#if resp.enumDataTypes.name()=="ARRAY">[]</#if><#else>${resp.enumDataTypes.getName()}</#if>
-|style="text-align:left;padding-left:5px;border:1px solid #cccccc"|${resp.vc2desc}
+|style="text-align:left;padding-left:5px;border:1px solid #cccccc"|${resp.vc2desc?default("")}
+</#list>
+|}
+</#if>
+== 错误码 ==
+{| border="1" cellspacing="0" cellpadding="0" width="100%" class="parameters" style="border-color: #CCCCCC;"
+|-
+!width="15%" style="text-align:center;font-weight:bolder;border:1px solid #cccccc"|错误码
+!width="15%" style="text-align:center;font-weight:bolder;border:1px solid #cccccc"|HTTP状态码
+!width="20%" style="text-align:center;font-weight:bolder;border:1px solid #cccccc"|错误信息
+!width="20%" style="text-align:center;font-weight:bolder;border:1px solid #cccccc"|错误信息（中文）
+!width="30%" style="text-align:center;font-weight:bolder;border:1px solid #cccccc"|说明
+<#if (syserror?exists)&&(syserror?size > 0)>
+|-
+|colspan="5" style="text-align:center;background-color:#eeeeee;font-weight:bold;border:1px solid #cccccc"|系统级错误码
+<#list syserror as serr>
+|-
+|style="text-align:center;font-weight:bolder;border:1px solid #cccccc"|${serr.vc2errorcode?default("")}
+|style="text-align:center;text-transform:lowercase;border:1px solid #cccccc"|${serr.vc2httpcode?default("")}
+|style="text-align:center;text-transform:lowercase;border:1px solid #cccccc"|${serr.vc2errmsg?default("")}
+|style="text-align:left;padding-left:5px;border:1px solid #cccccc"|${serr.vc2cnmsg?default("")}
+|style="text-align:left;padding-left:5px;border:1px solid #cccccc"|${serr.vc2desc?default("")}
 </#list>
 </#if>
+<#if (spec.trequestparamSet?exists)&&(spec.trequestparamSet?size > 0)>
+|-
+|colspan="5" style="text-align:center;background-color:#eeeeee;font-weight:bold;border:1px solid #cccccc"|应用级错误码
+<#list spec.terrorcodeSet as specerr>
+|-
+|style="text-align:center;font-weight:bolder;border:1px solid #cccccc"|${specerr.vc2errorcode?default("")}
+|style="text-align:center;text-transform:lowercase;border:1px solid #cccccc"|${specerr.vc2httpcode?default("")}
+|style="text-align:center;text-transform:lowercase;border:1px solid #cccccc"|${specerr.vc2errmsg?default("")}
+|style="text-align:left;padding-left:5px;border:1px solid #cccccc"|${specerr.vc2cnmsg?default("")}
+|style="text-align:left;padding-left:5px;border:1px solid #cccccc"|${specerr.vc2desc?default("")}
+</#list>
+</#if>
+|}

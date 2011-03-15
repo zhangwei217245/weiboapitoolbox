@@ -73,7 +73,7 @@ public class WikiGeneratorImpl implements WikiGenerator {
             dataMap.put(pcate, subDataMap);
         }
         try {
-            String outpath = baseArgument.getWikiFileBaseDir()+"/"+"catalog.wiki";
+            String outpath = baseArgument.getWikiFileBaseDir() + "/" + "catalog.wiki";
             Template template = getFreeMarkerTemplate("specWikiCatalog.ftl");
             Map tplData = new HashMap();
             tplData.put("dataMap", dataMap);
@@ -86,7 +86,7 @@ public class WikiGeneratorImpl implements WikiGenerator {
         }
         return null;
     }
-    
+
     public void generateSpecWikiByCate(Tspeccategory cate) {
 
         if (cate.getNumparentcateid().getNumcateid() == 1) {
@@ -319,7 +319,20 @@ public class WikiGeneratorImpl implements WikiGenerator {
                 + "/" + spec.getNumspecid() + "_" + spec.getResourcePath() + ".wiki";
     }
 
-    public void generateDsWiki(Tdatastruct ds) {
+    public String generateDsWiki(Tdatastruct ds) {
+        String outpath = baseArgument.getDSWikiFileBaseDir() + "/" + ds.getVc2version()+"."+ds.getVc2structname()+".wiki";
+        try {
+            Template template = getFreeMarkerTemplate("datastructWiki.ftl");
+            Map param = new HashMap();
+            param.put("dstruct", ds);
+            freeMarkerUtil.processTemplateIntoFile(template, param, outpath, false);
+            return outpath;
+        } catch (TemplateException ex) {
+            Logger.getLogger(WikiGeneratorImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(WikiGeneratorImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     public String generateDsMenu() {
@@ -331,6 +344,7 @@ public class WikiGeneratorImpl implements WikiGenerator {
             Template template = getFreeMarkerTemplate("dsWikiCatalog.ftl");
             Map param = new HashMap();
             param.put("dsList", structs);
+            renderDsList(structs);
             freeMarkerUtil.processTemplateIntoFile(template, param, outpath, false);
             return outpath;
         } catch (TemplateException ex) {
@@ -341,9 +355,13 @@ public class WikiGeneratorImpl implements WikiGenerator {
         return null;
     }
 
+    private void renderDsList(List<Tdatastruct> structs) {
+        for (Tdatastruct tdatastruct : structs) {
+            generateDsWiki(tdatastruct);
+        }
+    }
     
-
-    private Template getFreeMarkerTemplate(String templateName) throws IOException{
+    private Template getFreeMarkerTemplate(String templateName) throws IOException {
         Configuration cfg = new Configuration();
         String tempdir = "/WEB-INF/template";
         tempdir = Executions.getCurrent().getDesktop().getWebApp().getRealPath(tempdir);
@@ -351,4 +369,6 @@ public class WikiGeneratorImpl implements WikiGenerator {
         Template template = cfg.getTemplate(templateName);
         return template;
     }
+
+    
 }
