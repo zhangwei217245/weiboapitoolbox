@@ -47,31 +47,14 @@ public class WikiGeneratorImpl implements WikiGenerator {
     @Resource
     BaseArgument baseArgument;
 
-    public String generateMenuByParentCate() {
+    public String generateTotalMenu() {
         QLGenerator qlgen = new JPQLGenerator();
         qlgen.select("pcate").from("Tspeccategory pcate").where(null, "pcate.numenable=1");
         qlgen.where(null, "pcate.numparentcateid.numcateid=1");
         List<Tspeccategory> pcates = jpaDaoService.findEntities(qlgen.toString(), null, true, -1, -1);
         Map dataMap = new HashMap();
-        Map pm = new HashMap();
         for (Tspeccategory pcate : pcates) {
-            qlgen.init();
-            qlgen.select("subcate").from("Tspeccategory subcate").where(null, "subcate.numenable=1");
-            qlgen.where(null, "subcate.numparentcateid = :pcate");
-            pm.put("pcate", pcate);
-            List<Tspeccategory> subcates = jpaDaoService.findEntities(qlgen.toString(), pm, true, -1, -1);
-            Map subDataMap = new HashMap();
-            Map par = new HashMap();
-            for (Tspeccategory subcate : subcates) {
-                //generateSpecWikiByCate(subcate);
-                qlgen.init();
-                qlgen.select("spec").from("Tspec spec").where(null, "spec.numenable=1");
-                qlgen.where(null, "spec.numcateid = :numcateid");
-                par.put("numcateid", subcate);
-                List<Tspec> speclist = jpaDaoService.findEntities(qlgen.toString(), par, true, -1, -1);
-                subDataMap.put(subcate.getNumindex()+"||"+subcate.getVc2catename(), speclist);
-            }
-            dataMap.put(pcate.getNumindex()+"||"+pcate.getVc2catename(), subDataMap);
+            generateMenuByParentCate(pcate, dataMap, false);
         }
         try {
             String outpath = baseArgument.getWikiFileBaseDir() + "/" + "catalog.wiki";
@@ -86,6 +69,45 @@ public class WikiGeneratorImpl implements WikiGenerator {
             Logger.getLogger(WikiGeneratorImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public String generateMenuByParentCate(Tspeccategory pcate, Map dataMap, boolean genspec) {
+        String zipdir = baseArgument.getWikiFileBaseDir()
+                + "/" + pcate.getVc2catename();
+        Map pm = new HashMap();
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.select("subcate").from("Tspeccategory subcate").where(null, "subcate.numenable=1");
+        qlgen.where(null, "subcate.numparentcateid = :pcate");
+        pm.put("pcate", pcate);
+        List<Tspeccategory> subcates = jpaDaoService.findEntities(qlgen.toString(), pm, true, -1, -1);
+        Map subDataMap = new HashMap();
+        Map par = new HashMap();
+        for (Tspeccategory subcate : subcates) {
+            if (genspec) {
+                generateSpecWikiByCate(subcate);
+            }
+            qlgen.init();
+            qlgen.select("spec").from("Tspec spec").where(null, "spec.numenable=1");
+            qlgen.where(null, "spec.numcateid = :numcateid");
+            par.put("numcateid", subcate);
+            List<Tspec> speclist = jpaDaoService.findEntities(qlgen.toString(), par, true, -1, -1);
+            subDataMap.put(subcate.getNumindex() + "||" + subcate.getVc2catename(), speclist);
+        }
+        dataMap.put(pcate.getNumindex() + "||" + pcate.getVc2catename(), subDataMap);
+        if (genspec) {
+            try {
+                String outpath = zipdir + "/" + "catalog.wiki";
+                Template template = getFreeMarkerTemplate("specWikiCatalog.ftl");
+                Map tplData = new HashMap();
+                tplData.put("dataMap", dataMap);
+                freeMarkerUtil.processTemplateIntoFile(template, tplData, outpath, false);
+            } catch (TemplateException ex) {
+                Logger.getLogger(WikiGeneratorImpl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(WikiGeneratorImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return zipdir + "/catalog.wiki";
     }
 
     public void generateSpecWikiByCate(Tspeccategory cate) {
@@ -312,7 +334,7 @@ public class WikiGeneratorImpl implements WikiGenerator {
     }
 
     public String getWikiOutPath(Tspec spec) {
-        return baseArgument.getWikiFileBaseDir() 
+        return baseArgument.getWikiFileBaseDir()
                 + "/" + spec.getNumcateid().getNumparentcateid().getVc2catename()
                 + "/" + spec.getNumcateid().getVc2catename()
                 + "/" + spec.getVc2version()
@@ -322,7 +344,7 @@ public class WikiGeneratorImpl implements WikiGenerator {
     }
 
     public String generateDsWiki(Tdatastruct ds) {
-        String outpath = baseArgument.getDSWikiFileBaseDir() + "/" + ds.getVc2version()+"."+ds.getVc2structname()+".wiki";
+        String outpath = baseArgument.getDSWikiFileBaseDir() + "/" + ds.getVc2version() + "." + ds.getVc2structname() + ".wiki";
         try {
             Template template = getFreeMarkerTemplate("datastructWiki.ftl");
             Map param = new HashMap();
@@ -362,7 +384,7 @@ public class WikiGeneratorImpl implements WikiGenerator {
             generateDsWiki(tdatastruct);
         }
     }
-    
+
     private Template getFreeMarkerTemplate(String templateName) throws IOException {
         Configuration cfg = new Configuration();
         String tempdir = "/WEB-INF/template";
@@ -371,6 +393,4 @@ public class WikiGeneratorImpl implements WikiGenerator {
         Template template = cfg.getTemplate(templateName);
         return template;
     }
-
-    
 }

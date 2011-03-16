@@ -16,6 +16,8 @@ import com.weibo.api.toolbox.service.spec.SpecDocService;
 import com.weibo.api.toolbox.service.spec.SpecProvider;
 import com.weibo.api.toolbox.util.CodeMirrorSyntax;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
+import com.weibo.api.toolbox.util.ZipOutUtil;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,6 +38,7 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zkplus.databind.AnnotateDataBinder;
+import org.zkoss.zul.Filedownload;
 import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
@@ -78,7 +81,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
         catetree.setModel(specTreeModel);
     }
 
-    public void onClick$ctxm_genwadlzip(){
+    public void onClick$ctxm_genwikizip() {
         Tspeccategory cate = null;
         if (catetree.getSelectedCount() > 0) {
             Set selitems = catetree.getSelectedItems();
@@ -86,12 +89,53 @@ public class SpecManagerComposer extends GenericForwardComposer {
                 Treeitem ti = (Treeitem) sel;
                 cate = (Tspeccategory) ti.getValue();
             }
-            
+            File zip = docService.genWikiZipByParentCate(cate);
+            try {
+                Filedownload.save(zip, null);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(SpecManagerComposer.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
-    
+
+    public void onClick$ctxm_genwadlzip() {
+        List<Tspeccategory> cateLevelOne = cp.getCateLevelOne();
+        File zip = docService.genMultiSpecWadl(cateLevelOne);
+        try {
+            Filedownload.save(zip, null);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SpecManagerComposer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void onClick$ctxm_genwadllist() throws InterruptedException {
+        Tspeccategory cate = null;
+        if (catetree.getSelectedCount() > 0) {
+            Set selitems = catetree.getSelectedItems();
+            for (Object sel : selitems) {
+                Treeitem ti = (Treeitem) sel;
+                cate = (Tspeccategory) ti.getValue();
+            }
+            List<Tspec> _specList = sp.getSpecListByParentCate(cate);
+            if (ToolBoxUtil.isNotEmpty(_specList)) {
+                String docpath = docService.genMultiSpecInOneWadl(_specList);
+                if (Strings.isEmpty(docpath)) {
+                    Messagebox.show("生成汇总WADL失败，可能该分类下某些SPEC定义有误，请检查后重试!", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
+                    return;
+                }
+                Map windowparam = new HashMap();
+                windowparam.put(SpecDocViewer.ARG_DOCPATH, docpath);
+                windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.XML.lowerName());
+                showDocViewer(windowparam);
+            } else {
+                Messagebox.show("该分类下没有有效的SPEC定义！", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
+            }
+
+        }
+    }
+
     public void onClick$ctxm_genwikimenu() {
-        String menuPath = wikiGenerator.generateMenuByParentCate();
+        String menuPath = wikiGenerator.generateTotalMenu();
         Map windowparam = new HashMap();
         windowparam.put(SpecDocViewer.ARG_DOCPATH, menuPath);
         windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.WIKI.lowerName());
@@ -122,32 +166,6 @@ public class SpecManagerComposer extends GenericForwardComposer {
             windowparam.put(SpecDocViewer.ARG_CODEVAL, codesb.toString());
             windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.JS.lowerName());
             showDocViewer(windowparam);
-        }
-    }
-
-    public void onClick$ctxm_genwadllist() throws InterruptedException {
-        Tspeccategory cate = null;
-        if (catetree.getSelectedCount() > 0) {
-            Set selitems = catetree.getSelectedItems();
-            for (Object sel : selitems) {
-                Treeitem ti = (Treeitem) sel;
-                cate = (Tspeccategory) ti.getValue();
-            }
-            List<Tspec> _specList = sp.getSpecListByParentCate(cate);
-            if (ToolBoxUtil.isNotEmpty(_specList)) {
-                String docpath = docService.genMultiSpecInOneWadl(_specList);
-                if (Strings.isEmpty(docpath)) {
-                    Messagebox.show("生成汇总WADL失败，可能该分类下某些SPEC定义有误，请检查后重试!", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
-                    return;
-                }
-                Map windowparam = new HashMap();
-                windowparam.put(SpecDocViewer.ARG_DOCPATH, docpath);
-                windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.XML.lowerName());
-                showDocViewer(windowparam);
-            } else {
-                Messagebox.show("该分类下没有有效的SPEC定义！", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
-            }
-
         }
     }
 
@@ -317,7 +335,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
                 dataRow.setContext("specCatePopup");
                 dataRow.setDroppable("true");
                 dataRow.addEventListener("onDrop", new TreeitemDropListener());
-            }else{
+            } else {
                 dataRow.setContext("specParentCatePopup");
             }
         }

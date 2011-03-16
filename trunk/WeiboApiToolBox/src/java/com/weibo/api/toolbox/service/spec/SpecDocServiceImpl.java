@@ -14,9 +14,11 @@ import com.weibo.api.toolbox.persist.IJpaDaoService;
 import com.weibo.api.toolbox.persist.entity.Tdatastruct;
 import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
+import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import com.weibo.api.toolbox.persist.entity.Tstructfield;
 import com.weibo.api.toolbox.persist.qlgenerator.JPQLGenerator;
 import com.weibo.api.toolbox.persist.qlgenerator.QLGenerator;
+import com.weibo.api.toolbox.util.ToolBoxUtil;
 import com.weibo.api.toolbox.util.ZipOutUtil;
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +48,8 @@ public class SpecDocServiceImpl implements SpecDocService {
     IJpaDaoService jpaDaoService;
     @Resource
     WikiGenerator wikigenerator;
+    @Resource
+    SpecProvider specProvider;
 
     public Map<String, List<String>> genMultiSchemaForEachSpec(List<Tspec> _specList) {
         Map<String, List<String>> schemaDocMap = null;
@@ -69,6 +73,21 @@ public class SpecDocServiceImpl implements SpecDocService {
         return structPathList;
     }
 
+    public File genMultiSpecWadl(List<Tspeccategory> cateLevelOne){
+        String doccatedir = baseArgument.getWadlFileBaseDir();
+        for (Tspeccategory levelOne : cateLevelOne) {
+            List<Tspec> _specList = specProvider.getSpecListByParentCate(levelOne);
+            if (ToolBoxUtil.isNotEmpty(_specList)) {
+                genMultiSpecInOneWadl(_specList);
+            }
+        }
+        
+        File out = new File(doccatedir+ ".zip");
+        File in = new File(doccatedir);
+        ZipOutUtil.zip(out, in);
+        return out;
+    }
+    
     public String genMultiSpecInOneWadl(List<Tspec> _specList) {
         String docpath = null;
         if (_specList != null && _specList.size() > 0) {
@@ -162,5 +181,14 @@ public class SpecDocServiceImpl implements SpecDocService {
                 generateJsonSchemaByStruct(structPathList, fieldstruct);
             }
         }
+    }
+
+    public File genWikiZipByParentCate(Tspeccategory pcate){
+        final Map dataMap = new HashMap();
+        String menuPath = wikigenerator.generateMenuByParentCate(pcate, dataMap, true);
+        File in = new File(menuPath).getParentFile();
+        File out = new File(in.getAbsolutePath()+".zip");
+        ZipOutUtil.zip(out, in);
+        return out;
     }
 }

@@ -6,6 +6,7 @@
 package com.weibo.api.toolbox.service.spec;
 
 import com.weibo.api.toolbox.persist.entity.Tspec;
+import com.weibo.api.toolbox.persist.entity.Tspeccategory;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -27,4 +28,8 @@ public interface SpecDocService {
     File batchJsonSchemaByStruct();
 
     File batchWikiByStruct();
+
+    File genMultiSpecWadl(List<Tspeccategory> cateLevelOne);
+
+    File genWikiZipByParentCate(Tspeccategory pcate);
 }
