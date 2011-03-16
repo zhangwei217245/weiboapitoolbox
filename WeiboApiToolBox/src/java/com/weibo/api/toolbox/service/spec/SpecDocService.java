@@ -6,6 +6,7 @@
 package com.weibo.api.toolbox.service.spec;
 
 import com.weibo.api.toolbox.persist.entity.Tspec;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -23,4 +24,7 @@ public interface SpecDocService {
 
     String genOneSpecWadl(Tspec spec);
 
+    File batchJsonSchemaByStruct();
+
+    File batchWikiByStruct();
 }

@@ -11,6 +11,14 @@
         <west style="width:40%" autoscroll="true" collapsible="true">
             <vlayout>
                 <vbox style="width:100%">
+                    <menubar id="menubar">
+                        <menu label="下载归档" src="/img/smallicons/mbi_010.gif">
+                            <menupopup>
+                                <menuitem id="dl_schema_zip" label="下载schema归档" src="/img/smallicons/mbi_024.gif"/>
+                                <menuitem id="dl_wiki_zip" label="下载wiki归档" src="/img/smallicons/mbi_023.gif"/>
+                            </menupopup>
+                        </menu>
+                    </menubar>
                     <listbox id="structlist" model="@{datastructlayout$composer.dataStruct,load-when='btn_addstruct.onClick,btn_savestruct.onClick'}"
                 checkmark="true" paginal="${structPaging}" rows="5">
                         <auxhead>

@@ -5,20 +5,26 @@ import com.weibo.api.toolbox.persist.entity.Tdatastruct;
 import com.weibo.api.toolbox.persist.entity.Tenumgroup;
 import com.weibo.api.toolbox.persist.entity.Tstructfield;
 import com.weibo.api.toolbox.service.spec.CategoryProvider;
+import com.weibo.api.toolbox.service.spec.SpecDocService;
 import com.weibo.api.toolbox.service.spec.SpecProvider;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.zkoss.spring.SpringUtil;
 import org.zkoss.util.logging.Log;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zkplus.databind.AnnotateDataBinder;
+import org.zkoss.zul.Filedownload;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
@@ -35,6 +41,9 @@ public class DataStructComposer extends GenericForwardComposer {
     private static final long serialVersionUID = -1610058058620582667L;
     CategoryProvider cp = (CategoryProvider) SpringUtil.getBean("categoryProvider");
     SpecProvider sp = (SpecProvider) SpringUtil.getBean("specProvider");
+    SpecDocService docService = (SpecDocService)SpringUtil.getBean("specDocService");
+    
+
     Textbox namefilter;
     Textbox versionfilter;
     Listbox structlist;
@@ -49,6 +58,24 @@ public class DataStructComposer extends GenericForwardComposer {
     public void doAfterCompose(Component comp) throws Exception {
         super.doAfterCompose(comp);
         dataStruct = getDataStruct(namefilter.getValue(),versionfilter.getValue());
+    }
+
+    public void onClick$dl_schema_zip(){
+        try {
+            File zip = docService.batchJsonSchemaByStruct();
+            Filedownload.save(zip, null);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DataStructComposer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void onClick$dl_wiki_zip(){
+        try {
+            File zip = docService.batchWikiByStruct();
+            Filedownload.save(zip, null);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DataStructComposer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void onClick$link_refresh() {

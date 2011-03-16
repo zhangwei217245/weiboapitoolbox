@@ -8,11 +8,16 @@ import com.weibo.api.spec.basic.BaseArgument;
 import com.weibo.api.spec.jsonschema.JsonSchemaCreator;
 import com.weibo.api.spec.wadl.WadlBinding;
 import com.weibo.api.spec.wadl.wadl20090202.Application;
+import com.weibo.api.spec.wiki.WikiGenerator;
 import com.weibo.api.toolbox.common.enumerations.ContentType;
+import com.weibo.api.toolbox.persist.IJpaDaoService;
 import com.weibo.api.toolbox.persist.entity.Tdatastruct;
 import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.persist.entity.Tstructfield;
+import com.weibo.api.toolbox.persist.qlgenerator.JPQLGenerator;
+import com.weibo.api.toolbox.persist.qlgenerator.QLGenerator;
+import com.weibo.api.toolbox.util.ZipOutUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +42,10 @@ public class SpecDocServiceImpl implements SpecDocService {
     BaseArgument baseArgument;
     @Resource
     JsonSchemaCreator jsonSchemaCreator;
+    @Resource
+    IJpaDaoService jpaDaoService;
+    @Resource
+    WikiGenerator wikigenerator;
 
     public Map<String, List<String>> genMultiSchemaForEachSpec(List<Tspec> _specList) {
         Map<String, List<String>> schemaDocMap = null;
@@ -54,7 +63,7 @@ public class SpecDocServiceImpl implements SpecDocService {
         List<String> structPathList = new ArrayList<String>();
         for (Tresponse response : spec.getTresponseSet()) {
             if (response.getEnumContentType().equals(ContentType.APP_JSON)) {
-                generateJsonSchema(structPathList,response);
+                generateJsonSchema(structPathList, response);
             }
         }
         return structPathList;
@@ -96,19 +105,47 @@ public class SpecDocServiceImpl implements SpecDocService {
         return docpath;
     }
 
-    private void generateJsonSchema(List<String> structPathList,Tresponse response) {
+    private void generateJsonSchema(List<String> structPathList, Tresponse response) {
         if (response.getEnumDataTypes().isStruct()) {
-                Tdatastruct struct = response.getNumdatastructid();
-                generateJsonSchemaByStruct(structPathList, struct);
+            Tdatastruct struct = response.getNumdatastructid();
+            generateJsonSchemaByStruct(structPathList, struct);
         }
     }
 
-    private void generateJsonSchemaByStruct(List<String> structPathList,Tdatastruct struct) {
+    public File batchJsonSchemaByStruct() {
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.select("ds").from("Tdatastruct ds").where(null, "ds.numenable=1");
+        List<Tdatastruct> dslist = jpaDaoService.findEntities(qlgen.toString(), null, true, -1, -1);
+        for (Tdatastruct ds : dslist) {
+            try {
+                String schemaFilePath = baseArgument.getSchemaFileBaseDir() + "/" + ds.getStructDocName() + ".jssd";
+                File schemaFile = new File(schemaFilePath);
+                Map schemaMap = jsonSchemaCreator.generateSchemaMap(ds);
+                jsonSchemaCreator.writeToFile(schemaFile, schemaMap);
+            } catch (IOException ex) {
+                Logger.getLogger(SpecDocServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        File out = new File(baseArgument.getSchemaFileBaseDir() + ".zip");
+        File in = new File(baseArgument.getSchemaFileBaseDir());
+        ZipOutUtil.zip(out, in);
+        return out;
+    }
+
+    public File batchWikiByStruct() {
+        wikigenerator.generateDsMenu();
+        File in = new File(baseArgument.getDSWikiFileBaseDir());
+        File out = new File(baseArgument.getDSWikiFileBaseDir()+".zip");
+        ZipOutUtil.zip(out, in);
+        return out;
+    }
+
+    private void generateJsonSchemaByStruct(List<String> structPathList, Tdatastruct struct) {
         String schemaFilePath = baseArgument.getSchemaFileBaseDir()
                 + "/" + struct.getStructDocName() + ".jssd";
         File schemaFile = new File(schemaFilePath);
-        long interval = System.currentTimeMillis()-schemaFile.lastModified();
-        if(schemaFile.exists()&&interval<5000){
+        long interval = System.currentTimeMillis() - schemaFile.lastModified();
+        if (schemaFile.exists() && interval < 5000) {
             return;
         }
         try {
@@ -118,10 +155,10 @@ public class SpecDocServiceImpl implements SpecDocService {
         } catch (IOException ex) {
             Logger.getLogger(SpecDocServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        for (Tstructfield field : struct.getTstructfieldSet()){
+
+        for (Tstructfield field : struct.getTstructfieldSet()) {
             Tdatastruct fieldstruct = field.getNumdatastructid();
-            if (field.getEnumDataTypes().isStruct()&&fieldstruct!=null){
+            if (field.getEnumDataTypes().isStruct() && fieldstruct != null) {
                 generateJsonSchemaByStruct(structPathList, fieldstruct);
             }
         }

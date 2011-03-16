@@ -120,7 +120,7 @@
                 </groupbox>
                 <groupbox id="gb_user" mold="3d" width="550px">
                     <caption label="用户"/>
-                        <listbox id="userlistbox" width="500px" height="60%" rows="10"
+                        <listbox id="userlistbox" width="500px" height="60%" rows="6"
                     model="@{usermana$composer.currTgroup.tuserSet,load-after='grouplistbox.onSelect'}"
                     selectedItem="@{usermana$composer.currTuser}"
 			oddRowSclass="non-odd" fixedLayout="true">
