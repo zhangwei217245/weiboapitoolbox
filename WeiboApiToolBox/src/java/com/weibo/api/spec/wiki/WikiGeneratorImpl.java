@@ -335,11 +335,11 @@ public class WikiGeneratorImpl implements WikiGenerator {
 
     public String getWikiOutPath(Tspec spec) {
         return baseArgument.getWikiFileBaseDir()
-                + "/" + spec.getNumcateid().getNumparentcateid().getVc2catename()
-                + "/" + spec.getNumcateid().getVc2catename()
-                + "/" + spec.getVc2version()
-                + "/" + spec.getEnumApiType().getName()
-                + "/" + spec.getEnumApiStatus().getName()
+                + "/" + spec.getNumcateid().getNumparentcateid().getVc2catename().trim()
+                + "/" + spec.getNumcateid().getVc2catename().trim()
+                + "/" + spec.getVc2version().trim()
+                + "/" + spec.getEnumApiType().getName().trim()
+                + "/" + spec.getEnumApiStatus().getName().trim()
                 + "/" + spec.getNumspecid() + "_" + spec.getResourcePath().replace('/', '_') + ".wiki";
     }
 
