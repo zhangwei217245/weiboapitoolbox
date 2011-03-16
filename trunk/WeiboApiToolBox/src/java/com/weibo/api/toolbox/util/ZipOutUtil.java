@@ -6,6 +6,9 @@ package com.weibo.api.toolbox.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.tools.zip.ZipOutputStream;
 
 /**
@@ -13,6 +16,26 @@ import org.apache.tools.zip.ZipOutputStream;
  * @author x-spirit
  */
 public class ZipOutUtil {
+
+    public static void zip(File out, File src) {
+        ZipOutputStream zos = null;
+        try {
+            zos = new ZipOutputStream(out);
+            String base = "";
+            if (src.isDirectory()) {
+                base = src.getName();
+            }
+            zip(zos, src, base);
+        } catch (Exception ex) {
+            Logger.getLogger(ZipOutUtil.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                zos.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ZipOutUtil.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     /**
      * ZipOutPut (out is need to manually close)
      * @param out
