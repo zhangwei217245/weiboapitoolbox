@@ -78,15 +78,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
         catetree.setModel(specTreeModel);
     }
 
-    public void onClick$ctxm_genwikilist() {
-        String menuPath = wikiGenerator.generateMenuByParentCate();
-        Map windowparam = new HashMap();
-        windowparam.put(SpecDocViewer.ARG_DOCPATH, menuPath);
-        windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.WIKI.lowerName());
-        showDocViewer(windowparam);
-    }
-
-    public void onClick$ctxm_genschemalist() throws InterruptedException {
+    public void onClick$ctxm_genwadlzip(){
         Tspeccategory cate = null;
         if (catetree.getSelectedCount() > 0) {
             Set selitems = catetree.getSelectedItems();
@@ -94,20 +86,16 @@ public class SpecManagerComposer extends GenericForwardComposer {
                 Treeitem ti = (Treeitem) sel;
                 cate = (Tspeccategory) ti.getValue();
             }
-            List<Tspec> _specList = sp.getSpecListByCategory(cate, null, null);
-
-            if (ToolBoxUtil.isNotEmpty(_specList)) {
-                Map<String, List<String>> docpathMap = docService.genMultiSchemaForEachSpec(_specList);
-                if (docpathMap == null || docpathMap.isEmpty()) {
-                    Messagebox.show("该分类的所有SPEC下没有有效的数据结构定义！", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
-                    return;
-                }
-                showSchemaDocs(docpathMap);
-            } else {
-                Messagebox.show("该分类下没有有效的SPEC定义！", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
-            }
-
+            
         }
+    }
+    
+    public void onClick$ctxm_genwikimenu() {
+        String menuPath = wikiGenerator.generateMenuByParentCate();
+        Map windowparam = new HashMap();
+        windowparam.put(SpecDocViewer.ARG_DOCPATH, menuPath);
+        windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.WIKI.lowerName());
+        showDocViewer(windowparam);
     }
 
     public void onClick$ctxm_genschema() throws InterruptedException {
@@ -145,8 +133,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
                 Treeitem ti = (Treeitem) sel;
                 cate = (Tspeccategory) ti.getValue();
             }
-            List<Tspec> _specList = sp.getSpecListByCategory(cate, null, null);
-
+            List<Tspec> _specList = sp.getSpecListByParentCate(cate);
             if (ToolBoxUtil.isNotEmpty(_specList)) {
                 String docpath = docService.genMultiSpecInOneWadl(_specList);
                 if (Strings.isEmpty(docpath)) {
@@ -330,6 +317,8 @@ public class SpecManagerComposer extends GenericForwardComposer {
                 dataRow.setContext("specCatePopup");
                 dataRow.setDroppable("true");
                 dataRow.addEventListener("onDrop", new TreeitemDropListener());
+            }else{
+                dataRow.setContext("specParentCatePopup");
             }
         }
     }

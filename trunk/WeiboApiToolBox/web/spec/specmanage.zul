@@ -49,12 +49,16 @@ signature="com.weibo.api.toolbox.util.PermissionControl  hasPermission(java.lang
         }
 ]]>
     </zscript>
+
+    <menupopup id="specParentCatePopup">
+        <menuitem id="ctxm_genwadllist" label="生成WADL汇总" image="/img/smallicons/folder_files.gif"/>
+        <menuitem id="ctxm_genwikimenu" label="生成WIKI菜单汇总" image="/img/smallicons/folder_files.gif"/>
+        <menuseparator/>
+        <menuitem id="ctxm_genwadlzip" label="下载WADL归档" image="/img/smallicons/mbi_010.gif"/>
+        <menuitem id="ctxm_genwikizip" label="下载WIKI归档" image="/img/smallicons/mbi_010.gif"/>
+    </menupopup>
     <menupopup id="specCatePopup">
         <menuitem id="ctxm_newspec" if="${c:hasPermission('ctxm_newspec')}" label="新建SPEC" image="/img/smallicons/action_add.gif"/>
-        <menuseparator/>
-        <menuitem id="ctxm_genwadllist" label="生成WADL归档" image="/img/smallicons/folder_files.gif"/>
-        <menuseparator/>
-        <menuitem id="ctxm_genwikilist" label="生成wiki归档" image="/img/smallicons/mbi_010.gif"/>
     </menupopup>
     <menupopup id="specListPopup">
         <menuitem id="ctxm_editspec" label="编辑SPEC" image="/img/smallicons/reply.gif"/>
@@ -62,7 +66,7 @@ signature="com.weibo.api.toolbox.util.PermissionControl  hasPermission(java.lang
         <menuitem id="ctxm_genwadl" label="查看WADL归档" image="/img/smallicons/file.gif"/>
         <menuitem id="ctxm_genschema" label="查看schema归档" image="/img/smallicons/file.gif"/>
         <menuseparator/>
-        <menuitem id="ctxm_genwiki" label="查看wiki归档" image="/img/smallicons/file.gif"/>
+        <menuitem id="ctxm_genwiki" label="查看WIKI归档" image="/img/smallicons/file.gif"/>
     </menupopup>
     <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./specmanage" ?>
         <borderlayout id="specmanage"  apply="com.weibo.api.toolbox.page.spec.SpecManagerComposer">

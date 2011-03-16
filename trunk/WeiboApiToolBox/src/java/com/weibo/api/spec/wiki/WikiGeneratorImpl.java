@@ -63,7 +63,7 @@ public class WikiGeneratorImpl implements WikiGenerator {
             Map subDataMap = new HashMap();
             Map par = new HashMap();
             for (Tspeccategory subcate : subcates) {
-                generateSpecWikiByCate(subcate);
+                //generateSpecWikiByCate(subcate);
                 qlgen.init();
                 qlgen.select("spec").from("Tspec spec").where(null, "spec.numenable=1");
                 qlgen.where(null, "spec.numcateid = :numcateid");
@@ -312,12 +312,13 @@ public class WikiGeneratorImpl implements WikiGenerator {
     }
 
     public String getWikiOutPath(Tspec spec) {
-        return baseArgument.getWikiFileBaseDir() + "/" + spec.getVc2version()
+        return baseArgument.getWikiFileBaseDir() 
                 + "/" + spec.getNumcateid().getNumparentcateid().getVc2catename()
                 + "/" + spec.getNumcateid().getVc2catename()
+                + "/" + spec.getVc2version()
                 + "/" + spec.getEnumApiType().getName()
                 + "/" + spec.getEnumApiStatus().getName()
-                + "/" + spec.getNumspecid() + "_" + spec.getResourcePath() + ".wiki";
+                + "/" + spec.getNumspecid() + "_" + spec.getResourcePath().replace('/', '_') + ".wiki";
     }
 
     public String generateDsWiki(Tdatastruct ds) {
