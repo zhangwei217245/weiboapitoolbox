@@ -63,14 +63,15 @@ public class WikiGeneratorImpl implements WikiGenerator {
             Map subDataMap = new HashMap();
             Map par = new HashMap();
             for (Tspeccategory subcate : subcates) {
+                generateSpecWikiByCate(subcate);
                 qlgen.init();
                 qlgen.select("spec").from("Tspec spec").where(null, "spec.numenable=1");
-                qlgen.where(null, "subcate.numcateid = :numcateid");
+                qlgen.where(null, "spec.numcateid = :numcateid");
                 par.put("numcateid", subcate);
                 List<Tspec> speclist = jpaDaoService.findEntities(qlgen.toString(), par, true, -1, -1);
-                subDataMap.put(subcate, speclist);
+                subDataMap.put(subcate.getNumindex()+"||"+subcate.getVc2catename(), speclist);
             }
-            dataMap.put(pcate, subDataMap);
+            dataMap.put(pcate.getNumindex()+"||"+pcate.getVc2catename(), subDataMap);
         }
         try {
             String outpath = baseArgument.getWikiFileBaseDir() + "/" + "catalog.wiki";

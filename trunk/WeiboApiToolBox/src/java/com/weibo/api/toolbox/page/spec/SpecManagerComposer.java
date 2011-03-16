@@ -78,6 +78,14 @@ public class SpecManagerComposer extends GenericForwardComposer {
         catetree.setModel(specTreeModel);
     }
 
+    public void onClick$ctxm_genwikilist() {
+        String menuPath = wikiGenerator.generateMenuByParentCate();
+        Map windowparam = new HashMap();
+        windowparam.put(SpecDocViewer.ARG_DOCPATH, menuPath);
+        windowparam.put(SpecDocViewer.ARG_SYNTAX, CodeMirrorSyntax.WIKI.lowerName());
+        showDocViewer(windowparam);
+    }
+
     public void onClick$ctxm_genschemalist() throws InterruptedException {
         Tspeccategory cate = null;
         if (catetree.getSelectedCount() > 0) {
@@ -175,7 +183,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
         if (specList.getSelectedCount() > 0) {
             currentSpec = (Tspec) specList.getSelectedItem().getValue();
             String wikipath = wikiGenerator.renderWikiForEachSpec(currentSpec);
-            if (Strings.isEmpty(wikipath)){
+            if (Strings.isEmpty(wikipath)) {
                 Messagebox.show("生成WIKI失败，请检查SPEC内容！", "提示", Messagebox.OK, Messagebox.EXCLAMATION);
                 return;
             }
@@ -185,7 +193,7 @@ public class SpecManagerComposer extends GenericForwardComposer {
             showDocViewer(windowparam);
         }
     }
-    
+
     public void onClick$ctxm_editspec() {
         if (specList.getSelectedCount() > 0) {
             currentSpec = (Tspec) specList.getSelectedItem().getValue();
