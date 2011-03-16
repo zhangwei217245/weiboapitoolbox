@@ -54,6 +54,8 @@ signature="com.weibo.api.toolbox.util.PermissionControl  hasPermission(java.lang
         <menuseparator/>
         <menuitem id="ctxm_genwadllist" label="生成WADL归档" image="/img/smallicons/folder_files.gif"/>
         <menuitem id="ctxm_genschemalist" label="生成Schema归档" image="/img/smallicons/folder_files.gif"/>
+        <menuseparator/>
+        <menuitem id="ctxm_genwikilist" label="生成wiki归档" image="/img/smallicons/mbi_010.gif"/>
     </menupopup>
     <menupopup id="specListPopup">
         <menuitem id="ctxm_editspec" label="编辑SPEC" image="/img/smallicons/reply.gif"/>
