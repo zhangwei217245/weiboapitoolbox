@@ -38,4 +38,5 @@ public interface SpecProvider {
     void saveEnumgroup(Tenumgroup enumgroup);
     List<Tenumvalues> getAllEnumvaluesByGroup(Tenumgroup group);
     void saveEnumValues(Tenumvalues value);
+    List<Tspec> getSpecListByParentCate(Tspeccategory pcate);
 }

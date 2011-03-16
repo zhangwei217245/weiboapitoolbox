@@ -97,6 +97,20 @@ public class SpecProviderImpl implements SpecProvider {
         }
     }
 
+    public List<Tspec> getSpecListByParentCate(Tspeccategory pcate){
+        QLGenerator qlgen = new JPQLGenerator();
+        List rstlst = null;
+        qlgen.select("s").from("Tspec s");
+        Map<String, Object> param = new HashMap<String, Object>();
+        if (pcate != null) {
+            param.put("numcateid", pcate);
+            qlgen.where(null, "s.numcateid.numparentcateid = :numcateid");
+            qlgen.orderBy("s.numcateindex", "ASC");
+            rstlst = jpaDaoService.findEntities(qlgen.toString(), param, true, -1, -1);
+        }
+        return rstlst;
+    }
+
     public List<Tspec> getSpecListByCategory(Tspeccategory cate, Integer specid, String version) {
         QLGenerator qlgen = new JPQLGenerator();
         List rstlst = null;

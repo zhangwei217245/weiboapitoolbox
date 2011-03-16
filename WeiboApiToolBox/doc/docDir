@@ -16,7 +16,7 @@
 ----{spec_cate}
 -----{public type}
 ------{api status}
--------{specid}.wiki
+-------{specid}_{resourcePath}.wiki
 
 --dswiki
----DataStruct:{version}.{structName}
+---{version}_{struct_id}.wiki

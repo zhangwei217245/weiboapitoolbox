@@ -76,7 +76,7 @@ ${spec.vc2maindesc?default("")}
 |-
 |style="text-align:center;font-weight:bolder;border:1px solid #cccccc"|${resp.vc2responsename}
 |style="text-align:center;text-transform:lowercase;border:1px solid #cccccc"|${resp.getIsRequired()?string}
-|style="text-align:left;padding-left:5px;border:1px solid #cccccc"|<#if resp.enumDataTypes.isStruct()>[[DataStruct:${resp.numdatastructid.vc2version}.${resp.numdatastructid.vc2structname?cap_first}|${resp.numdatastructid.vc2structname}]]<#if resp.enumDataTypes.name()=="ARRAY">[]</#if><#else>${resp.enumDataTypes.getName()}</#if>
+|style="text-align:left;padding-left:5px;border:1px solid #cccccc"|<#if resp.enumDataTypes.isStruct()>[[DataStruct:${resp.numdatastructid.numdatastructid}.${resp.numdatastructid.vc2version}_${resp.numdatastructid.vc2structname?cap_first}|${resp.numdatastructid.vc2structname}]]<#if resp.enumDataTypes.name()=="ARRAY">[]</#if><#else>${resp.enumDataTypes.getName()}</#if>
 |style="text-align:left;padding-left:5px;border:1px solid #cccccc"|${resp.vc2desc?default("")}
 </#list>
 |}
