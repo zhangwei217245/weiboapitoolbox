@@ -116,6 +116,8 @@ public class Tspec implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "numspecid",fetch=FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     private List<Tresponse> tresponseSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "numspecid")
+    private Set<Tspecreview> tspecreviewSet;
 
     @JoinTable(name = "tspec_ref_tspec", joinColumns = {
         @JoinColumn(name = "numspecid", referencedColumnName = "numspecid", nullable = false)}, inverseJoinColumns = {
@@ -363,6 +365,15 @@ public class Tspec implements Serializable {
     public void setTspecSetOnWho(Set<Tspec> tspecSetOnWho) {
         this.tspecSetOnWho = tspecSetOnWho;
     }
+
+    public Set<Tspecreview> getTspecreviewSet() {
+        return tspecreviewSet;
+    }
+
+    public void setTspecreviewSet(Set<Tspecreview> tspecreviewSet) {
+        this.tspecreviewSet = tspecreviewSet;
+    }
+    
 
     public String getResourcePath(){
         return (this.vc2version==null?"":this.vc2version)

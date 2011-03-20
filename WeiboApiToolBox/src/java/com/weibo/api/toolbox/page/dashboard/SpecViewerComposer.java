@@ -10,12 +10,15 @@ import com.weibo.api.toolbox.common.enumerations.DataTypes;
 import com.weibo.api.toolbox.common.enumerations.HttpMethod;
 import com.weibo.api.toolbox.common.enumerations.ParamStyle;
 import com.weibo.api.toolbox.common.enumerations.RateLimit;
+import com.weibo.api.toolbox.persist.entity.Baseurl;
 import com.weibo.api.toolbox.persist.entity.Tdatastruct;
 import com.weibo.api.toolbox.persist.entity.Tenumgroup;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
+import com.weibo.api.toolbox.persist.entity.Tspecreview;
 import com.weibo.api.toolbox.service.spec.CategoryProvider;
 import com.weibo.api.toolbox.service.spec.SpecProvider;
+import com.weibo.api.toolbox.util.ToolBoxUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,6 +29,7 @@ import org.zkoss.spring.SpringUtil;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
+import org.zkoss.zkplus.databind.AnnotateDataBinder;
 import org.zkoss.zul.Checkbox;
 
 /**
@@ -37,13 +41,27 @@ public class SpecViewerComposer extends GenericForwardComposer{
     CategoryProvider cp = (CategoryProvider) SpringUtil.getBean("categoryProvider");
     SpecProvider sp = (SpecProvider) SpringUtil.getBean("specProvider");
     Tspec currentSpec;
+    Tspecreview currentSpecReview;
+    List<Tspecreview> allReviews;
+
 
     @Override
     public void doAfterCompose(Component comp) throws Exception {
         Map<String, Tspec> argmap = Executions.getCurrent().getArg();
         currentSpec = argmap.get("editingSpec");
+        allReviews = getAllReviews();
+        currentSpecReview = new Tspecreview(null, "", 0, null);
+        currentSpecReview.setNumspecid(currentSpec);
         super.doAfterCompose(comp);
-        //autoCheck("cbhm", currentSpec.getVc2httpmethod(), ",", comp);
+        autoCheck("cbhm", currentSpec.getVc2httpmethod(), ",", comp);
+    }
+
+    public void onClick$btn_addRev(){
+        currentSpecReview.setNumreviewerid(ToolBoxUtil.getCurrentUser());
+        sp.saveReview(currentSpecReview);
+        currentSpecReview = new Tspecreview(null, "", 0, null);
+        currentSpecReview.setNumspecid(currentSpec);
+        refreshDataBinding();
     }
 
     private void autoCheck(String cb_prefix, String ids, String delimiter, Component comp) {
@@ -169,6 +187,13 @@ public class SpecViewerComposer extends GenericForwardComposer{
         return pslst;
     }
 
+    public List<Tspecreview> getAllReviews(){
+        if (currentSpec!=null){
+            allReviews = sp.getReviewBySpec(currentSpec);
+        }
+        return allReviews;
+    }
+
     public List<Tenumgroup> getAllEnableEnumGroups(){
         return sp.getAllEnableEnumGroups();
     }
@@ -189,5 +214,20 @@ public class SpecViewerComposer extends GenericForwardComposer{
         this.currentSpec = currentSpec;
     }
 
-    
+    public List<Baseurl> getBaseUrls() {
+        return sp.getBaseurls();
+    }
+
+    public Tspecreview getCurrentSpecReview() {
+        return currentSpecReview;
+    }
+
+    public void setCurrentSpecReview(Tspecreview currentSpecReview) {
+        this.currentSpecReview = currentSpecReview;
+    }
+
+    public void refreshDataBinding(){
+        AnnotateDataBinder binder = (AnnotateDataBinder) this.self.getAttribute("binder", true);
+        binder.loadAll();
+    }
 }
