@@ -11,6 +11,7 @@ import com.weibo.api.toolbox.persist.entity.Tenumgroup;
 import com.weibo.api.toolbox.persist.entity.Tenumvalues;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
+import com.weibo.api.toolbox.persist.entity.Tspecreview;
 import com.weibo.api.toolbox.persist.entity.Tstructfield;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
  */
 public interface SpecProvider {
 
+    List<Tspecreview> getReviewBySpec(Tspec currSpec);
     List<Tspec> getSpecListByCategory(Tspeccategory cate,Integer specid,String version);
     List<Baseurl> getBaseurls();
     void saveTspec(Tspec spec);
@@ -39,4 +41,5 @@ public interface SpecProvider {
     List<Tenumvalues> getAllEnumvaluesByGroup(Tenumgroup group);
     void saveEnumValues(Tenumvalues value);
     List<Tspec> getSpecListByParentCate(Tspeccategory pcate);
+    void saveReview(Tspecreview currentSpecReview);
 }

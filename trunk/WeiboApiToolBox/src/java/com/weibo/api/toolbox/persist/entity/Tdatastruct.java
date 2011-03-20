@@ -67,7 +67,8 @@ public class Tdatastruct implements Serializable {
     @JoinColumn(name = "numinheritfrom", referencedColumnName = "numdatastructid")
     @ManyToOne
     private Tdatastruct numinheritfrom;
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "numdatastructid")
+    private Set<Tdatastructreview> tdatastructreviewSet;
     @OneToMany(mappedBy = "numdatastructid")
     private Set<Tresponse> tresponseSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "numparentdatastructid", fetch = FetchType.EAGER)
@@ -192,6 +193,14 @@ public class Tdatastruct implements Serializable {
 
     public void setNuminheritfrom(Tdatastruct numinheritfrom) {
         this.numinheritfrom = numinheritfrom;
+    }
+
+    public Set<Tdatastructreview> getTdatastructreviewSet() {
+        return tdatastructreviewSet;
+    }
+
+    public void setTdatastructreviewSet(Set<Tdatastructreview> tdatastructreviewSet) {
+        this.tdatastructreviewSet = tdatastructreviewSet;
     }
 
     public Set<Tdatastruct> getDatastructExtendedSet() {

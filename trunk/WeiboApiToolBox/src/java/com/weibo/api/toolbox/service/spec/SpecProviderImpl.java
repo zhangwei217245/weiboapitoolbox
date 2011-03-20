@@ -15,10 +15,12 @@ import com.weibo.api.toolbox.persist.entity.Trequestparam;
 import com.weibo.api.toolbox.persist.entity.Tresponse;
 import com.weibo.api.toolbox.persist.entity.Tspec;
 import com.weibo.api.toolbox.persist.entity.Tspeccategory;
+import com.weibo.api.toolbox.persist.entity.Tspecreview;
 import com.weibo.api.toolbox.persist.entity.Tstructfield;
 import com.weibo.api.toolbox.persist.qlgenerator.JPQLGenerator;
 import com.weibo.api.toolbox.persist.qlgenerator.QLGenerator;
 import com.weibo.api.toolbox.util.ToolBoxUtil;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,14 @@ public class SpecProviderImpl implements SpecProvider {
 
     @Resource
     IJpaDaoService jpaDaoService;
+
+    public List<Tspecreview> getReviewBySpec(Tspec currSpec){
+        QLGenerator qlgen = new JPQLGenerator();
+        qlgen.select("t").from("Tspecreview t").where(null, "t.numspecid = :numspecid");
+        Map param = new HashMap();
+        param.put("numspecid", currSpec);
+        return jpaDaoService.findEntities(qlgen.toString(), param, true, -1, -1);
+    }
 
     public List<Tenumvalues> getAllEnumvaluesByGroup(Tenumgroup group){
         QLGenerator qlgen = new JPQLGenerator();
@@ -341,5 +351,15 @@ public class SpecProviderImpl implements SpecProvider {
             response.setEnumDataTypes(DataTypes.STRING);
             response.setNumenumgroupid(null);
         }
+    }
+
+    public void saveReview(Tspecreview currentSpecReview) {
+        currentSpecReview.setDatreviewtime(new Date());
+        if (currentSpecReview.getNumreviewerid()==null){
+            jpaDaoService.create(currentSpecReview);
+        }else{
+            jpaDaoService.edit(currentSpecReview);
+        }
+
     }
 }
