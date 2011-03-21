@@ -36,7 +36,7 @@
                 <listheader id="speclh_datcreated">创建时间：创建者</listheader>
                 <listheader id="speclh_datupdated">更新时间：更新者</listheader>
             </listhead>
-            <listitem self="@{each='eachspec'}" value="@{eachspec}" context="specListPopup">
+            <listitem self="@{each='eachspec'}" forward="onDoubleClick=slp_viewspec.onClick" value="@{eachspec}" context="specListPopup">
                 <listcell label="@{eachspec.numspecid}"/>
                 <listcell label="@{eachspec,converter='com.weibo.api.toolbox.page.spec.ResourceNameConvertor'}"/>
                 <listcell label="@{eachspec.createdInfo}"/>
